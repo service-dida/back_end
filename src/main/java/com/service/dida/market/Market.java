@@ -1,0 +1,36 @@
+package com.service.dida.market;
+
+import com.service.dida.nft.Nft;
+import com.service.dida.user.User;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Builder
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "market")
+public class Market {
+    @Id
+    @Column(name = "market_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long marketId;
+
+    @Column(nullable = false)
+    private double price;
+
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean deleted;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "nft_id")
+    private Nft nft;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+}
