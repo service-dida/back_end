@@ -25,11 +25,11 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(nullable = false)
+    @Column(name = "email",nullable = false)
     private String email;
-    @Column(nullable = false)
+    @Column(name = "nickname",nullable = false)
     private String nickname;
-    @Column(nullable = true)
+    @Column(name = "description",nullable = true)
     private String description;
     @Column(name = "profile_url", nullable = true)
     private String profileUrl;
@@ -38,6 +38,10 @@ public class User extends BaseEntity {
     private String refreshToken;
     @Column(name = "device_token", nullable = false)
     private String deviceToken;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
 
     @Column(name = "report_cnt", nullable = false, columnDefinition = "int default 0")
     private int reportCnt;
