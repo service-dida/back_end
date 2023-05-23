@@ -5,7 +5,6 @@ import com.service.dida.market.Market;
 import com.service.dida.nft.Nft;
 import com.service.dida.post.Post;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

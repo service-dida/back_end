@@ -24,14 +24,14 @@ public class Post extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
 
-    @Column(nullable = false, length = 20)
+    @Column(name = "title", nullable = false, length = 20)
     private String title;
-    @Column(nullable = false, length = 300)
+    @Column(name = "content", nullable = false, length = 300)
     private String content;
 
     @Column(name = "report_cnt", nullable = false, columnDefinition = "int default 0")
     private int reportCnt;
-    @Column(nullable = false, columnDefinition = "boolean default false")
+    @Column(name = "deleted", nullable = false, columnDefinition = "boolean default false")
     private boolean deleted;
 
     @ManyToOne(fetch = FetchType.LAZY)

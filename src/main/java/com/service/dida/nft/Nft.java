@@ -24,13 +24,13 @@ public class Nft extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long nftId;
 
-    @Column(nullable = false)
+    @Column(name = "id", nullable = false)
     private String id;
-    @Column(nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
-    @Column(nullable = false)
+    @Column(name = "description", nullable = false)
     private String description;
-    @Column(nullable = false)
+    @Column(name = "contracts", nullable = false)
     private String contracts;
     @Column(name = "tx_hash", nullable = false)
     private String txHash;
@@ -42,7 +42,7 @@ public class Nft extends BaseEntity {
 
     @Column(name = "report_cnt", nullable = false, columnDefinition = "int default 0")
     private int reportCnt;
-    @Column(nullable = false, columnDefinition = "boolean default false")
+    @Column(name = "deleted", nullable = false, columnDefinition = "boolean default false")
     private boolean deleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
