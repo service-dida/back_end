@@ -4,8 +4,7 @@ import com.service.dida.config.exception.errorCode.UserErrorCode;
 
 import com.service.dida.config.exception.BaseException;
 import com.service.dida.like.LikeRepository;
-import com.service.dida.market.dto.GetHotItem;
-import com.service.dida.market.dto.GetMainPageWithoutSoldOut;
+import com.service.dida.market.dto.*;
 import com.service.dida.nft.Nft;
 import com.service.dida.user.User;
 import com.service.dida.user.repository.UserRepository;
@@ -51,9 +50,9 @@ public class MarketService {
 
     public List<GetHotItem> getHotItems(User user) {
         List<GetHotItem> hotItems = new ArrayList<>();
-        List<Nft> nftList = likeRepository.getHotItems((Pageable) PageRequest.of(0, 20)).orElse(null);
-        if (nftList != null) {
-            for (Nft nft : nftList) {
+        List<Nft> nfts = likeRepository.getHotItems((Pageable) PageRequest.of(0, 20)).orElse(null);
+        if (nfts != null) {
+            for (Nft nft : nfts) {
                 if (nft.isValidated()) {
                     continue;
                 }
@@ -66,13 +65,17 @@ public class MarketService {
         return hotItems;
     }
 
+
     public GetMainPageWithoutSoldOut getMainPage(Long userId) {
         User user = userRepository.findByUserId(userId).orElse(null);
         if (user.isValidated()) {
             throw new BaseException(UserErrorCode.EMPTY_USER);
         }
-
-        return new GetMainPageWithoutSoldOut();
+        List<GetHotItem> hotItems = new ArrayList<>();
+        List<GetHotSeller> hotSellers = new ArrayList<>();
+        List<GetRecentNft> recentNfts = new ArrayList<>();
+        List<GetHotUser> hotUsers = new ArrayList<>();
+        return new GetMainPageWithoutSoldOut(hotItems, hotSellers, recentNfts, hotUsers);
     }
 
 

@@ -1,9 +1,11 @@
 package com.service.dida.market.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 @AllArgsConstructor
 public class GetRecentNft {
     private Long nftId;         // NFT ID

@@ -1,9 +1,11 @@
 package com.service.dida.market.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 @AllArgsConstructor
 public class GetHotUser {
     private Long userId;            // 유저 ID
