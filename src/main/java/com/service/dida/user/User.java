@@ -1,6 +1,7 @@
 package com.service.dida.user;
 
 import com.service.dida.common.BaseEntity;
+import com.service.dida.like.Like;
 import com.service.dida.market.Market;
 import com.service.dida.nft.Nft;
 import com.service.dida.post.Post;
@@ -55,5 +56,12 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Post> posts;
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private List<Like> likes;
+
+    public boolean isValidated() {
+        return !this.isDeleted();
+    }
 
 }

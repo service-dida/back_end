@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum UserErrorCode implements ErrorCode {
-    EMPTY_MEMBER("MEMBER_001", "존재하지 않는 사용자입니다.")
+    EMPTY_USER("USER_001", "존재하지 않는 사용자입니다.")
     ;
     private final String errorCode;
     private final String message;
