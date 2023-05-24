@@ -1,4 +1,4 @@
-package com.service.dida.market;
+package com.service.dida.domain.market;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

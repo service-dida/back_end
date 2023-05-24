@@ -1,9 +1,9 @@
-package com.service.dida.post;
+package com.service.dida.domain.post;
 
-import com.service.dida.comment.Comment;
-import com.service.dida.common.BaseEntity;
-import com.service.dida.nft.Nft;
-import com.service.dida.user.User;
+import com.service.dida.domain.comment.Comment;
+import com.service.dida.global.common.BaseEntity;
+import com.service.dida.domain.nft.Nft;
+import com.service.dida.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

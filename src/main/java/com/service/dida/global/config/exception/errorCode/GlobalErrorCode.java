@@ -1,6 +1,6 @@
-package com.service.dida.config.exception.errorCode;
+package com.service.dida.global.config.exception.errorCode;
 
-import com.service.dida.config.exception.ErrorCode;
+import com.service.dida.global.config.exception.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

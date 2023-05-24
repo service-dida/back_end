@@ -1,9 +1,9 @@
-package com.service.dida.nft;
+package com.service.dida.domain.nft;
 
-import com.service.dida.common.BaseEntity;
-import com.service.dida.market.Market;
-import com.service.dida.post.Post;
-import com.service.dida.user.User;
+import com.service.dida.global.common.BaseEntity;
+import com.service.dida.domain.market.Market;
+import com.service.dida.domain.post.Post;
+import com.service.dida.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

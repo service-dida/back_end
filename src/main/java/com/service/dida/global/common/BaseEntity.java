@@ -1,4 +1,4 @@
-package com.service.dida.common;
+package com.service.dida.global.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
