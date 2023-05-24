@@ -27,8 +27,9 @@ public class ControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleException(MethodArgumentNotValidException e) {
         System.out.println(e);
-        String detailMessage = extractMessage(e.getBindingResult().getFieldErrors());
-        return convert(GlobalErrorCode.NOT_VALID_ARGUMENT_ERROR, detailMessage);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(e.getErrorCode(),
+                e.getMessage());
+        return exceptionResponse;
     }
 
     private String extractMessage(List<FieldError> fieldErrors) {
@@ -72,4 +73,5 @@ public class ControllerAdvice {
         return new ResponseEntity<>(
             exceptionRes, HttpStatus.BAD_REQUEST);
     }
+    
 }

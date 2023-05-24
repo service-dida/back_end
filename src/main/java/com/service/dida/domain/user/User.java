@@ -1,6 +1,7 @@
 package com.service.dida.domain.user;
 
 import com.service.dida.global.common.BaseEntity;
+import com.service.dida.domain.like.Like;
 import com.service.dida.domain.market.Market;
 import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.post.Post;
@@ -28,6 +29,7 @@ public class User extends BaseEntity {
     private String email;
     @Column(name = "nickname",nullable = false)
     private String nickname;
+
     @Column(name = "description")
     private String description;
     @Column(name = "profile_url")
@@ -55,6 +57,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Post> posts;
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private List<Like> likes;
 
     public void changeRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;

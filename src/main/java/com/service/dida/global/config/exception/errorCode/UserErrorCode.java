@@ -11,7 +11,6 @@ public enum UserErrorCode implements ErrorCode {
     UN_REGISTERED_MEMBER("MEMBER_002", ""),
     DUPLICATE_MEMBER("MEMBER_003", "중복된 사용자입니다."),
     DUPLICATE_NICKNAME("MEMBER_004", "중복된 닉네임입니다.");
-
     private final String errorCode;
     private final String message;
 }

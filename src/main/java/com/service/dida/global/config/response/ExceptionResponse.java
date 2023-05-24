@@ -1,10 +1,7 @@
 package com.service.dida.global.config.response;
 
-import com.service.dida.global.config.exception.BaseException;
 import lombok.Getter;
-
 import java.time.LocalDateTime;
-import org.springframework.http.ResponseEntity;
 
 @Getter
 public class ExceptionResponse {
