@@ -1,9 +1,9 @@
-package com.service.dida.user;
+package com.service.dida.domain.user;
 
-import com.service.dida.common.BaseEntity;
-import com.service.dida.market.Market;
-import com.service.dida.nft.Nft;
-import com.service.dida.post.Post;
+import com.service.dida.global.common.BaseEntity;
+import com.service.dida.domain.market.Market;
+import com.service.dida.domain.nft.Nft;
+import com.service.dida.domain.post.Post;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,9 +28,9 @@ public class User extends BaseEntity {
     private String email;
     @Column(name = "nickname",nullable = false)
     private String nickname;
-    @Column(name = "description",nullable = true)
+    @Column(name = "description")
     private String description;
-    @Column(name = "profile_url", nullable = true)
+    @Column(name = "profile_url")
     private String profileUrl;
 
     @Column(name = "refresh_token", nullable = false)
@@ -56,4 +56,7 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Post> posts;
 
+    public void changeRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }

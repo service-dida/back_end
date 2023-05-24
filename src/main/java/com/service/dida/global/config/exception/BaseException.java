@@ -1,4 +1,4 @@
-package com.service.dida.config.exception;
+package com.service.dida.global.config.exception;
 
 import lombok.Getter;
 
@@ -6,10 +6,14 @@ import lombok.Getter;
 public class BaseException extends RuntimeException {
 
     private final String errorCode;
-    private final String message;
+    private String message;
 
     public BaseException(ErrorCode code) {
         errorCode = code.getErrorCode();
         message = code.getMessage();
+    }
+
+    public void setEmailMessage(String message) {
+        this.message = "해당 사용자의 이메일은 " + message + " 입니다.";
     }
 }
