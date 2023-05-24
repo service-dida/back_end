@@ -69,7 +69,7 @@ public class MarketService {
     public GetMainPageWithoutSoldOut getMainPage(Long userId) {
         User user = userRepository.findByUserId(userId).orElse(null);
         if (user.isValidated()) {
-            throw new BaseException(UserErrorCode.EMPTY_USER);
+            throw new BaseException(UserErrorCode.EMPTY_MEMBER);
         }
         List<GetHotItem> hotItems = new ArrayList<>();
         List<GetHotSeller> hotSellers = new ArrayList<>();
