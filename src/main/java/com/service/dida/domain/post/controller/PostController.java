@@ -9,10 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,9 +30,19 @@ public class PostController {
      *  [PATCH] /post
      */
     @PatchMapping("/post")
-    public ResponseEntity<Integer> editPost(@RequestBody @Valid EditPostReq editPostReq) {
+    public ResponseEntity<Integer> editPost(@RequestBody @Valid EditPostReq editPostReq) throws BaseException {
         Long userId = 0L;
         postService.editPost(userId, editPostReq);
+        return new ResponseEntity<Integer>(200, HttpStatus.OK);
+    }
+
+    /** 게시글 수정하기
+     *  [PATCH] /post/delete
+     */
+    @PatchMapping("/post/delete")
+    public ResponseEntity<Integer> deletePost(@PathVariable("postId") Long postId) throws BaseException {
+        Long userId = 0L;
+        postService.deletePost(userId, postId);
         return new ResponseEntity<Integer>(200, HttpStatus.OK);
     }
 }
