@@ -44,4 +44,9 @@ public class Post extends BaseEntity {
 
     @OneToMany(mappedBy = "post", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Comment> comments;
+
+    public void editPost(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }
