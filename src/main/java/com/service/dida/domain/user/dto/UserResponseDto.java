@@ -12,9 +12,7 @@ public class UserResponseDto {
     @AllArgsConstructor
     public static class TokenInfo {
         private String accessToken;
-        private LocalDateTime accessTokenExpirationTime;
         private String refreshToken;
-        private LocalDateTime refreshTokenExpirationTime;
     }
 
     @Getter

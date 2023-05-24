@@ -1,11 +1,11 @@
 package com.service.dida.global.config.security.jwt;
 
+import com.service.dida.domain.user.dto.UserResponseDto;
+import com.service.dida.domain.user.dto.UserResponseDto.TokenInfo;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.AuthErrorCode;
 import com.service.dida.global.config.security.auth.PrincipalDetails;
 import com.service.dida.global.config.security.auth.PrincipalDetailsService;
-import com.service.dida.domain.user.dto.UserResponseDto;
-import com.service.dida.domain.user.dto.UserResponseDto.TokenInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -15,7 +15,6 @@ import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
-import java.time.ZoneId;
 import java.util.Base64;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +37,7 @@ public class JwtTokenProvider {
     private final PrincipalDetailsService principalDetailsService;
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String REFRESH_HEADER = "refreshToken";
     private static final long TOKEN_VALID_TIME = 1000 * 60L * 60L * 24L;  // 유효기간 24시간
     private static final long REF_TOKEN_VALID_TIME = 1000 * 60L * 60L * 24L * 60L;  // 유효기간 2달
 
@@ -47,21 +47,29 @@ public class JwtTokenProvider {
         refreshSecretKey = Base64.getEncoder().encodeToString(refreshSecretKey.getBytes());
     }
 
-    public UserResponseDto.TokenInfo generateToken(Long userId) {
+    public String generateAccessToken(Long userId) {
         Claims claims = Jwts.claims();
         claims.put("userId", userId);
 
         Date now = new Date();
         Date accessTokenExpirationTime = new Date(now.getTime() + TOKEN_VALID_TIME);
-        Date refreshTokenExpirationTime = new Date(now.getTime() + REF_TOKEN_VALID_TIME);
 
-        String accessToken = Jwts.builder()
+        return Jwts.builder()
             .setClaims(claims)
             .setIssuedAt(now) // 토큰 발행 시간 정보
             .setExpiration(accessTokenExpirationTime)
             .signWith(SignatureAlgorithm.HS256, jwtSecretKey)
             .compact();
+    }
 
+    public UserResponseDto.TokenInfo generateToken(Long userId) {
+        Claims claims = Jwts.claims();
+        claims.put("userId", userId);
+
+        Date now = new Date();
+        Date refreshTokenExpirationTime = new Date(now.getTime() + REF_TOKEN_VALID_TIME);
+
+        String accessToken = generateAccessToken(userId);
         String refreshToken = Jwts.builder()
             .setClaims(claims)
             .setIssuedAt(now) // 토큰 발행 시간 정보
@@ -71,13 +79,7 @@ public class JwtTokenProvider {
 
         return TokenInfo.builder()
             .accessToken(accessToken)
-            .accessTokenExpirationTime(accessTokenExpirationTime.toInstant()
-                .atZone(ZoneId.systemDefault()) // Instant -> ZonedDateTime
-                .toLocalDateTime())
             .refreshToken(refreshToken)
-            .refreshTokenExpirationTime(refreshTokenExpirationTime.toInstant()
-                .atZone(ZoneId.systemDefault()) // Instant -> ZonedDateTime
-                .toLocalDateTime())
             .build();
     }
 
@@ -92,13 +94,33 @@ public class JwtTokenProvider {
         }
     }
 
+    public Authentication getRefreshAuthentication(String token) {
+        try {
+            PrincipalDetails principalDetails = principalDetailsService.loadUserByUsername(
+                getUserIdByRefreshToken(token));
+            return new UsernamePasswordAuthenticationToken(principalDetails.getUserId(),
+                "", principalDetails.getAuthorities());
+        } catch (UsernameNotFoundException exception) {
+            throw new BaseException(AuthErrorCode.UNSUPPORTED_JWT);
+        }
+    }
+
     public String getUserIdByToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecretKey).parseClaimsJws(token).
             getBody().get("userId").toString();
     }
 
+    public String getUserIdByRefreshToken(String token) {
+        return Jwts.parser().setSigningKey(refreshSecretKey).parseClaimsJws(token).
+            getBody().get("userId").toString();
+    }
+
     public String resolveToken(HttpServletRequest request) {
         return request.getHeader(AUTHORIZATION_HEADER);
+    }
+
+    public String resolveRefreshToken(HttpServletRequest request) {
+        return request.getHeader(REFRESH_HEADER);
     }
 
     public boolean validateToken(String token) {
@@ -116,4 +138,18 @@ public class JwtTokenProvider {
         }
     }
 
+    public boolean validateRefreshToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(refreshSecretKey).parseClaimsJws(token);
+            return true;
+        } catch (SecurityException | MalformedJwtException e) {
+            throw new BaseException(AuthErrorCode.INVALID_JWT);
+        } catch (ExpiredJwtException e) {
+            throw new BaseException(AuthErrorCode.EXPIRED_MEMBER_JWT);
+        } catch (UnsupportedJwtException | SignatureException e) {
+            throw new BaseException(AuthErrorCode.UNSUPPORTED_JWT);
+        } catch (IllegalArgumentException e) {
+            throw new BaseException(AuthErrorCode.EMPTY_JWT);
+        }
+    }
 }

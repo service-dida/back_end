@@ -20,6 +20,7 @@ public class UserRequestDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class RegisterMember {
+        @NotEmpty(message = "이메일 형식이 아닙니다.")
         @Email(message = "이메일 형식이 아닙니다.")
         private String email;
         @NotEmpty(message = "닉네임은 공백일 수 없습니다.")

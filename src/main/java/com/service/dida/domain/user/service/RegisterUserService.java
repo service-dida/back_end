@@ -62,9 +62,6 @@ public class RegisterUserService implements RegisterUserUseCase {
     public TokenInfo socialLogin(SocialLoginType socialLoginType,
         SocialLoginToken socialLoginToken) throws IOException {
         String idToken = socialLoginToken.getIdToken();
-        if (idToken.length() == 0) {
-            throw new BaseException(AuthErrorCode.EMPTY_ID_TOKEN);
-        }
         String email = "";
         switch (socialLoginType) {
             case KAKAO -> email = kakaoLoginService.getEmail(idToken);
