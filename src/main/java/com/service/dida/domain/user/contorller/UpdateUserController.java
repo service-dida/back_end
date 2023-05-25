@@ -19,7 +19,7 @@ public class UpdateUserController {
     /**
      * 로그인 토큰 갱신
      */
-    @PatchMapping("/user/refresh")
+    @PatchMapping("/common/refresh")
     public ResponseEntity<UserResponseDto.TokenInfo> refreshLogin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return new ResponseEntity<>(updateUserUseCase.refreshAccessToken(authentication),

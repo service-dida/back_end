@@ -16,7 +16,7 @@ public class GetUserController {
     private final GetUserUseCase getUserUseCase;
 
     @GetMapping("/visitor/auth")
-    public ResponseEntity<SendAuthEmailDto> test() {
+    public ResponseEntity<SendAuthEmailDto> sendAuthEmail() {
         return new ResponseEntity<>(
             getUserUseCase.sendAuthMail(SecurityContextHolder.getContext().getAuthentication()),
             HttpStatus.OK);
