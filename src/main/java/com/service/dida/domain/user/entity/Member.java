@@ -19,12 +19,12 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user")
-public class User extends BaseEntity {
+@Table(name = "member")
+public class Member extends BaseEntity {
     @Id
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "member_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long memberId;
 
     @Column(name = "email",nullable = false)
     private String email;
@@ -50,16 +50,16 @@ public class User extends BaseEntity {
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean deleted;
 
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Nft> nfts;
 
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Market> markets;
 
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Like> likes;
 
     public boolean isValidated() {

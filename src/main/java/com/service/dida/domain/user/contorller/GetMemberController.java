@@ -1,7 +1,7 @@
 package com.service.dida.domain.user.contorller;
 
 import com.service.dida.domain.user.dto.SendAuthEmailDto;
-import com.service.dida.domain.user.usecase.GetUserUseCase;
+import com.service.dida.domain.user.usecase.GetMemberUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class GetUserController {
+public class GetMemberController {
 
-    private final GetUserUseCase getUserUseCase;
+    private final GetMemberUseCase getUserUseCase;
 
     @GetMapping("/visitor/auth")
     public ResponseEntity<SendAuthEmailDto> sendAuthEmail() {

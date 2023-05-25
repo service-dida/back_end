@@ -3,7 +3,7 @@ package com.service.dida.domain.post;
 import com.service.dida.domain.comment.Comment;
 import com.service.dida.global.common.BaseEntity;
 import com.service.dida.domain.nft.Nft;
-import com.service.dida.domain.user.entity.User;
+import com.service.dida.domain.user.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,8 +39,8 @@ public class Post extends BaseEntity {
     private Nft nft;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @OneToMany(mappedBy = "post", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Comment> comments;

@@ -4,7 +4,7 @@ import com.service.dida.global.common.BaseEntity;
 import com.service.dida.domain.like.Like;
 import com.service.dida.domain.market.Market;
 import com.service.dida.domain.post.Post;
-import com.service.dida.domain.user.entity.User;
+import com.service.dida.domain.user.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,8 +49,8 @@ public class Nft extends BaseEntity {
     private boolean deleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @OneToMany(mappedBy = "nft", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Post> posts;

@@ -1,9 +1,9 @@
 package com.service.dida.domain.user.service;
 
-import com.service.dida.domain.user.entity.User;
-import com.service.dida.domain.user.dto.UserResponseDto.TokenInfo;
-import com.service.dida.domain.user.repository.UserRepository;
-import com.service.dida.domain.user.usecase.UpdateUserUseCase;
+import com.service.dida.domain.user.entity.Member;
+import com.service.dida.domain.user.dto.MemberResponseDto.TokenInfo;
+import com.service.dida.domain.user.repository.MemberRepository;
+import com.service.dida.domain.user.usecase.UpdateMemberUseCase;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.UserErrorCode;
 import com.service.dida.global.config.security.jwt.JwtTokenProvider;
@@ -13,20 +13,20 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UpdateUserService implements UpdateUserUseCase {
+public class UpdateMemberService implements UpdateMemberUseCase {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public TokenInfo refreshAccessToken(Authentication authentication) {
-        User user = userRepository.findByUserId((Long) authentication.getPrincipal()).orElse(null);
-        if (user == null || user.isDeleted()) {
+        Member member = memberRepository.findByMemberId((Long) authentication.getPrincipal()).orElse(null);
+        if (member == null || member.isDeleted()) {
             throw new BaseException(UserErrorCode.EMPTY_MEMBER);
         }
         return TokenInfo.builder()
-            .accessToken(jwtTokenProvider.generateAccessToken(user.getUserId()))
-            .refreshToken(user.getRefreshToken())
+            .accessToken(jwtTokenProvider.generateAccessToken(member.getMemberId()))
+            .refreshToken(member.getRefreshToken())
             .build();
     }
 }

@@ -1,7 +1,7 @@
 package com.service.dida.global.config.security.jwt;
 
-import com.service.dida.domain.user.dto.UserResponseDto;
-import com.service.dida.domain.user.dto.UserResponseDto.TokenInfo;
+import com.service.dida.domain.user.dto.MemberResponseDto;
+import com.service.dida.domain.user.dto.MemberResponseDto.TokenInfo;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.AuthErrorCode;
 import com.service.dida.global.config.security.auth.PrincipalDetails;
@@ -62,7 +62,7 @@ public class JwtTokenProvider {
             .compact();
     }
 
-    public UserResponseDto.TokenInfo generateToken(Long userId) {
+    public MemberResponseDto.TokenInfo generateToken(Long userId) {
         Claims claims = Jwts.claims();
         claims.put("userId", userId);
 

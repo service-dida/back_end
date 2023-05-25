@@ -1,14 +1,14 @@
 package com.service.dida.domain.user.service;
 
 import com.service.dida.domain.user.Role;
-import com.service.dida.domain.user.dto.UserRequestDto.CheckNickname;
-import com.service.dida.domain.user.dto.UserRequestDto.RegisterMember;
-import com.service.dida.domain.user.dto.UserRequestDto.SocialLoginToken;
-import com.service.dida.domain.user.dto.UserResponseDto;
-import com.service.dida.domain.user.dto.UserResponseDto.TokenInfo;
-import com.service.dida.domain.user.entity.User;
-import com.service.dida.domain.user.repository.UserRepository;
-import com.service.dida.domain.user.usecase.RegisterUserUseCase;
+import com.service.dida.domain.user.dto.MemberRequestDto.CheckNickname;
+import com.service.dida.domain.user.dto.MemberRequestDto.RegisterMember;
+import com.service.dida.domain.user.dto.MemberRequestDto.SocialLoginToken;
+import com.service.dida.domain.user.dto.MemberResponseDto;
+import com.service.dida.domain.user.dto.MemberResponseDto.TokenInfo;
+import com.service.dida.domain.user.entity.Member;
+import com.service.dida.domain.user.repository.MemberRepository;
+import com.service.dida.domain.user.usecase.RegisterMemberUseCase;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.UserErrorCode;
 import com.service.dida.global.config.security.jwt.JwtTokenProvider;
@@ -23,19 +23,19 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Service
 @RequiredArgsConstructor
-public class RegisterUserService implements RegisterUserUseCase {
+public class RegisterMemberService implements RegisterMemberUseCase {
 
     private final KakaoLoginService kakaoLoginService;
     private final AppleLoginService appleLoginService;
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
-    public void save(User user) {
-        userRepository.save(user);
+    public void save(Member member) {
+        memberRepository.save(member);
     }
 
-    public User register(RegisterMember registerMember) {
-        User user = User.builder()
+    public Member register(RegisterMember registerMember) {
+        Member member = Member.builder()
             .email(registerMember.getEmail())
             .nickname(registerMember.getNickname())
             .refreshToken("")
@@ -44,16 +44,16 @@ public class RegisterUserService implements RegisterUserUseCase {
             .reportCnt(0)
             .deleted(false)
             .build();
-        save(user);
-        return user;
+        save(member);
+        return member;
     }
 
     @Override
     public TokenInfo registerMember(RegisterMember registerMember) {
         checkRegister(registerMember);
-        User user = register(registerMember);
-        UserResponseDto.TokenInfo tokenInfo = jwtTokenProvider.generateToken(user.getUserId());
-        user.changeRefreshToken(tokenInfo.getRefreshToken());
+        Member member = register(registerMember);
+        MemberResponseDto.TokenInfo tokenInfo = jwtTokenProvider.generateToken(member.getMemberId());
+        member.changeRefreshToken(tokenInfo.getRefreshToken());
         return tokenInfo;
     }
 
@@ -67,10 +67,10 @@ public class RegisterUserService implements RegisterUserUseCase {
             case APPLE -> email = appleLoginService.getEmail(idToken);
         }
 
-        User user = userRepository.findByEmail(email).orElse(null);
-        if (user != null) {
-            UserResponseDto.TokenInfo tokenInfo = jwtTokenProvider.generateToken(user.getUserId());
-            user.changeRefreshToken(tokenInfo.getRefreshToken());
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if (member != null) {
+            MemberResponseDto.TokenInfo tokenInfo = jwtTokenProvider.generateToken(member.getMemberId());
+            member.changeRefreshToken(tokenInfo.getRefreshToken());
             return tokenInfo;
         } else {
             BaseException exception = new BaseException(UserErrorCode.UN_REGISTERED_MEMBER);
@@ -80,17 +80,17 @@ public class RegisterUserService implements RegisterUserUseCase {
     }
 
     @Override
-    public UserResponseDto.CheckNickname checkNickname(CheckNickname checkNickname) {
-        return new UserResponseDto.CheckNickname(
-            userRepository.existsByNickname(checkNickname.getNickname()).orElse(false));
+    public MemberResponseDto.CheckNickname checkNickname(CheckNickname checkNickname) {
+        return new MemberResponseDto.CheckNickname(
+            memberRepository.existsByNickname(checkNickname.getNickname()).orElse(false));
     }
 
     public void checkRegister(RegisterMember registerMember) {
-        Boolean flag = userRepository.existsByEmail(registerMember.getEmail()).orElse(false);
+        Boolean flag = memberRepository.existsByEmail(registerMember.getEmail()).orElse(false);
         if (flag) {
             throw new BaseException(UserErrorCode.DUPLICATE_MEMBER);
         }
-        flag = userRepository.existsByNickname(registerMember.getNickname()).orElse(false);
+        flag = memberRepository.existsByNickname(registerMember.getNickname()).orElse(false);
         if (flag) {
             throw new BaseException(UserErrorCode.DUPLICATE_NICKNAME);
         }

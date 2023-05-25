@@ -7,8 +7,8 @@ import com.service.dida.domain.post.dto.EditPostReq;
 import com.service.dida.domain.post.dto.PostPostReq;
 import com.service.dida.domain.post.repository.PostRepository;
 import com.service.dida.domain.post.usecase.PostUseCase;
-import com.service.dida.domain.user.entity.User;
-import com.service.dida.domain.user.repository.UserRepository;
+import com.service.dida.domain.user.entity.Member;
+import com.service.dida.domain.user.repository.MemberRepository;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.NftErrorCode;
 import com.service.dida.global.config.exception.errorCode.PostErrorCode;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class PostService implements PostUseCase {
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final PostRepository postRepository;
     private final NftRepository nftRepository;
     @Override
@@ -32,8 +32,8 @@ public class PostService implements PostUseCase {
     @Override
     @Transactional
     public void createPost(Long userId, PostPostReq postPostReq) {
-        User user = userRepository.findByUserId(userId).orElse(null);
-        if (user == null || user.isDeleted()) {
+        Member member = memberRepository.findByMemberId(userId).orElse(null);
+        if (member == null || member.isDeleted()) {
             throw new BaseException(UserErrorCode.EMPTY_MEMBER);
         }
         Nft nft = nftRepository.findByNftId(postPostReq.getNftId()).orElse(null);
@@ -44,7 +44,7 @@ public class PostService implements PostUseCase {
         Post post = Post.builder()
                 .title(postPostReq.getTitle())
                 .content(postPostReq.getContent())
-                .user(user)
+                .member(member)
                 .nft(nft)
                 .build();
 
@@ -69,7 +69,7 @@ public class PostService implements PostUseCase {
         if (post == null || post.isDeleted()) {
             throw new BaseException(PostErrorCode.EMPTY_POST);
         }
-        if (checkIsMe(userId, post.getUser().getUserId())) {
+        if (checkIsMe(userId, post.getMember().getMemberId())) {
             post.editPost(editPostReq.getTitle(), editPostReq.getContent());
         }
     }
@@ -81,7 +81,7 @@ public class PostService implements PostUseCase {
         if (post == null || post.isDeleted()) {
             throw new BaseException(PostErrorCode.EMPTY_POST);
         }
-        if (checkIsMe(userId, post.getUser().getUserId())) {
+        if (checkIsMe(userId, post.getMember().getMemberId())) {
             post.setDeleted();
         }
     }

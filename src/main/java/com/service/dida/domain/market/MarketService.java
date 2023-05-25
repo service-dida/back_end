@@ -6,8 +6,8 @@ import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.domain.like.LikeRepository;
 import com.service.dida.domain.market.dto.*;
 import com.service.dida.domain.nft.Nft;
-import com.service.dida.domain.user.entity.User;
-import com.service.dida.domain.user.repository.UserRepository;
+import com.service.dida.domain.user.entity.Member;
+import com.service.dida.domain.user.repository.MemberRepository;
 import com.service.dida.global.util.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MarketService {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final MarketRepository marketRepository;
     private final LikeRepository likeRepository;
     private final UtilService utilService;
@@ -42,13 +42,13 @@ public class MarketService {
         return GetHotItem.builder()
                 .nftId(nft.getNftId())
                 .nftImgUrl(nft.getImgUrl())
-                .userName(nft.getUser().getNickname())
+                .userName(nft.getMember().getNickname())
                 .price(price)
                 .likeCount(like)
                 .build();
     }
 
-    public List<GetHotItem> getHotItems(User user) {
+    public List<GetHotItem> getHotItems(Member member) {
         List<GetHotItem> hotItems = new ArrayList<>();
         List<Nft> nfts = likeRepository.getHotItems((Pageable) PageRequest.of(0, 20)).orElse(null);
         if (nfts != null) {
@@ -67,8 +67,8 @@ public class MarketService {
 
 
     public GetMainPageWithoutSoldOut getMainPage(Long userId) {
-        User user = userRepository.findByUserId(userId).orElse(null);
-        if (user.isValidated()) {
+        Member member = memberRepository.findByMemberId(userId).orElse(null);
+        if (member.isValidated()) {
             throw new BaseException(UserErrorCode.EMPTY_MEMBER);
         }
         List<GetHotItem> hotItems = new ArrayList<>();
