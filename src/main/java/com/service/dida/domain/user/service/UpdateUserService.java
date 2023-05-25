@@ -1,6 +1,6 @@
 package com.service.dida.domain.user.service;
 
-import com.service.dida.domain.user.Entity.User;
+import com.service.dida.domain.user.entity.User;
 import com.service.dida.domain.user.dto.UserResponseDto.TokenInfo;
 import com.service.dida.domain.user.repository.UserRepository;
 import com.service.dida.domain.user.usecase.UpdateUserUseCase;

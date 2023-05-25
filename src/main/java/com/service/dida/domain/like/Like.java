@@ -1,7 +1,7 @@
 package com.service.dida.domain.like;
 
 import com.service.dida.domain.nft.Nft;
-import com.service.dida.domain.user.Entity.User;
+import com.service.dida.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -6,7 +6,7 @@ import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.domain.like.LikeRepository;
 import com.service.dida.domain.market.dto.*;
 import com.service.dida.domain.nft.Nft;
-import com.service.dida.domain.user.Entity.User;
+import com.service.dida.domain.user.entity.User;
 import com.service.dida.domain.user.repository.UserRepository;
 import com.service.dida.global.util.UtilService;
 import lombok.RequiredArgsConstructor;

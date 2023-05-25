@@ -1,7 +1,7 @@
 package com.service.dida.domain.user.service;
 
 import com.service.dida.domain.user.Role;
-import com.service.dida.domain.user.Entity.User;
+import com.service.dida.domain.user.entity.User;
 import com.service.dida.domain.user.dto.UserRequestDto.CheckNickname;
 import com.service.dida.domain.user.dto.UserRequestDto.RegisterMember;
 import com.service.dida.domain.user.dto.UserRequestDto.SocialLoginToken;

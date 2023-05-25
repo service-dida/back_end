@@ -1,4 +1,4 @@
-package com.service.dida.domain.user.Entity;
+package com.service.dida.domain.user.entity;
 
 import com.service.dida.domain.user.Role;
 import com.service.dida.global.common.BaseEntity;
