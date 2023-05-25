@@ -1,12 +1,12 @@
 package com.service.dida.domain.user.service;
 
 import com.service.dida.domain.user.Role;
-import com.service.dida.domain.user.entity.User;
 import com.service.dida.domain.user.dto.UserRequestDto.CheckNickname;
 import com.service.dida.domain.user.dto.UserRequestDto.RegisterMember;
 import com.service.dida.domain.user.dto.UserRequestDto.SocialLoginToken;
 import com.service.dida.domain.user.dto.UserResponseDto;
 import com.service.dida.domain.user.dto.UserResponseDto.TokenInfo;
+import com.service.dida.domain.user.entity.User;
 import com.service.dida.domain.user.repository.UserRepository;
 import com.service.dida.domain.user.usecase.RegisterUserUseCase;
 import com.service.dida.global.config.exception.BaseException;
@@ -40,7 +40,7 @@ public class RegisterUserService implements RegisterUserUseCase {
             .nickname(registerMember.getNickname())
             .refreshToken("")
             .deviceToken("")
-            .role(Role.ROLE_USER)
+            .role(Role.ROLE_VISITOR)
             .reportCnt(0)
             .deleted(false)
             .build();

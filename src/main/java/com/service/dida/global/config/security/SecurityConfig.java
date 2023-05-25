@@ -30,6 +30,7 @@ public class SecurityConfig {
             .formLogin().disable()
             .httpBasic().disable()
             .authorizeHttpRequests()
+            .requestMatchers("/visitor/**").hasRole("VISITOR")
             .requestMatchers("/user/**").hasAnyRole("USER", "MANAGER")
             .requestMatchers("/manager/**").hasAnyRole("MANAGER")
             .anyRequest().permitAll()
