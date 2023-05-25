@@ -6,7 +6,7 @@ import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.domain.like.LikeRepository;
 import com.service.dida.domain.market.dto.*;
 import com.service.dida.domain.nft.Nft;
-import com.service.dida.domain.user.User;
+import com.service.dida.domain.user.entity.User;
 import com.service.dida.domain.user.repository.UserRepository;
 import com.service.dida.global.util.UtilService;
 import lombok.RequiredArgsConstructor;
@@ -69,7 +69,7 @@ public class MarketService {
     public GetMainPageWithoutSoldOut getMainPage(Long userId) {
         User user = userRepository.findByUserId(userId).orElse(null);
         if (user.isValidated()) {
-            throw new BaseException(UserErrorCode.EMPTY_USER);
+            throw new BaseException(UserErrorCode.EMPTY_MEMBER);
         }
         List<GetHotItem> hotItems = new ArrayList<>();
         List<GetHotSeller> hotSellers = new ArrayList<>();
@@ -77,6 +77,5 @@ public class MarketService {
         List<GetHotUser> hotUsers = new ArrayList<>();
         return new GetMainPageWithoutSoldOut(hotItems, hotSellers, recentNfts, hotUsers);
     }
-
 
 }

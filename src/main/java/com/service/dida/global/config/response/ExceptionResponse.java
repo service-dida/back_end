@@ -1,7 +1,6 @@
 package com.service.dida.global.config.response;
 
 import lombok.Getter;
-
 import java.time.LocalDateTime;
 
 @Getter

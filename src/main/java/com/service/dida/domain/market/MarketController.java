@@ -22,4 +22,5 @@ public class MarketController {
         Long userId = 0L;
         return new ResponseEntity<GetMainPageWithoutSoldOut>(marketService.getMainPage(userId), HttpStatus.OK);
     }
+
 }

@@ -1,5 +1,6 @@
-package com.service.dida.domain.user;
+package com.service.dida.domain.user.entity;
 
+import com.service.dida.domain.user.Role;
 import com.service.dida.global.common.BaseEntity;
 import com.service.dida.domain.like.Like;
 import com.service.dida.domain.market.Market;
@@ -29,9 +30,10 @@ public class User extends BaseEntity {
     private String email;
     @Column(name = "nickname",nullable = false)
     private String nickname;
-    @Column(name = "description",nullable = true)
+
+    @Column(name = "description")
     private String description;
-    @Column(name = "profile_url", nullable = true)
+    @Column(name = "profile_url")
     private String profileUrl;
 
     @Column(name = "refresh_token", nullable = false)
@@ -64,4 +66,7 @@ public class User extends BaseEntity {
         return !this.isDeleted();
     }
 
+    public void changeRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }
