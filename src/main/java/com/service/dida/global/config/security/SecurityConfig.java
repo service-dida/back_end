@@ -1,5 +1,6 @@
 package com.service.dida.global.config.security;
 
+import com.service.dida.global.config.security.auth.CustomAccessDeniedHandler;
 import com.service.dida.global.config.security.jwt.JwtAuthenticationFilter;
 import com.service.dida.global.config.security.jwt.JwtExceptionFilter;
 import com.service.dida.global.config.security.jwt.JwtTokenProvider;
@@ -18,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -35,6 +37,8 @@ public class SecurityConfig {
             .requestMatchers("/user/**").hasAnyRole("USER", "MANAGER")
             .requestMatchers("/manager/**").hasAnyRole("MANAGER")
             .anyRequest().permitAll()
+            .and()
+            .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler)
             .and()
             .addFilterBefore(new JwtExceptionFilter(),
                 JwtAuthenticationFilter.class)
