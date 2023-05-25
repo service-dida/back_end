@@ -1,7 +1,7 @@
 package com.service.dida.domain.user.service;
 
 import com.service.dida.domain.user.Role;
-import com.service.dida.domain.user.User;
+import com.service.dida.domain.user.Entity.User;
 import com.service.dida.domain.user.dto.UserRequestDto.CheckNickname;
 import com.service.dida.domain.user.dto.UserRequestDto.RegisterMember;
 import com.service.dida.domain.user.dto.UserRequestDto.SocialLoginToken;
@@ -10,7 +10,6 @@ import com.service.dida.domain.user.dto.UserResponseDto.TokenInfo;
 import com.service.dida.domain.user.repository.UserRepository;
 import com.service.dida.domain.user.usecase.RegisterUserUseCase;
 import com.service.dida.global.config.exception.BaseException;
-import com.service.dida.global.config.exception.errorCode.AuthErrorCode;
 import com.service.dida.global.config.exception.errorCode.UserErrorCode;
 import com.service.dida.global.config.security.jwt.JwtTokenProvider;
 import com.service.dida.global.config.security.oauth.helper.SocialLoginType;

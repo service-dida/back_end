@@ -2,7 +2,7 @@ package com.service.dida.global.config.security.auth;
 
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.UserErrorCode;
-import com.service.dida.domain.user.User;
+import com.service.dida.domain.user.Entity.User;
 import com.service.dida.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
