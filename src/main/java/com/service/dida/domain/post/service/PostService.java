@@ -7,7 +7,7 @@ import com.service.dida.domain.post.dto.EditPostReq;
 import com.service.dida.domain.post.dto.PostPostReq;
 import com.service.dida.domain.post.repository.PostRepository;
 import com.service.dida.domain.post.usecase.PostUseCase;
-import com.service.dida.domain.user.User;
+import com.service.dida.domain.user.entity.User;
 import com.service.dida.domain.user.repository.UserRepository;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.NftErrorCode;
@@ -34,7 +34,7 @@ public class PostService implements PostUseCase {
     public void createPost(Long userId, PostPostReq postPostReq) {
         User user = userRepository.findByUserId(userId).orElse(null);
         if (user == null || user.isDeleted()) {
-            throw new BaseException(UserErrorCode.EMPTY_USER);
+            throw new BaseException(UserErrorCode.EMPTY_MEMBER);
         }
         Nft nft = nftRepository.findByNftId(postPostReq.getNftId()).orElse(null);
         if (nft == null || nft.isDeleted()) {
