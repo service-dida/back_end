@@ -20,10 +20,8 @@ public class UpdateMemberService implements UpdateMemberUseCase {
 
     @Override
     public TokenInfo refreshAccessToken(Authentication authentication) {
-        Member member = memberRepository.findByMemberId((Long) authentication.getPrincipal()).orElse(null);
-        if (member == null || member.isDeleted()) {
-            throw new BaseException(MemberErrorCode.EMPTY_MEMBER);
-        }
+        Member member = memberRepository.findByMemberId((Long) authentication.getPrincipal())
+            .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER));
         return TokenInfo.builder()
             .accessToken(jwtTokenProvider.generateAccessToken(member.getMemberId()))
             .refreshToken(member.getRefreshToken())
