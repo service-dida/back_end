@@ -1,6 +1,6 @@
 package com.service.dida.domain.market;
 
-import com.service.dida.global.config.exception.errorCode.UserErrorCode;
+import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.domain.like.LikeRepository;
@@ -42,7 +42,7 @@ public class MarketService {
         return GetHotItem.builder()
                 .nftId(nft.getNftId())
                 .nftImgUrl(nft.getImgUrl())
-                .userName(nft.getMember().getNickname())
+                .nftName(nft.getMember().getNickname())
                 .price(price)
                 .likeCount(like)
                 .build();
@@ -69,7 +69,7 @@ public class MarketService {
     public GetMainPageWithoutSoldOut getMainPage(Long userId) {
         Member member = memberRepository.findByMemberId(userId).orElse(null);
         if (member.isValidated()) {
-            throw new BaseException(UserErrorCode.EMPTY_MEMBER);
+            throw new BaseException(MemberErrorCode.EMPTY_MEMBER);
         }
         List<GetHotItem> hotItems = new ArrayList<>();
         List<GetHotSeller> hotSellers = new ArrayList<>();
