@@ -1,6 +1,6 @@
 package com.service.dida.global.config.security.auth;
 
-import com.service.dida.domain.member.entity.Member;
+import com.service.dida.domain.user.entity.Member;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;

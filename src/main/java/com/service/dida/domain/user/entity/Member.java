@@ -1,6 +1,7 @@
-package com.service.dida.domain.member.entity;
+package com.service.dida.domain.user.entity;
 
-import com.service.dida.domain.member.Role;
+import com.service.dida.domain.user.Role;
+import com.service.dida.domain.wallet.Wallet;
 import com.service.dida.global.common.BaseEntity;
 import com.service.dida.domain.like.Like;
 import com.service.dida.domain.market.Market;
@@ -26,9 +27,9 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
-    @Column(name = "email",nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
-    @Column(name = "nickname",nullable = false)
+    @Column(name = "nickname", nullable = false)
     private String nickname;
 
     @Column(name = "description")
@@ -50,6 +51,10 @@ public class Member extends BaseEntity {
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean deleted;
 
+    @OneToOne
+    @JoinColumn(name = "wallet_id")
+    private Wallet wallet;
+
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Nft> nfts;
 
@@ -68,5 +73,9 @@ public class Member extends BaseEntity {
 
     public void changeRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public void changeRole(Role role) {
+        this.role = role;
     }
 }

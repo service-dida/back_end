@@ -1,4 +1,4 @@
-package com.service.dida.domain.member.dto;
+package com.service.dida.domain.user.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

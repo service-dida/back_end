@@ -1,7 +1,7 @@
-package com.service.dida.domain.member.contorller;
+package com.service.dida.domain.user.contorller;
 
-import com.service.dida.domain.member.dto.MemberResponseDto;
-import com.service.dida.domain.member.usecase.UpdateMemberUseCase;
+import com.service.dida.domain.user.dto.MemberResponseDto;
+import com.service.dida.domain.user.usecase.UpdateMemberUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

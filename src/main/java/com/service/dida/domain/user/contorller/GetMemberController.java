@@ -1,7 +1,7 @@
-package com.service.dida.domain.member.contorller;
+package com.service.dida.domain.user.contorller;
 
-import com.service.dida.domain.member.dto.SendAuthEmailDto;
-import com.service.dida.domain.member.usecase.GetMemberUseCase;
+import com.service.dida.domain.user.dto.SendAuthEmailDto;
+import com.service.dida.domain.user.usecase.GetMemberUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
