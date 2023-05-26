@@ -1,8 +1,8 @@
-package com.service.dida.domain.user.repository;
+package com.service.dida.domain.member.repository;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.service.dida.domain.user.entity.Member;
+import com.service.dida.domain.member.entity.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
