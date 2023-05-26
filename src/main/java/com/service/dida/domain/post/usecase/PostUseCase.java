@@ -6,8 +6,8 @@ import com.service.dida.domain.post.dto.PostPostReq;
 
 public interface PostUseCase {
     void save(Post post);
-    void createPost(Long userId, PostPostReq postPostReq);
-    boolean checkIsMe(Long userId, Long ownerId);
-    void editPost(Long userId, EditPostReq editPostReq);
-    void deletePost(Long userId, Long postId);
+    void createPost(Long memberId, PostPostReq postPostReq);
+    boolean checkIsMe(Long memberId, Long ownerId);
+    void editPost(Long memberId, EditPostReq editPostReq);
+    void deletePost(Long memberId, Long postId);
 }

@@ -31,8 +31,8 @@ public class PostService implements PostUseCase {
 
     @Override
     @Transactional
-    public void createPost(Long userId, PostPostReq postPostReq) {
-        Member member = memberRepository.findByMemberId(userId).orElse(null);
+    public void createPost(Long memberId, PostPostReq postPostReq) {
+        Member member = memberRepository.findByMemberId(memberId).orElse(null);
         if (member == null || member.isDeleted()) {
             throw new BaseException(MemberErrorCode.EMPTY_MEMBER);
         }
@@ -55,8 +55,8 @@ public class PostService implements PostUseCase {
      * 나의 게시글인지 체크하는 함수
      */
     @Override
-    public boolean checkIsMe(Long userId, Long ownerId) {
-        if (userId.equals(ownerId)) {
+    public boolean checkIsMe(Long memberId, Long ownerId) {
+        if (memberId.equals(ownerId)) {
             return true;
         } else {
             throw new BaseException(PostErrorCode.NOT_OWN_POST);
@@ -64,24 +64,24 @@ public class PostService implements PostUseCase {
     }
     @Override
     @Transactional
-    public void editPost(Long userId, EditPostReq editPostReq) {
+    public void editPost(Long memberId, EditPostReq editPostReq) {
         Post post = postRepository.findByPostId(editPostReq.getPostId()).orElse(null);
         if (post == null || post.isDeleted()) {
             throw new BaseException(PostErrorCode.EMPTY_POST);
         }
-        if (checkIsMe(userId, post.getMember().getMemberId())) {
+        if (checkIsMe(memberId, post.getMember().getMemberId())) {
             post.editPost(editPostReq.getTitle(), editPostReq.getContent());
         }
     }
 
     @Override
     @Transactional
-    public void deletePost(Long userId, Long postId) {
+    public void deletePost(Long memberId, Long postId) {
         Post post = postRepository.findByPostId(postId).orElse(null);
         if (post == null || post.isDeleted()) {
             throw new BaseException(PostErrorCode.EMPTY_POST);
         }
-        if (checkIsMe(userId, post.getMember().getMemberId())) {
+        if (checkIsMe(memberId, post.getMember().getMemberId())) {
             post.setDeleted();
         }
     }

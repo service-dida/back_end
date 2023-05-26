@@ -21,8 +21,8 @@ public class PostController {
      */
     @PostMapping("/post")
     public ResponseEntity<Integer> createPost(@RequestBody @Valid PostPostReq postPostReq) throws BaseException {
-        Long userId = 0L;
-        postService.createPost(userId, postPostReq);
+        Long memberId = 0L;
+        postService.createPost(memberId, postPostReq);
         return new ResponseEntity<Integer>(200, HttpStatus.OK);
     }
 
@@ -31,8 +31,8 @@ public class PostController {
      */
     @PatchMapping("/post")
     public ResponseEntity<Integer> editPost(@RequestBody @Valid EditPostReq editPostReq) throws BaseException {
-        Long userId = 0L;
-        postService.editPost(userId, editPostReq);
+        Long memberId = 0L;
+        postService.editPost(memberId, editPostReq);
         return new ResponseEntity<Integer>(200, HttpStatus.OK);
     }
 
@@ -41,8 +41,8 @@ public class PostController {
      */
     @PatchMapping("/post/delete")
     public ResponseEntity<Integer> deletePost(@PathVariable("postId") Long postId) throws BaseException {
-        Long userId = 0L;
-        postService.deletePost(userId, postId);
+        Long memberId = 0L;
+        postService.deletePost(memberId, postId);
         return new ResponseEntity<Integer>(200, HttpStatus.OK);
     }
 }
