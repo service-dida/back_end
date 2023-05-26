@@ -19,4 +19,12 @@ public class MemberResponseDto {
     public static class CheckNickname {
         private boolean isUsed;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class MemberInfo {
+        private Long memberId;
+        private String memberName;
+        private String profileImgUrl;
+    }
 }
