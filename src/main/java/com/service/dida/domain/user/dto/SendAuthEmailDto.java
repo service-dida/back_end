@@ -1,4 +1,4 @@
-package com.service.dida.domain.member.dto;
+package com.service.dida.domain.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

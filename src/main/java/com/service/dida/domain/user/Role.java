@@ -1,4 +1,4 @@
-package com.service.dida.domain.member;
+package com.service.dida.domain.user;
 
 public enum Role {
 

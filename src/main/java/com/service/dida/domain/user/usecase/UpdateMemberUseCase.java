@@ -1,6 +1,6 @@
-package com.service.dida.domain.member.usecase;
+package com.service.dida.domain.user.usecase;
 
-import com.service.dida.domain.member.dto.MemberResponseDto;
+import com.service.dida.domain.user.dto.MemberResponseDto;
 import org.springframework.security.core.Authentication;
 
 public interface UpdateMemberUseCase {

@@ -1,8 +1,8 @@
-package com.service.dida.domain.member.contorller;
+package com.service.dida.domain.user.contorller;
 
-import com.service.dida.domain.member.dto.MemberRequestDto;
-import com.service.dida.domain.member.dto.MemberResponseDto;
-import com.service.dida.domain.member.usecase.RegisterMemberUseCase;
+import com.service.dida.domain.user.dto.MemberRequestDto;
+import com.service.dida.domain.user.dto.MemberResponseDto;
+import com.service.dida.domain.user.usecase.RegisterMemberUseCase;
 import com.service.dida.global.config.security.oauth.helper.SocialLoginType;
 import jakarta.validation.Valid;
 import java.io.IOException;
