@@ -87,7 +87,7 @@ public class JwtTokenProvider {
         try {
             PrincipalDetails principalDetails = principalDetailsService.loadUserByUsername(
                 getUserIdByToken(token));
-            return new UsernamePasswordAuthenticationToken(principalDetails.getMemberId(),
+            return new UsernamePasswordAuthenticationToken(principalDetails,
                 "", principalDetails.getAuthorities());
         } catch (UsernameNotFoundException exception) {
             throw new BaseException(AuthErrorCode.UNSUPPORTED_JWT);
@@ -98,7 +98,7 @@ public class JwtTokenProvider {
         try {
             PrincipalDetails principalDetails = principalDetailsService.loadUserByUsername(
                 getUserIdByRefreshToken(token));
-            return new UsernamePasswordAuthenticationToken(principalDetails.getMemberId(),
+            return new UsernamePasswordAuthenticationToken(principalDetails,
                 "", principalDetails.getAuthorities());
         } catch (UsernameNotFoundException exception) {
             throw new BaseException(AuthErrorCode.UNSUPPORTED_JWT);
