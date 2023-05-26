@@ -7,6 +7,6 @@ import com.service.dida.global.common.dto.PageResponseDto;
 import java.util.List;
 
 public interface GetPostUseCase {
-    public PostResponseDto.GetPostResponseDto makeGetPostResForm(Long memberId, Post post);
-    public PageResponseDto<List<PostResponseDto.GetPostsResponseDto>> getAllPosts(Long memberId, int page);
+    PostResponseDto.GetPostResponseDto makeGetPostResForm(Long memberId, Post post);
+    PageResponseDto<List<PostResponseDto.GetPostsResponseDto>> getAllPosts(Long memberId, int page);
 }
