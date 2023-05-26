@@ -1,7 +1,7 @@
-package com.service.dida.domain.user.usecase;
+package com.service.dida.domain.member.usecase;
 
-import com.service.dida.domain.user.dto.MemberRequestDto;
-import com.service.dida.domain.user.dto.MemberResponseDto;
+import com.service.dida.domain.member.dto.MemberRequestDto;
+import com.service.dida.domain.member.dto.MemberResponseDto;
 import com.service.dida.global.config.security.oauth.helper.SocialLoginType;
 import java.io.IOException;
 

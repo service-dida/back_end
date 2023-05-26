@@ -1,6 +1,6 @@
 package com.service.dida.domain.wallet;
 
-import com.service.dida.domain.user.entity.Member;
+import com.service.dida.domain.member.entity.Member;
 import com.service.dida.global.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

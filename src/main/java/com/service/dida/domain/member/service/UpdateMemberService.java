@@ -1,9 +1,9 @@
-package com.service.dida.domain.user.service;
+package com.service.dida.domain.member.service;
 
-import com.service.dida.domain.user.entity.Member;
-import com.service.dida.domain.user.dto.MemberResponseDto.TokenInfo;
-import com.service.dida.domain.user.repository.MemberRepository;
-import com.service.dida.domain.user.usecase.UpdateMemberUseCase;
+import com.service.dida.domain.member.entity.Member;
+import com.service.dida.domain.member.dto.MemberResponseDto.TokenInfo;
+import com.service.dida.domain.member.repository.MemberRepository;
+import com.service.dida.domain.member.usecase.UpdateMemberUseCase;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 import com.service.dida.global.config.security.jwt.JwtTokenProvider;

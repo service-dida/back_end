@@ -1,8 +1,8 @@
 package com.service.dida.domain.wallet.service;
 
-import com.service.dida.domain.user.Role;
-import com.service.dida.domain.user.entity.Member;
-import com.service.dida.domain.user.repository.MemberRepository;
+import com.service.dida.domain.member.Role;
+import com.service.dida.domain.member.entity.Member;
+import com.service.dida.domain.member.repository.MemberRepository;
 import com.service.dida.domain.wallet.Wallet;
 import com.service.dida.domain.wallet.dto.WalletRequestDto;
 import com.service.dida.domain.wallet.repository.WalletRepository;
