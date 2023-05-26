@@ -41,7 +41,7 @@ public class WalletService implements WalletUseCase {
             .member(member)
             .build();
         save(wallet);
-        member.changeRole(Role.ROLE_USER);
+        member.changeRole(Role.ROLE_MEMBER);
     }
 
     @Override
