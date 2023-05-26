@@ -1,6 +1,6 @@
-package com.service.dida.domain.member.usecase;
+package com.service.dida.domain.user.usecase;
 
-import com.service.dida.domain.member.dto.SendAuthEmailDto;
+import com.service.dida.domain.user.dto.SendAuthEmailDto;
 import org.springframework.security.core.Authentication;
 
 public interface GetMemberUseCase {

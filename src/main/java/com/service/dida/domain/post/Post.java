@@ -3,7 +3,7 @@ package com.service.dida.domain.post;
 import com.service.dida.domain.comment.Comment;
 import com.service.dida.global.common.BaseEntity;
 import com.service.dida.domain.nft.Nft;
-import com.service.dida.domain.member.entity.Member;
+import com.service.dida.domain.user.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
