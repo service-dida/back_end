@@ -92,4 +92,8 @@ public class Member extends BaseEntity {
     public void changeDeviceToken(String deviceToken) {
         this.deviceToken = deviceToken;
     }
+
+    public void changeDeleted(boolean flag) {
+        this.deleted = flag;
+    }
 }
