@@ -33,4 +33,16 @@ public class GetPostController {
         Long memberId = 0L;
         return new ResponseEntity<>(getPostService.getAllPosts(memberId, pageRequestDto), HttpStatus.OK);
     }
+
+    /**
+     * NFT 별 게시글 조회하기
+     * [GET] /posts/{nftId}
+     */
+    @GetMapping("/posts/{nftId}}")
+    public ResponseEntity<PageResponseDto<List<PostResponseDto.GetPostsResponseDto>>> getPostsByNft(
+            @PathVariable("nftId") Long nftId, @RequestBody PageRequestDto pageRequestDto)
+            throws BaseException {
+        Long memberId = 0L;
+        return new ResponseEntity<>(getPostService.getPostsByNftId(memberId, nftId, pageRequestDto), HttpStatus.OK);
+    }
 }

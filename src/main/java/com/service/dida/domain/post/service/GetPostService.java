@@ -34,6 +34,15 @@ public class GetPostService implements GetPostUseCase {
     private final GetCommentService getCommentService;
 
     /**
+     * 게시글 조회에서 공통으로 사용 될 PageRequest 를 정의하는 함수
+     */
+    public PageRequest pageReq(PageRequestDto pageRequestDto) {
+        // pageRequest 는 원하는 page, 한 page 당 size, 최신 순서 정렬 이라는 요청을 담고 있다.
+        return PageRequest.of(pageRequestDto.getPage(), pageRequestDto.getPageSize()
+                , Sort.by(Sort.Direction.DESC, "createdAt"));
+    }
+
+    /**
      * 나의 게시글인지를 나타내는 type 을 반환하는 함수
      */
     public String checkIsMe(Long memberId, Long ownerId) {
@@ -58,6 +67,7 @@ public class GetPostService implements GetPostUseCase {
         }
         return price;
     }
+
     /**
      * PostInfo, MemberInfo, NftInfo 를 가지는 GetPostResponseDto 형태를 만들어주는 함수
      */
@@ -83,27 +93,36 @@ public class GetPostService implements GetPostUseCase {
     }
 
     /**
-     * GetPostResponseDto, commentsList 를 가지는 GetPostsResponseDto 의  List 를
-     * PageResponseDto 로 감싸서 반환 하는 함수
+     *
      */
-    @Override
-    public PageResponseDto<List<GetPostsResponseDto>> getAllPosts(Long memberId, PageRequestDto pageRequestDto) {
-        // pageRequest 는 원하는 page, 한 page 당 size, 최신 순서 정렬 이라는 요청을 담고 있다.
-        PageRequest pageRequest = PageRequest.of(pageRequestDto.getPage(), pageRequestDto.getPageSize()
-                , Sort.by(Sort.Direction.DESC, "createdAt"));
-        // pageRequest 대로 Page<post>를 받아온다.
-        Page<Post> posts = postRepository.findAllWithDeleted(pageRequest);
-
+    public PageResponseDto<List<GetPostsResponseDto>> makeGetPostsResForm(Long memberId, Page<Post> posts) {
         List<GetPostsResponseDto> res = new ArrayList<>();
 
         // Page<Post>의 content 는 페이지 요청대로 가져온 List<Post>를 나타낸다.
         for (Post p : posts.getContent()) {
 
             res.add(new GetPostsResponseDto(
-                    makeGetPostResForm(memberId, p),getCommentService.getPreviewComments(p.getPostId())));
+                    makeGetPostResForm(memberId, p), getCommentService.getPreviewComments(p.getPostId())));
         }
 
         return new PageResponseDto<>(
                 posts.getNumber(), posts.getSize(), posts.hasNext(), res);
+    }
+
+    /**
+     * GetPostResponseDto, commentsList 를 가지는 GetPostsResponseDto 의  List 를
+     * PageResponseDto 로 감싸서 반환 하는 함수
+     */
+    @Override
+    public PageResponseDto<List<GetPostsResponseDto>> getAllPosts(Long memberId, PageRequestDto pageRequestDto) {
+        // pageRequest 대로 Page<post>를 받아온다.
+        Page<Post> posts = postRepository.findAllWithDeleted(pageReq(pageRequestDto));
+        return makeGetPostsResForm(memberId, posts);
+    }
+
+    @Override
+    public PageResponseDto<List<GetPostsResponseDto>> getPostsByNftId(Long memberId, Long nftId, PageRequestDto pageRequestDto) {
+        Page<Post> posts = postRepository.findByNftIdWithDeleted(nftId, pageReq(pageRequestDto));
+        return makeGetPostsResForm(memberId, posts);
     }
 }

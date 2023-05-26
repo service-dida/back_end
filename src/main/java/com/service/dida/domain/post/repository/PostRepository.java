@@ -19,4 +19,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query(value = "SELECT p FROM Post p WHERE p.deleted = false")
     Page<Post> findAllWithDeleted(PageRequest pageRequest);
+
+    @Query(value = "SELECT p FROM Post p WHERE p.nft.nftId = :nftId AND p.deleted = false")
+    Page<Post> findByNftIdWithDeleted(Long nftId, PageRequest pageRequest);
 }

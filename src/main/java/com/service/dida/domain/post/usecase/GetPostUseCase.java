@@ -10,4 +10,5 @@ import java.util.List;
 public interface GetPostUseCase {
     PostResponseDto.GetPostResponseDto makeGetPostResForm(Long memberId, Post post);
     PageResponseDto<List<PostResponseDto.GetPostsResponseDto>> getAllPosts(Long memberId, PageRequestDto pageRequestDto);
+    PageResponseDto<List<PostResponseDto.GetPostsResponseDto>> getPostsByNftId(Long memberId, Long nftId, PageRequestDto pageRequestDto);
 }
