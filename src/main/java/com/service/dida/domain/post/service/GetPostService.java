@@ -14,6 +14,8 @@ import com.service.dida.domain.post.repository.PostRepository;
 import com.service.dida.domain.post.usecase.GetPostUseCase;
 import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
+import com.service.dida.global.config.exception.BaseException;
+import com.service.dida.global.config.exception.errorCode.PostErrorCode;
 import com.service.dida.global.util.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -97,6 +99,7 @@ public class GetPostService implements GetPostUseCase {
      * List<GetPostsResponseDto> 을 만드는 함수
      * GetPostsResponseDto 는 GetPostResponseDto 에 댓글 미리보기인 List<GetCommentResponseDto>를 추가한 형태이다.
      */
+    @Override
     public PageResponseDto<List<GetPostsResponseDto>> makeGetPostsResForm(Long memberId, Page<Post> posts) {
         List<GetPostsResponseDto> res = new ArrayList<>();
 
@@ -128,5 +131,15 @@ public class GetPostService implements GetPostUseCase {
     public PageResponseDto<List<GetPostsResponseDto>> getPostsByNftId(Long memberId, Long nftId, PageRequestDto pageRequestDto) {
         Page<Post> posts = postRepository.findByNftIdWithDeleted(nftId, pageReq(pageRequestDto));
         return makeGetPostsResForm(memberId, posts);
+    }
+
+    /**
+     * 게시글을 상세 조회하는 함수
+     */
+    @Override
+    public GetPostResponseDto getPost(Long memberId, Long postId) {
+        Post post = postRepository.findByPostIdWithDeleted(postId)
+                .orElseThrow(() -> new BaseException(PostErrorCode.EMPTY_POST));
+        return makeGetPostResForm(memberId, post);
     }
 }
