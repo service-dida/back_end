@@ -1,19 +1,29 @@
 package com.service.dida.domain.member.entity;
 
-import com.service.dida.domain.member.Role;
-import com.service.dida.domain.wallet.Wallet;
-import com.service.dida.global.common.BaseEntity;
 import com.service.dida.domain.like.Like;
 import com.service.dida.domain.market.Market;
+import com.service.dida.domain.member.Role;
 import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.post.Post;
-import jakarta.persistence.*;
+import com.service.dida.domain.wallet.Wallet;
+import com.service.dida.global.common.BaseEntity;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Builder
@@ -77,5 +87,9 @@ public class Member extends BaseEntity {
 
     public void changeRole(Role role) {
         this.role = role;
+    }
+
+    public void changeDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 }

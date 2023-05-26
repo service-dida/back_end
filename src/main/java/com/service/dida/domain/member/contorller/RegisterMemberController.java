@@ -34,7 +34,7 @@ public class RegisterMemberController {
     /**
      * 소셜 회원가입
      */
-    @PostMapping("/member")
+    @PostMapping("/user")
     public ResponseEntity<MemberResponseDto.TokenInfo> register(
         @Valid @RequestBody MemberRequestDto.RegisterMember registerMember
     ) {

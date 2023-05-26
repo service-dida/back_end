@@ -1,7 +1,8 @@
 package com.service.dida.domain.member.service;
 
-import com.service.dida.domain.member.entity.Member;
+import com.service.dida.domain.member.dto.MemberRequestDto.UpdateDeviceToken;
 import com.service.dida.domain.member.dto.MemberResponseDto.TokenInfo;
+import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.member.repository.MemberRepository;
 import com.service.dida.domain.member.usecase.UpdateMemberUseCase;
 import com.service.dida.global.config.exception.BaseException;
@@ -26,5 +27,12 @@ public class UpdateMemberService implements UpdateMemberUseCase {
             .accessToken(jwtTokenProvider.generateAccessToken(member.getMemberId()))
             .refreshToken(member.getRefreshToken())
             .build();
+    }
+
+    @Override
+    public void updateDeviceToken(Long memberId, UpdateDeviceToken updateDeviceToken) {
+        Member member = memberRepository.findByMemberId(memberId)
+            .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER));
+        member.changeDeviceToken(updateDeviceToken.getDeviceToken());
     }
 }

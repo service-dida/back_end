@@ -1,5 +1,6 @@
 package com.service.dida.domain.member.contorller;
 
+import com.service.dida.domain.member.dto.MemberRequestDto;
 import com.service.dida.domain.member.dto.MemberResponseDto;
 import com.service.dida.domain.member.usecase.UpdateMemberUseCase;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,5 +26,14 @@ public class UpdateMemberController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return new ResponseEntity<>(updateMemberUseCase.refreshAccessToken(authentication),
             HttpStatus.OK);
+    }
+
+    @PatchMapping("/member/device")
+    public ResponseEntity<Integer> updateDeviceToken(
+        @RequestBody MemberRequestDto.UpdateDeviceToken updateDeviceToken) {
+        updateMemberUseCase.updateDeviceToken(
+            (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal(),
+            updateDeviceToken);
+        return new ResponseEntity<>(200, HttpStatus.OK);
     }
 }
