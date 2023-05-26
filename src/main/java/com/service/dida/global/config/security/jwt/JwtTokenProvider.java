@@ -1,7 +1,7 @@
 package com.service.dida.global.config.security.jwt;
 
-import com.service.dida.domain.user.dto.MemberResponseDto;
-import com.service.dida.domain.user.dto.MemberResponseDto.TokenInfo;
+import com.service.dida.domain.member.dto.MemberResponseDto;
+import com.service.dida.domain.member.dto.MemberResponseDto.TokenInfo;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.AuthErrorCode;
 import com.service.dida.global.config.security.auth.PrincipalDetails;

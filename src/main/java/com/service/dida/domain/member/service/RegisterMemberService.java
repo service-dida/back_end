@@ -1,14 +1,14 @@
-package com.service.dida.domain.user.service;
+package com.service.dida.domain.member.service;
 
-import com.service.dida.domain.user.Role;
-import com.service.dida.domain.user.dto.MemberRequestDto.CheckNickname;
-import com.service.dida.domain.user.dto.MemberRequestDto.RegisterMember;
-import com.service.dida.domain.user.dto.MemberRequestDto.SocialLoginToken;
-import com.service.dida.domain.user.dto.MemberResponseDto;
-import com.service.dida.domain.user.dto.MemberResponseDto.TokenInfo;
-import com.service.dida.domain.user.entity.Member;
-import com.service.dida.domain.user.repository.MemberRepository;
-import com.service.dida.domain.user.usecase.RegisterMemberUseCase;
+import com.service.dida.domain.member.Role;
+import com.service.dida.domain.member.dto.MemberRequestDto.CheckNickname;
+import com.service.dida.domain.member.dto.MemberRequestDto.RegisterMember;
+import com.service.dida.domain.member.dto.MemberRequestDto.SocialLoginToken;
+import com.service.dida.domain.member.dto.MemberResponseDto;
+import com.service.dida.domain.member.dto.MemberResponseDto.TokenInfo;
+import com.service.dida.domain.member.entity.Member;
+import com.service.dida.domain.member.repository.MemberRepository;
+import com.service.dida.domain.member.usecase.RegisterMemberUseCase;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.UserErrorCode;
 import com.service.dida.global.config.security.jwt.JwtTokenProvider;

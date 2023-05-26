@@ -1,6 +1,6 @@
-package com.service.dida.domain.user.entity;
+package com.service.dida.domain.member.entity;
 
-import com.service.dida.domain.user.Role;
+import com.service.dida.domain.member.Role;
 import com.service.dida.global.common.BaseEntity;
 import com.service.dida.domain.like.Like;
 import com.service.dida.domain.market.Market;
