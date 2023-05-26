@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum UserErrorCode implements ErrorCode {
+public enum MemberErrorCode implements ErrorCode {
     EMPTY_MEMBER("MEMBER_001", "존재하지 않는 사용자입니다.",HttpStatus.CONFLICT),
     UN_REGISTERED_MEMBER("MEMBER_002", "",HttpStatus.OK),
     DUPLICATE_MEMBER("MEMBER_003", "중복된 사용자입니다.",HttpStatus.CONFLICT),

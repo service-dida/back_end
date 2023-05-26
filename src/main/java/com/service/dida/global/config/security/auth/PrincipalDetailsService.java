@@ -1,7 +1,7 @@
 package com.service.dida.global.config.security.auth;
 
 import com.service.dida.global.config.exception.BaseException;
-import com.service.dida.global.config.exception.errorCode.UserErrorCode;
+import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 import com.service.dida.domain.user.entity.Member;
 import com.service.dida.domain.user.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class PrincipalDetailsService implements UserDetailsService {
     @Override
     public PrincipalDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member memberEntity = memberRepository.findByMemberId(Long.parseLong(username))
-            .orElseThrow(() -> new BaseException(UserErrorCode.EMPTY_MEMBER));
+            .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER));
         return new PrincipalDetails(memberEntity);
     }
 }

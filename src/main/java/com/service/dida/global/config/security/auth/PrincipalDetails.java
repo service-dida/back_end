@@ -20,7 +20,7 @@ public class PrincipalDetails implements UserDetails {
         return new BCryptPasswordEncoder();
     }
 
-    public Long getUserId() {
+    public Long getMemberId() {
         return this.member.getMemberId();
     }
 
