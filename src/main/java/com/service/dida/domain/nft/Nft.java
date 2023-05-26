@@ -61,7 +61,4 @@ public class Nft extends BaseEntity {
     @OneToMany(mappedBy = "nft", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Like> likes;
 
-    public boolean isValidated() {
-        return !this.isDeleted();
-    }
 }

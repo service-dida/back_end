@@ -67,10 +67,6 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Like> likes;
 
-    public boolean isValidated() {
-        return !this.isDeleted();
-    }
-
     public void changeRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }

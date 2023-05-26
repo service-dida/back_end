@@ -53,7 +53,7 @@ public class MarketService {
         List<Nft> nfts = likeRepository.getHotItems((Pageable) PageRequest.of(0, 20)).orElse(null);
         if (nfts != null) {
             for (Nft nft : nfts) {
-                if (nft.isValidated()) {
+                if (nft.isDeleted()) {
                     continue;
                 }
                 hotItems.add(makeHotItemForm(nft));
@@ -67,10 +67,9 @@ public class MarketService {
 
 
     public GetMainPageWithoutSoldOut getMainPage(Long memberId) {
-        Member member = memberRepository.findByMemberId(memberId).orElse(null);
-        if (member.isValidated()) {
-            throw new BaseException(MemberErrorCode.EMPTY_MEMBER);
-        }
+        Member member = memberRepository.findByMemberIdWithDeleted((memberId))
+                .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER));
+
         List<GetHotItem> hotItems = new ArrayList<>();
         List<GetHotSeller> hotSellers = new ArrayList<>();
         List<GetRecentNft> recentNfts = new ArrayList<>();
