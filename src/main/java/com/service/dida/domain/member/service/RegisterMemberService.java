@@ -1,16 +1,16 @@
-package com.service.dida.domain.user.service;
+package com.service.dida.domain.member.service;
 
-import com.service.dida.domain.user.Role;
-import com.service.dida.domain.user.dto.MemberRequestDto.CheckNickname;
-import com.service.dida.domain.user.dto.MemberRequestDto.RegisterMember;
-import com.service.dida.domain.user.dto.MemberRequestDto.SocialLoginToken;
-import com.service.dida.domain.user.dto.MemberResponseDto;
-import com.service.dida.domain.user.dto.MemberResponseDto.TokenInfo;
-import com.service.dida.domain.user.entity.Member;
-import com.service.dida.domain.user.repository.MemberRepository;
-import com.service.dida.domain.user.usecase.RegisterMemberUseCase;
+import com.service.dida.domain.member.Role;
+import com.service.dida.domain.member.dto.MemberRequestDto.CheckNickname;
+import com.service.dida.domain.member.dto.MemberRequestDto.RegisterMember;
+import com.service.dida.domain.member.dto.MemberRequestDto.SocialLoginToken;
+import com.service.dida.domain.member.dto.MemberResponseDto;
+import com.service.dida.domain.member.dto.MemberResponseDto.TokenInfo;
+import com.service.dida.domain.member.entity.Member;
+import com.service.dida.domain.member.repository.MemberRepository;
+import com.service.dida.domain.member.usecase.RegisterMemberUseCase;
 import com.service.dida.global.config.exception.BaseException;
-import com.service.dida.global.config.exception.errorCode.UserErrorCode;
+import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 import com.service.dida.global.config.security.jwt.JwtTokenProvider;
 import com.service.dida.global.config.security.oauth.helper.SocialLoginType;
 import com.service.dida.global.config.security.oauth.service.AppleLoginService;
@@ -73,7 +73,7 @@ public class RegisterMemberService implements RegisterMemberUseCase {
             member.changeRefreshToken(tokenInfo.getRefreshToken());
             return tokenInfo;
         } else {
-            BaseException exception = new BaseException(UserErrorCode.UN_REGISTERED_MEMBER);
+            BaseException exception = new BaseException(MemberErrorCode.UN_REGISTERED_MEMBER);
             exception.setEmailMessage(email);
             throw exception;
         }
@@ -88,11 +88,11 @@ public class RegisterMemberService implements RegisterMemberUseCase {
     public void checkRegister(RegisterMember registerMember) {
         Boolean flag = memberRepository.existsByEmail(registerMember.getEmail()).orElse(false);
         if (flag) {
-            throw new BaseException(UserErrorCode.DUPLICATE_MEMBER);
+            throw new BaseException(MemberErrorCode.DUPLICATE_MEMBER);
         }
         flag = memberRepository.existsByNickname(registerMember.getNickname()).orElse(false);
         if (flag) {
-            throw new BaseException(UserErrorCode.DUPLICATE_NICKNAME);
+            throw new BaseException(MemberErrorCode.DUPLICATE_NICKNAME);
         }
     }
 }

@@ -4,7 +4,7 @@ import com.service.dida.global.common.BaseEntity;
 import com.service.dida.domain.like.Like;
 import com.service.dida.domain.market.Market;
 import com.service.dida.domain.post.Post;
-import com.service.dida.domain.user.entity.Member;
+import com.service.dida.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

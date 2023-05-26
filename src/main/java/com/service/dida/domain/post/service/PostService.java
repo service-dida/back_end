@@ -7,12 +7,12 @@ import com.service.dida.domain.post.dto.EditPostReq;
 import com.service.dida.domain.post.dto.PostPostReq;
 import com.service.dida.domain.post.repository.PostRepository;
 import com.service.dida.domain.post.usecase.PostUseCase;
-import com.service.dida.domain.user.entity.Member;
-import com.service.dida.domain.user.repository.MemberRepository;
+import com.service.dida.domain.member.entity.Member;
+import com.service.dida.domain.member.repository.MemberRepository;
 import com.service.dida.global.config.exception.BaseException;
+import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 import com.service.dida.global.config.exception.errorCode.NftErrorCode;
 import com.service.dida.global.config.exception.errorCode.PostErrorCode;
-import com.service.dida.global.config.exception.errorCode.UserErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class PostService implements PostUseCase {
     public void createPost(Long userId, PostPostReq postPostReq) {
         Member member = memberRepository.findByMemberId(userId).orElse(null);
         if (member == null || member.isDeleted()) {
-            throw new BaseException(UserErrorCode.EMPTY_MEMBER);
+            throw new BaseException(MemberErrorCode.EMPTY_MEMBER);
         }
         Nft nft = nftRepository.findByNftId(postPostReq.getNftId()).orElse(null);
         if (nft == null || nft.isDeleted()) {
