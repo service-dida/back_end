@@ -69,7 +69,8 @@ public class GetPostService implements GetPostUseCase {
     }
 
     /**
-     * PostInfo, MemberInfo, NftInfo 를 가지는 GetPostResponseDto 형태를 만들어주는 함수
+     * 1개의 Post 를 GetPostResponseDto 형태로 만들어주는 함수
+     * GetPostResponseDto 는 PostInfo, MemberInfo, NftInfo, type 을 가진다.
      */
     @Override
     public GetPostResponseDto makeGetPostResForm(Long memberId, Post post) {
@@ -93,14 +94,14 @@ public class GetPostService implements GetPostUseCase {
     }
 
     /**
-     *
+     * List<GetPostsResponseDto> 을 만드는 함수
+     * GetPostsResponseDto 는 GetPostResponseDto 에 댓글 미리보기인 List<GetCommentResponseDto>를 추가한 형태이다.
      */
     public PageResponseDto<List<GetPostsResponseDto>> makeGetPostsResForm(Long memberId, Page<Post> posts) {
         List<GetPostsResponseDto> res = new ArrayList<>();
 
         // Page<Post>의 content 는 페이지 요청대로 가져온 List<Post>를 나타낸다.
         for (Post p : posts.getContent()) {
-
             res.add(new GetPostsResponseDto(
                     makeGetPostResForm(memberId, p), getCommentService.getPreviewComments(p.getPostId())));
         }
@@ -110,16 +111,19 @@ public class GetPostService implements GetPostUseCase {
     }
 
     /**
-     * GetPostResponseDto, commentsList 를 가지는 GetPostsResponseDto 의  List 를
-     * PageResponseDto 로 감싸서 반환 하는 함수
+     * 최신 게시글(삭제 제외)을 페이지 요청에 맞게 가져오는 함수
+     * List<GetPostsResponseDto> 를 PageResponseDto 로 감싸서 반환
      */
     @Override
     public PageResponseDto<List<GetPostsResponseDto>> getAllPosts(Long memberId, PageRequestDto pageRequestDto) {
-        // pageRequest 대로 Page<post>를 받아온다.
         Page<Post> posts = postRepository.findAllWithDeleted(pageReq(pageRequestDto));
         return makeGetPostsResForm(memberId, posts);
     }
 
+    /**
+     * nftId를 받아 해당 NFT에 달린 게시글(삭제 제외)을 페이지 요청에 맞게 가져오는 함수
+     * List<GetPostsResponseDto> 를 PageResponseDto 로 감싸서 반환
+     */
     @Override
     public PageResponseDto<List<GetPostsResponseDto>> getPostsByNftId(Long memberId, Long nftId, PageRequestDto pageRequestDto) {
         Page<Post> posts = postRepository.findByNftIdWithDeleted(nftId, pageReq(pageRequestDto));
