@@ -19,9 +19,7 @@ public class GetMemberService implements GetMemberUseCase {
     private final MailUseCase mailUseCase;
 
     @Override
-    public SendAuthEmailDto sendAuthMail(Authentication authentication) {
-        Member member = memberRepository.findByMemberId((Long) authentication.getPrincipal())
-            .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER));
+    public SendAuthEmailDto sendAuthMail(Member member) {
         return new SendAuthEmailDto(mailUseCase.sendAuthMail(member.getEmail()));
     }
 }

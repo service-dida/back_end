@@ -1,8 +1,15 @@
 package com.service.dida.domain.member.usecase;
 
+import com.service.dida.domain.member.dto.MemberRequestDto;
 import com.service.dida.domain.member.dto.MemberResponseDto;
+import com.service.dida.domain.member.entity.Member;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 
 public interface UpdateMemberUseCase {
-    MemberResponseDto.TokenInfo refreshAccessToken(Authentication authentication);
+    MemberResponseDto.TokenInfo refreshAccessToken(Member member);
+
+    void updateDeviceToken(Member member, MemberRequestDto.UpdateDeviceToken updateDeviceToken);
+
+    void deleteMember(Member member);
 }
