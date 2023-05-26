@@ -5,8 +5,9 @@ import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.member.repository.MemberRepository;
 import com.service.dida.domain.wallet.Wallet;
 import com.service.dida.domain.wallet.dto.WalletRequestDto;
+import com.service.dida.domain.wallet.dto.WalletResponseDto;
 import com.service.dida.domain.wallet.repository.WalletRepository;
-import com.service.dida.domain.wallet.usecase.RegisterWalletUseCase;
+import com.service.dida.domain.wallet.usecase.WalletUseCase;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 import com.service.dida.global.config.exception.errorCode.WalletErrorCode;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class RegisterWalletService implements RegisterWalletUseCase {
+public class WalletService implements WalletUseCase {
 
     private final MemberRepository memberRepository;
     private final WalletRepository walletRepository;
@@ -53,6 +54,13 @@ public class RegisterWalletService implements RegisterWalletUseCase {
         } else {
             throw new BaseException(WalletErrorCode.WRONG_PWD);
         }
+    }
+
+    @Override
+    public WalletResponseDto isExistWallet(Long memberId) {
+        return new WalletResponseDto(
+            walletRepository.existsWalletByMember(memberRepository.findByMemberId(memberId).get())
+                .orElse(false));
     }
 
     public boolean checkPassword(WalletRequestDto walletRequestDto) {
