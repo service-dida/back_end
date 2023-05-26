@@ -23,7 +23,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String refreshToken = jwtTokenProvider.resolveRefreshToken((HttpServletRequest) request);
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
         if (refreshToken != null && ((HttpServletRequest) request).getRequestURI()
-            .equals("/user/refresh") && jwtTokenProvider.validateRefreshToken(refreshToken)) {
+            .equals("/common/refresh") && jwtTokenProvider.validateRefreshToken(refreshToken)) {
             Authentication authentication = jwtTokenProvider.getRefreshAuthentication(refreshToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } else if (token != null && jwtTokenProvider.validateToken(token)) {
