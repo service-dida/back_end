@@ -5,7 +5,7 @@ import com.service.dida.domain.member.dto.MemberResponseDto.TokenInfo;
 import com.service.dida.domain.member.repository.MemberRepository;
 import com.service.dida.domain.member.usecase.UpdateMemberUseCase;
 import com.service.dida.global.config.exception.BaseException;
-import com.service.dida.global.config.exception.errorCode.UserErrorCode;
+import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 import com.service.dida.global.config.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -22,7 +22,7 @@ public class UpdateMemberService implements UpdateMemberUseCase {
     public TokenInfo refreshAccessToken(Authentication authentication) {
         Member member = memberRepository.findByMemberId((Long) authentication.getPrincipal()).orElse(null);
         if (member == null || member.isDeleted()) {
-            throw new BaseException(UserErrorCode.EMPTY_MEMBER);
+            throw new BaseException(MemberErrorCode.EMPTY_MEMBER);
         }
         return TokenInfo.builder()
             .accessToken(jwtTokenProvider.generateAccessToken(member.getMemberId()))
