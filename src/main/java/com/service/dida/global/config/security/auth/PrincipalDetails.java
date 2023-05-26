@@ -20,8 +20,8 @@ public class PrincipalDetails implements UserDetails {
         return new BCryptPasswordEncoder();
     }
 
-    public Long getMemberId() {
-        return this.member.getMemberId();
+    public Member getMember() {
+        return this.member;
     }
 
     @Override
