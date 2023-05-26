@@ -1,9 +1,9 @@
 package com.service.dida.domain.user.service;
 
 import com.service.dida.domain.user.dto.SendAuthEmailDto;
-import com.service.dida.domain.user.entity.User;
-import com.service.dida.domain.user.repository.UserRepository;
-import com.service.dida.domain.user.usecase.GetUserUseCase;
+import com.service.dida.domain.user.entity.Member;
+import com.service.dida.domain.user.repository.MemberRepository;
+import com.service.dida.domain.user.usecase.GetMemberUseCase;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.UserErrorCode;
 import com.service.dida.global.util.mail.MailUseCase;
@@ -13,17 +13,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class GetUserService implements GetUserUseCase {
+public class GetMemberService implements GetMemberUseCase {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final MailUseCase mailUseCase;
 
     @Override
     public SendAuthEmailDto sendAuthMail(Authentication authentication) {
-        User user = userRepository.findByUserId((Long) authentication.getPrincipal()).orElse(null);
-        if (user == null || user.isDeleted()) {
+        Member member = memberRepository.findByMemberId((Long) authentication.getPrincipal()).orElse(null);
+        if (member == null || member.isDeleted()) {
             throw new BaseException(UserErrorCode.EMPTY_MEMBER);
         }
-        return new SendAuthEmailDto(mailUseCase.sendAuthMail(user.getEmail()));
+        return new SendAuthEmailDto(mailUseCase.sendAuthMail(member.getEmail()));
     }
 }

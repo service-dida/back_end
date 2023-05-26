@@ -1,7 +1,7 @@
 package com.service.dida.global.config.security.jwt;
 
-import com.service.dida.domain.user.dto.UserResponseDto;
-import com.service.dida.domain.user.dto.UserResponseDto.TokenInfo;
+import com.service.dida.domain.user.dto.MemberResponseDto;
+import com.service.dida.domain.user.dto.MemberResponseDto.TokenInfo;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.AuthErrorCode;
 import com.service.dida.global.config.security.auth.PrincipalDetails;
@@ -47,9 +47,9 @@ public class JwtTokenProvider {
         refreshSecretKey = Base64.getEncoder().encodeToString(refreshSecretKey.getBytes());
     }
 
-    public String generateAccessToken(Long userId) {
+    public String generateAccessToken(Long memberId) {
         Claims claims = Jwts.claims();
-        claims.put("userId", userId);
+        claims.put("memberId", memberId);
 
         Date now = new Date();
         Date accessTokenExpirationTime = new Date(now.getTime() + TOKEN_VALID_TIME);
@@ -62,14 +62,14 @@ public class JwtTokenProvider {
             .compact();
     }
 
-    public UserResponseDto.TokenInfo generateToken(Long userId) {
+    public MemberResponseDto.TokenInfo generateToken(Long memberId) {
         Claims claims = Jwts.claims();
-        claims.put("userId", userId);
+        claims.put("memberId", memberId);
 
         Date now = new Date();
         Date refreshTokenExpirationTime = new Date(now.getTime() + REF_TOKEN_VALID_TIME);
 
-        String accessToken = generateAccessToken(userId);
+        String accessToken = generateAccessToken(memberId);
         String refreshToken = Jwts.builder()
             .setClaims(claims)
             .setIssuedAt(now) // 토큰 발행 시간 정보
@@ -87,7 +87,7 @@ public class JwtTokenProvider {
         try {
             PrincipalDetails principalDetails = principalDetailsService.loadUserByUsername(
                 getUserIdByToken(token));
-            return new UsernamePasswordAuthenticationToken(principalDetails.getUserId(),
+            return new UsernamePasswordAuthenticationToken(principalDetails.getMemberId(),
                 "", principalDetails.getAuthorities());
         } catch (UsernameNotFoundException exception) {
             throw new BaseException(AuthErrorCode.UNSUPPORTED_JWT);
@@ -98,7 +98,7 @@ public class JwtTokenProvider {
         try {
             PrincipalDetails principalDetails = principalDetailsService.loadUserByUsername(
                 getUserIdByRefreshToken(token));
-            return new UsernamePasswordAuthenticationToken(principalDetails.getUserId(),
+            return new UsernamePasswordAuthenticationToken(principalDetails.getMemberId(),
                 "", principalDetails.getAuthorities());
         } catch (UsernameNotFoundException exception) {
             throw new BaseException(AuthErrorCode.UNSUPPORTED_JWT);
@@ -107,12 +107,12 @@ public class JwtTokenProvider {
 
     public String getUserIdByToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecretKey).parseClaimsJws(token).
-            getBody().get("userId").toString();
+            getBody().get("memberId").toString();
     }
 
     public String getUserIdByRefreshToken(String token) {
         return Jwts.parser().setSigningKey(refreshSecretKey).parseClaimsJws(token).
-            getBody().get("userId").toString();
+            getBody().get("memberId").toString();
     }
 
     public String resolveToken(HttpServletRequest request) {

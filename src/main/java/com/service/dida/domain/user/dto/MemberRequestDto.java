@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-public class UserRequestDto {
+public class MemberRequestDto {
 
     @Getter
     @NoArgsConstructor

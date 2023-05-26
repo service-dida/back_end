@@ -2,7 +2,7 @@ package com.service.dida.domain.market;
 
 import com.service.dida.global.common.BaseEntity;
 import com.service.dida.domain.nft.Nft;
-import com.service.dida.domain.user.entity.User;
+import com.service.dida.domain.user.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +32,6 @@ public class Market extends BaseEntity {
     private Nft nft;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 }

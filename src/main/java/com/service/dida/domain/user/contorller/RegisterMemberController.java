@@ -1,8 +1,8 @@
 package com.service.dida.domain.user.contorller;
 
-import com.service.dida.domain.user.dto.UserRequestDto;
-import com.service.dida.domain.user.dto.UserResponseDto;
-import com.service.dida.domain.user.usecase.RegisterUserUseCase;
+import com.service.dida.domain.user.dto.MemberRequestDto;
+import com.service.dida.domain.user.dto.MemberResponseDto;
+import com.service.dida.domain.user.usecase.RegisterMemberUseCase;
 import com.service.dida.global.config.security.oauth.helper.SocialLoginType;
 import jakarta.validation.Valid;
 import java.io.IOException;
@@ -16,29 +16,29 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class RegisterUserController {
+public class RegisterMemberController {
 
-    private final RegisterUserUseCase registerUserUseCase;
+    private final RegisterMemberUseCase registerMemberUseCase;
 
     /**
      * 소셜 로그인
      */
     @PostMapping("/{socialLoginType}/login")
-    public ResponseEntity<UserResponseDto.TokenInfo> socialLogin(
+    public ResponseEntity<MemberResponseDto.TokenInfo> socialLogin(
         @PathVariable(name = "socialLoginType") SocialLoginType socialLoginType,
-        @Valid @RequestBody UserRequestDto.SocialLoginToken socialLoginToken) throws IOException {
+        @Valid @RequestBody MemberRequestDto.SocialLoginToken socialLoginToken) throws IOException {
         return new ResponseEntity<>(
-            registerUserUseCase.socialLogin(socialLoginType, socialLoginToken), HttpStatus.OK);
+            registerMemberUseCase.socialLogin(socialLoginType, socialLoginToken), HttpStatus.OK);
     }
 
     /**
      * 소셜 회원가입
      */
     @PostMapping("/member")
-    public ResponseEntity<UserResponseDto.TokenInfo> register(
-        @Valid @RequestBody UserRequestDto.RegisterMember registerMember
+    public ResponseEntity<MemberResponseDto.TokenInfo> register(
+        @Valid @RequestBody MemberRequestDto.RegisterMember registerMember
     ) {
-        return new ResponseEntity<>(registerUserUseCase.registerMember(registerMember),
+        return new ResponseEntity<>(registerMemberUseCase.registerMember(registerMember),
             HttpStatus.OK);
     }
 
@@ -46,9 +46,9 @@ public class RegisterUserController {
      * 닉네임 중복 확인
      */
     @PostMapping("/nickname")
-    public ResponseEntity<UserResponseDto.CheckNickname> checkNickname(
-        @Valid @RequestBody UserRequestDto.CheckNickname checkNickname) {
-        return new ResponseEntity<>(registerUserUseCase.checkNickname(checkNickname),
+    public ResponseEntity<MemberResponseDto.CheckNickname> checkNickname(
+        @Valid @RequestBody MemberRequestDto.CheckNickname checkNickname) {
+        return new ResponseEntity<>(registerMemberUseCase.checkNickname(checkNickname),
             HttpStatus.OK);
     }
 

@@ -10,7 +10,7 @@ import lombok.Getter;
 public class GetHotItem {
     private Long nftId;         // NFT ID
     private String nftImgUrl;   // NFT 이미지 주소
-    private String userName;    // 유저 이름
+    private String nftName;     // NFT 이름
     private String price;       // NFT 가격
     private String likeCount;   // 좋아요 수
 }

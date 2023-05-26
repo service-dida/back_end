@@ -1,6 +1,6 @@
 package com.service.dida.global.config.security.auth;
 
-import com.service.dida.domain.user.entity.User;
+import com.service.dida.domain.user.entity.Member;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,24 +10,24 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class PrincipalDetails implements UserDetails {
 
-    private User user;
+    private Member member;
 
-    public PrincipalDetails(User user) {
-        this.user = user;
+    public PrincipalDetails(Member member) {
+        this.member = member;
     }
 
     public BCryptPasswordEncoder encodePwd() {
         return new BCryptPasswordEncoder();
     }
 
-    public Long getUserId() {
-        return this.user.getUserId();
+    public Long getMemberId() {
+        return this.member.getMemberId();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
+        authorities.add(new SimpleGrantedAuthority(member.getRole().toString()));
         return authorities;
     }
 
@@ -38,7 +38,7 @@ public class PrincipalDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return member.getEmail();
     }
 
     @Override
@@ -58,6 +58,6 @@ public class PrincipalDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return !user.isDeleted();
+        return !member.isDeleted();
     }
 }

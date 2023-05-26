@@ -2,13 +2,13 @@ package com.service.dida.domain.user.repository;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.service.dida.domain.user.entity.User;
+import com.service.dida.domain.user.entity.Member;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Optional<User> findByUserId(Long userId);
+    Optional<Member> findByMemberId(Long memberId);
 
-    Optional<User> findByEmail(String email);
+    Optional<Member> findByEmail(String email);
 
     Optional<Boolean> existsByEmail(String email);
 
