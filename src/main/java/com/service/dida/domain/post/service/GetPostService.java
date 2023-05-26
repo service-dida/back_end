@@ -12,6 +12,7 @@ import com.service.dida.domain.post.dto.PostResponseDto.GetPostResponseDto;
 import com.service.dida.domain.post.dto.PostResponseDto.GetPostsResponseDto;
 import com.service.dida.domain.post.repository.PostRepository;
 import com.service.dida.domain.post.usecase.GetPostUseCase;
+import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
 import com.service.dida.global.util.UtilService;
 import lombok.RequiredArgsConstructor;
@@ -86,21 +87,23 @@ public class GetPostService implements GetPostUseCase {
      * PageResponseDto 로 감싸서 반환 하는 함수
      */
     @Override
-    public PageResponseDto<List<GetPostsResponseDto>> getAllPosts(Long memberId, int page) {
+    public PageResponseDto<List<GetPostsResponseDto>> getAllPosts(Long memberId, PageRequestDto pageRequestDto) {
         // pageRequest 는 원하는 page, 한 page 당 size, 최신 순서 정렬 이라는 요청을 담고 있다.
-        PageRequest pageRequest = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "createdAt"));
+        PageRequest pageRequest = PageRequest.of(pageRequestDto.getPage(), pageRequestDto.getPageSize()
+                , Sort.by(Sort.Direction.DESC, "createdAt"));
         // pageRequest 대로 Page<post>를 받아온다.
-        Page<Post> posts = postRepository.findAll(pageRequest);
+        Page<Post> posts = postRepository.findAllWithDeleted(pageRequest);
 
         List<GetPostsResponseDto> res = new ArrayList<>();
 
         // Page<Post>의 content 는 페이지 요청대로 가져온 List<Post>를 나타낸다.
         for (Post p : posts.getContent()) {
+
             res.add(new GetPostsResponseDto(
                     makeGetPostResForm(memberId, p),getCommentService.getPreviewComments(p.getPostId())));
         }
 
         return new PageResponseDto<>(
-                page, posts.getSize(), posts.hasNext(), res);
+                posts.getNumber(), posts.getSize(), posts.hasNext(), res);
     }
 }
