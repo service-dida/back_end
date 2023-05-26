@@ -42,7 +42,7 @@ public class MarketService {
         return GetHotItem.builder()
                 .nftId(nft.getNftId())
                 .nftImgUrl(nft.getImgUrl())
-                .nftName(nft.getMember().getNickname())
+                .nftName(nft.getTitle())
                 .price(price)
                 .likeCount(like)
                 .build();
@@ -66,8 +66,8 @@ public class MarketService {
     }
 
 
-    public GetMainPageWithoutSoldOut getMainPage(Long userId) {
-        Member member = memberRepository.findByMemberId(userId).orElse(null);
+    public GetMainPageWithoutSoldOut getMainPage(Long memberId) {
+        Member member = memberRepository.findByMemberId(memberId).orElse(null);
         if (member.isValidated()) {
             throw new BaseException(MemberErrorCode.EMPTY_MEMBER);
         }

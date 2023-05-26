@@ -19,8 +19,8 @@ public class MarketController {
      */
     @GetMapping("/main")
     public ResponseEntity<GetMainPageWithoutSoldOut> getMainPage() throws BaseException {
-        Long userId = 0L;
-        return new ResponseEntity<GetMainPageWithoutSoldOut>(marketService.getMainPage(userId), HttpStatus.OK);
+        Long memberId = 0L;
+        return new ResponseEntity<GetMainPageWithoutSoldOut>(marketService.getMainPage(memberId), HttpStatus.OK);
     }
 
 }

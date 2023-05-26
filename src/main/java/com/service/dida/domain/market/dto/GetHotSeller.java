@@ -8,8 +8,8 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class GetHotSeller {
-    private Long userId;            // 유저 ID
-    private String userName;        // 유저 이름
-    private String userProfileUrl;  // 유저 프로필 이미지 주소
+    private Long memberId;          // member ID
+    private String memberName;        // member 이름
+    private String memberProfileUrl;  // member 프로필 이미지 주소
     private String nftImgUrl;       // NFT 이미지 주소
 }
