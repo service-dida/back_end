@@ -27,7 +27,7 @@ public class GetPostController {
      * [GET] /posts
      */
     @GetMapping("/posts")
-    public ResponseEntity<PageResponseDto<List<PostResponseDto.GetPostsResponseDto>>> getAllPosts(
+    public ResponseEntity<PageResponseDto<List<PostResponseDto.GetPostResponseDto>>> getAllPosts(
             @RequestBody PageRequestDto pageRequestDto)
             throws BaseException {
         Long memberId = 0L;
@@ -39,7 +39,7 @@ public class GetPostController {
      * [GET] /posts/{nftId}
      */
     @GetMapping("/posts/{nftId}")
-    public ResponseEntity<PageResponseDto<List<PostResponseDto.GetPostsResponseDto>>> getPostsByNft(
+    public ResponseEntity<PageResponseDto<List<PostResponseDto.GetPostResponseDto>>> getPostsByNft(
             @PathVariable("nftId") Long nftId, @RequestBody PageRequestDto pageRequestDto)
             throws BaseException {
         Long memberId = 0L;

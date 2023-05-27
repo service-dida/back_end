@@ -14,6 +14,5 @@ public class NftResponseDto {
         private String nftName;
         private String nftImgUrl;
         private String price;
-        private String ownerProfileImgUrl;
     }
 }

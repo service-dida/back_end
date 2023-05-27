@@ -9,9 +9,9 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface GetPostUseCase {
-    PostResponseDto.GetPostResponseDto makeGetPostResForm(Long memberId, Post post);
-    PageResponseDto<List<PostResponseDto.GetPostsResponseDto>> makeGetPostsResForm(Long memberId, Page<Post> posts);
-    PageResponseDto<List<PostResponseDto.GetPostsResponseDto>> getAllPosts(Long memberId, PageRequestDto pageRequestDto);
-    PageResponseDto<List<PostResponseDto.GetPostsResponseDto>> getPostsByNftId(Long memberId, Long nftId, PageRequestDto pageRequestDto);
+    PostResponseDto.GetPostResponseDto makeGetPostResForm(Long memberId, Post post, boolean comment);
+    PageResponseDto<List<PostResponseDto.GetPostResponseDto>> makePostListForm(Long memberId, Page<Post> posts, boolean comment);
+    PageResponseDto<List<PostResponseDto.GetPostResponseDto>> getAllPosts(Long memberId, PageRequestDto pageRequestDto);
+    PageResponseDto<List<PostResponseDto.GetPostResponseDto>> getPostsByNftId(Long memberId, Long nftId, PageRequestDto pageRequestDto);
     PostResponseDto.GetPostResponseDto getPost(Long memberId, Long postId);
 }

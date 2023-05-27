@@ -27,8 +27,10 @@ public class PostResponseDto {
         private MemberResponseDto.MemberInfo memberInfo;      // 게시글 작성자 관련 정보
         private NftResponseDto.NftInfo nftInfo;               // NFT 관련 정보
         private String type;                                  // 본인의 게시물인지
+        private List<CommentResponseDto.GetCommentsResponseDto> comments; // 미리보기 댓글, 최대 3개
     }
 
+    /**
     @Builder
     @Getter
     @AllArgsConstructor
@@ -37,6 +39,7 @@ public class PostResponseDto {
         // 미리보기 댓글, 최대 3개
         private List<CommentResponseDto.GetCommentsResponseDto> comments;
     }
+    */
 
 
 }
