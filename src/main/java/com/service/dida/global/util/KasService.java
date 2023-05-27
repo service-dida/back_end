@@ -1,7 +1,9 @@
 package com.service.dida.global.util;
 
+import com.service.dida.domain.nft.dto.NftRequestDto.PostNftRequestDto;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.ErrorCode;
+import com.service.dida.global.config.exception.errorCode.NftErrorCode;
 import com.service.dida.global.config.exception.errorCode.WalletErrorCode;
 import com.service.dida.global.config.properties.KasProperties;
 import java.io.IOException;
@@ -51,15 +53,37 @@ public class KasService {
     public String createAccount()
         throws BaseException, IOException, ParseException, InterruptedException {
         String url = "https://wallet-api.klaytnapi.com/v2/account";
-        return useKasApi(
-            url,
-            "POST",
-            HttpRequest.BodyPublishers.noBody(),
-            "address",
-            WalletErrorCode.FAILED_CREATE_WALLET
-        );
+        return useKasApi(url, "POST", HttpRequest.BodyPublishers.noBody(), "address",
+            WalletErrorCode.FAILED_CREATE_WALLET);
     }
 
+    public String uploadMetadata(PostNftRequestDto postNftRequestDto)
+        throws IOException, ParseException, InterruptedException {
+        String url = "https://metadata-api.klaytnapi.com/v1/metadata/";
+        HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(
+            "{\n  " +
+                "\"metadata\": {\n    " +
+                "\"name\": \"" + postNftRequestDto.getTitle() + "\",\n    " +
+                "\"description\": \"" + postNftRequestDto.getDescription() + "\",\n    " +
+                "\"image\": \"" + postNftRequestDto.getImage() + "\"" +
+                "\n  }\n" +
+                "}");
+        return useKasApi(url, "POST", body, "uri", NftErrorCode.FAILED_CREATE_METADATA);
+    }
+
+    public String createNft(String address, String id, String uri)
+        throws IOException, ParseException, InterruptedException {
+        String url = "https://kip17-api.klaytnapi.com/2/contract/" + kasProperties.getNftContract()
+            + "/token";
+        HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(
+            "{\n  " +
+                "\"to\": \"" + address + "\",\n  " +
+                "\"id\": \"" + id + "\",\n  " +
+                "\"uri\": \"" + uri + "\"\n" +
+                "}"
+        );
+        return useKasApi(url, "POST", body, "transactionHash", NftErrorCode.FAILED_CREATE_NFT);
+    }
 
     public JSONObject parseBody(HttpResponse<String> response) throws ParseException {
         JSONParser parser = new JSONParser();

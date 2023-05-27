@@ -5,6 +5,7 @@ import com.service.dida.domain.member.dto.MemberResponseDto;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.member.usecase.UpdateMemberUseCase;
 import com.service.dida.global.config.security.auth.CurrentMember;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class UpdateMemberController {
 
     @PatchMapping("/member/device")
     public ResponseEntity<Integer> updateDeviceToken(@CurrentMember Member member,
-        @RequestBody MemberRequestDto.UpdateDeviceToken updateDeviceToken) {
+        @Valid @RequestBody MemberRequestDto.UpdateDeviceToken updateDeviceToken) {
         updateMemberUseCase.updateDeviceToken(member, updateDeviceToken);
         return new ResponseEntity<>(200, HttpStatus.OK);
     }
