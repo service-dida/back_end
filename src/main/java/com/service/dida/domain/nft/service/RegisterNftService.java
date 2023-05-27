@@ -13,7 +13,7 @@ import com.service.dida.global.common.manage.ManageUseCase;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.WalletErrorCode;
 import com.service.dida.global.config.properties.KasProperties;
-import com.service.dida.global.util.KasService;
+import com.service.dida.global.util.usecase.KasUseCase;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 public class RegisterNftService implements RegisterNftUseCase {
 
     private final NftRepository nftRepository;
-    private final KasService kasService;
+    private final KasUseCase kasUseCase;
     private final ManageUseCase manageUseCase;
     private final KasProperties kasProperties;
     private final TransactionUseCase transactionUseCase;
@@ -65,9 +65,9 @@ public class RegisterNftService implements RegisterNftUseCase {
 
         // 사용료 납부 부분 없음
 
-        String uri = kasService.uploadMetadata(postNftRequestDto);
+        String uri = kasUseCase.uploadMetadata(postNftRequestDto);
         String id = Long.toHexString(manageUseCase.getNftIdAndPlusOne());
-        String transactionHash = kasService.createNft(wallet.getAddress(), id, uri);
+        String transactionHash = kasUseCase.createNft(wallet.getAddress(), id, uri);
         Long nftId = register(postNftRequestDto, id, kasProperties.getNftContractAddress(),
             transactionHash, false, member);
         transactionUseCase.saveMintingTransaction(

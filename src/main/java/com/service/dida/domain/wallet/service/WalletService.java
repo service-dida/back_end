@@ -11,7 +11,7 @@ import com.service.dida.domain.wallet.usecase.WalletUseCase;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 import com.service.dida.global.config.exception.errorCode.WalletErrorCode;
-import com.service.dida.global.util.KasService;
+import com.service.dida.global.util.usecase.KasUseCase;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class WalletService implements WalletUseCase {
 
     private final MemberRepository memberRepository;
     private final WalletRepository walletRepository;
-    private final KasService kasService;
+    private final KasUseCase kasUseCase;
 
     public void save(Wallet wallet) {
         walletRepository.save(wallet);
@@ -33,7 +33,7 @@ public class WalletService implements WalletUseCase {
 
     public void register(Member member, String payPwd)
         throws IOException, ParseException, InterruptedException {
-        String address = kasService.createAccount();
+        String address = kasUseCase.createAccount();
         Wallet wallet = Wallet.builder()
             .address(address)
             .payPwd(payPwd)

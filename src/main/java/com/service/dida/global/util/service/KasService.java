@@ -1,4 +1,4 @@
-package com.service.dida.global.util;
+package com.service.dida.global.util.service;
 
 import com.service.dida.domain.nft.dto.NftRequestDto.PostNftRequestDto;
 import com.service.dida.global.config.exception.BaseException;
@@ -6,6 +6,7 @@ import com.service.dida.global.config.exception.ErrorCode;
 import com.service.dida.global.config.exception.errorCode.NftErrorCode;
 import com.service.dida.global.config.exception.errorCode.WalletErrorCode;
 import com.service.dida.global.config.properties.KasProperties;
+import com.service.dida.global.util.usecase.KasUseCase;
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class KasService {
+public class KasService implements KasUseCase {
 
     private final KasProperties kasProperties;
 
@@ -50,6 +51,7 @@ public class KasService {
     }
 
     // 지갑 생성
+    @Override
     public String createAccount()
         throws BaseException, IOException, ParseException, InterruptedException {
         String url = "https://wallet-api.klaytnapi.com/v2/account";
@@ -57,6 +59,7 @@ public class KasService {
             WalletErrorCode.FAILED_CREATE_WALLET);
     }
 
+    @Override
     public String uploadMetadata(PostNftRequestDto postNftRequestDto)
         throws IOException, ParseException, InterruptedException {
         String url = "https://metadata-api.klaytnapi.com/v1/metadata/";
@@ -71,6 +74,7 @@ public class KasService {
         return useKasApi(url, "POST", body, "uri", NftErrorCode.FAILED_CREATE_METADATA);
     }
 
+    @Override
     public String createNft(String address, String id, String uri)
         throws IOException, ParseException, InterruptedException {
         String url = "https://kip17-api.klaytnapi.com/2/contract/" + kasProperties.getNftContract()
