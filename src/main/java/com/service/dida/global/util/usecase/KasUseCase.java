@@ -12,4 +12,7 @@ public interface KasUseCase {
 
     String createNft(String address, String id, String uri)
         throws IOException, ParseException, InterruptedException;
+
+    String sendNftOutside(String sendAddress, String receiveAddress, String id)
+        throws IOException, ParseException, InterruptedException;
 }

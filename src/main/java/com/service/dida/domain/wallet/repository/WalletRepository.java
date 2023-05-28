@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface WalletRepository extends JpaRepository<Wallet, Long> {
     Optional<Boolean> existsWalletByMember(Member member);
+
+    Optional<Boolean> existsWalletByAddress(String address);
 }

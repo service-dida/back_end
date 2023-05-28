@@ -11,6 +11,7 @@ public enum NftErrorCode implements ErrorCode {
     EMPTY_NFT("NFT_001", "유효하지 않는 NFT입니다.", HttpStatus.CONFLICT),
     FAILED_CREATE_METADATA("NFT_002", "메타데이터 생성에 실패하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     FAILED_CREATE_NFT("NFT_003", "NFT 생성에 실패하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    FAILED_SEND_NFT("NFT_004", "NFT 전송에 실패하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     ;
     private final String errorCode;
     private final String message;

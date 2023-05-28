@@ -13,8 +13,7 @@ public interface NftRepository extends JpaRepository<Nft, Long> {
     @Query(value = "select n from Nft n where n.nftId = :nftId and n.deleted = false")
     Optional<Nft> findByNftIdWithDeleted(Long nftId);
 
-    @Query(value = "select n from Nft n where n.nftId = :nftId and n.member = :Member and n.deleted = false")
+    @Query(value = "select n from Nft n where n.nftId = :nftId and n.member = :member and n.deleted = false")
     Optional<Nft> findByNftIdWithDeletedAndMember(Member member, Long nftId);
 
-    Optional<Nft> findByNftId(Long nftId);
 }

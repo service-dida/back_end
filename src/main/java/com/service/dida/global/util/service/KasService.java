@@ -89,6 +89,21 @@ public class KasService implements KasUseCase {
         return useKasApi(url, "POST", body, "transactionHash", NftErrorCode.FAILED_CREATE_NFT);
     }
 
+    @Override
+    public String sendNftOutside(String sendAddress, String receiveAddress, String id)
+        throws IOException, ParseException, InterruptedException {
+        String url = "https://kip17-api.klaytnapi.com/v2/contract" + kasProperties.getNftContract()
+            + "/token/" + id;
+        HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(
+            "{\n  " +
+                "\"sender\": \"" + sendAddress + "\",\n  " +
+                "\"owner\": \"" + sendAddress + "\",\n  " +
+                "\"to\": \"" + receiveAddress + "\"\n" +
+                "}"
+        );
+        return useKasApi(url, "POST", body, "transactionHash", NftErrorCode.FAILED_SEND_NFT);
+    }
+
     public JSONObject parseBody(HttpResponse<String> response) throws ParseException {
         JSONParser parser = new JSONParser();
         Object obj = parser.parse(response.body());
