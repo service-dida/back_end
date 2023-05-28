@@ -4,6 +4,7 @@ import com.service.dida.domain.comment.Comment;
 import com.service.dida.domain.comment.dto.CommentResponseDto.CommentInfo;
 import com.service.dida.domain.comment.dto.CommentResponseDto.GetCommentResponseDto;
 import com.service.dida.domain.comment.repository.CommentRepository;
+import com.service.dida.domain.comment.usecase.GetCommentUseCase;
 import com.service.dida.domain.member.dto.MemberResponseDto.MemberInfo;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.post.Post;
@@ -23,7 +24,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class GetCommentService {
+public class GetCommentService implements GetCommentUseCase {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
@@ -52,6 +53,7 @@ public class GetCommentService {
         return type;
     }
 
+    @Override
     public GetCommentResponseDto makeGetCommentResForm(Long memberId, Comment comment, boolean needType) {
         CommentInfo commentInfo = new CommentInfo(
                 comment.getCommentId(), comment.getContent());
@@ -71,6 +73,7 @@ public class GetCommentService {
                 .build();
     }
 
+    @Override
     public PageResponseDto<List<GetCommentResponseDto>> makeCommentListForm(Long memberId, Page<Comment> comments) {
         List<GetCommentResponseDto> res = new ArrayList<>();
 
@@ -86,6 +89,7 @@ public class GetCommentService {
      * 페이징 처리 필요 X, 본인 댓글 여부 필요 X
      * 최신순 조회 O
      */
+    @Override
     public List<GetCommentResponseDto> getPreviewComments(Long postId) {
         Post post = postRepository.findByPostIdWithDeleted(postId)
                 .orElseThrow(() -> new BaseException(PostErrorCode.EMPTY_POST));
@@ -109,6 +113,7 @@ public class GetCommentService {
     /**
      * postId를 받아 댓글을 페이징 처리하여 반환하는 함수
      */
+    @Override
     public PageResponseDto<List<GetCommentResponseDto>> getAllComments(Member member, Long postId, PageRequestDto pageRequestDto) {
         postRepository.findByPostIdWithDeleted(postId)
                 .orElseThrow(() -> new BaseException(PostErrorCode.EMPTY_POST));
