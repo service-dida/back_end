@@ -74,7 +74,7 @@ public class GetPostService implements GetPostUseCase {
      * GetPostResponseDto 는 PostInfo, MemberInfo, NftInfo, comments, type 을 가진다.
      */
     @Override
-    public GetPostResponseDto makeGetPostResForm(Long memberId, Post post, boolean comment) {
+    public GetPostResponseDto makeGetPostResForm(Long memberId, Post post, boolean needComment) {
         PostResponseDto.PostInfo postInfo = new PostResponseDto.PostInfo(
                 post.getPostId(), post.getTitle(), post.getContent());
 
@@ -86,8 +86,8 @@ public class GetPostService implements GetPostUseCase {
                 getPrice(post.getNft()));
 
         List<CommentResponseDto.GetCommentResponseDto> comments = new ArrayList<>();
-        if (comment) {
-            getCommentService.getPreviewComments(post.getPostId());
+        if (needComment) {
+            comments = getCommentService.getPreviewComments(post.getPostId());
         }
 
         return GetPostResponseDto.builder()
