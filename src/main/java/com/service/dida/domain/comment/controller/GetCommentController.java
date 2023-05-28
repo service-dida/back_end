@@ -1,6 +1,7 @@
 package com.service.dida.domain.comment.controller;
 
-import com.service.dida.domain.comment.dto.CommentResponseDto.GetCommentsResponseDto;
+import com.service.dida.domain.comment.dto.CommentResponseDto;
+import com.service.dida.domain.comment.dto.CommentResponseDto.GetCommentResponseDto;
 import com.service.dida.domain.comment.service.GetCommentService;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.global.common.dto.PageRequestDto;
@@ -28,7 +29,7 @@ public class GetCommentController {
      * [GET] /comments/{postId}
      */
     @GetMapping("/comments/{postId}")
-    public ResponseEntity<PageResponseDto<List<GetCommentsResponseDto>>> getAllComments(
+    public ResponseEntity<PageResponseDto<List<GetCommentResponseDto>>> getAllComments(
             @CurrentMember Member member,
             @PathVariable("postId") Long postId,
             @RequestBody PageRequestDto pageRequestDto)

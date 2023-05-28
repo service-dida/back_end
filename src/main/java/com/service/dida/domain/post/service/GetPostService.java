@@ -85,7 +85,7 @@ public class GetPostService implements GetPostUseCase {
                 post.getNft().getNftId(), post.getNft().getTitle(), post.getNft().getImgUrl(),
                 getPrice(post.getNft()));
 
-        List<CommentResponseDto.GetCommentsResponseDto> comments = new ArrayList<>();
+        List<CommentResponseDto.GetCommentResponseDto> comments = new ArrayList<>();
         if (comment) {
             getCommentService.getPreviewComments(post.getPostId());
         }

@@ -2,12 +2,10 @@ package com.service.dida.domain.comment.service;
 
 import com.service.dida.domain.comment.Comment;
 import com.service.dida.domain.comment.dto.CommentResponseDto.CommentInfo;
-import com.service.dida.domain.comment.dto.CommentResponseDto.GetCommentsResponseDto;
+import com.service.dida.domain.comment.dto.CommentResponseDto.GetCommentResponseDto;
 import com.service.dida.domain.comment.repository.CommentRepository;
 import com.service.dida.domain.member.dto.MemberResponseDto.MemberInfo;
 import com.service.dida.domain.member.entity.Member;
-import com.service.dida.domain.nft.dto.NftResponseDto;
-import com.service.dida.domain.post.Post;
 import com.service.dida.domain.post.repository.PostRepository;
 import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
@@ -53,7 +51,7 @@ public class GetCommentService {
         return type;
     }
 
-    public GetCommentsResponseDto makeGetCommentResForm(Long memberId, Comment comment) {
+    public GetCommentResponseDto makeGetCommentResForm(Long memberId, Comment comment) {
         CommentInfo commentInfo = new CommentInfo(
                 comment.getCommentId(), comment.getContent());
 
@@ -61,15 +59,15 @@ public class GetCommentService {
                 comment.getMember().getMemberId(), comment.getMember().getNickname(),
                 comment.getMember().getProfileUrl());
 
-        return GetCommentsResponseDto.builder()
+        return GetCommentResponseDto.builder()
                 .commentInfo(commentInfo)
                 .memberInfo(memberInfo)
                 .type(checkIsMe(memberId, comment.getMember().getMemberId()))
                 .build();
     }
 
-    public PageResponseDto<List<GetCommentsResponseDto>> makeCommentListForm(Long memberId, Page<Comment> comments) {
-        List<GetCommentsResponseDto> res = new ArrayList<>();
+    public PageResponseDto<List<GetCommentResponseDto>> makeCommentListForm(Long memberId, Page<Comment> comments) {
+        List<GetCommentResponseDto> res = new ArrayList<>();
 
         for(Comment c: comments.getContent()) {
             res.add(makeGetCommentResForm(memberId, c));
@@ -81,11 +79,11 @@ public class GetCommentService {
     /**
      * [임시 함수] postId를 받아 미리 보기 댓글 3개 반환하는 함수
      */
-    public List<GetCommentsResponseDto> getPreviewComments(Long postId) {
+    public List<GetCommentResponseDto> getPreviewComments(Long postId) {
         return new ArrayList<>();
     }
 
-    public PageResponseDto<List<GetCommentsResponseDto>> getAllComments(Member member, Long postId, PageRequestDto pageRequestDto) {
+    public PageResponseDto<List<GetCommentResponseDto>> getAllComments(Member member, Long postId, PageRequestDto pageRequestDto) {
         postRepository.findByPostIdWithDeleted(postId)
                 .orElseThrow(() -> new BaseException(PostErrorCode.EMPTY_POST));
         Page<Comment> comments = commentRepository.findByPostIdWithDeleted(postId, pageReq(pageRequestDto));
