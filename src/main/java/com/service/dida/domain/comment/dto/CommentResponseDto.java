@@ -8,12 +8,14 @@ import lombok.Data;
 
 public class CommentResponseDto {
     @Data
+    @AllArgsConstructor
     public static class CommentInfo {
         private Long commentId;                 // 댓글 Id
         private String content;                 // 댓글 내용
     }
 
     @Data
+    @AllArgsConstructor
     @Builder
     public static class GetCommentsResponseDto {
         private CommentInfo commentInfo;
