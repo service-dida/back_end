@@ -34,4 +34,8 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
+
+    public void setDeleted() {
+        this.deleted = true;
+    }
 }
