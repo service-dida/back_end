@@ -36,6 +36,7 @@ public class UpdateNftService implements UpdateNftUseCase {
     public void sendNftOutside(Member member, SendNftRequestDto sendNftRequestDto)
         throws IOException, ParseException, InterruptedException {
         checkSendNftOutside(member, sendNftRequestDto);
+        member.getWallet().useWallet();
         Nft nft = nftRepository.findByNftIdWithDeletedAndMember(member,
                 sendNftRequestDto.getNftId())
             .orElseThrow(() -> new BaseException(NftErrorCode.EMPTY_NFT));
