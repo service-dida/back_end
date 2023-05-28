@@ -34,7 +34,7 @@ public class UpdateNftController {
     /**
      * NFT 전송하기 Api
      */
-    @PostMapping("/member/nft/{nftId}")
+    @PostMapping("/member/nft/address")
     public ResponseEntity<Integer> sendNftOutside(@CurrentMember Member member,
         @RequestBody SendNftRequestDto sendNftRequestDto)
         throws IOException, ParseException, InterruptedException {
