@@ -1,6 +1,6 @@
 package com.service.dida.domain.nft.dto;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,13 +11,13 @@ public class NftRequestDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class PostNftRequestDto {
-        @NotEmpty(message = "비밀번호가 일치하지 않습니다.")
+        @NotBlank(message = "비밀번호가 일치하지 않습니다.")
         private String payPwd;
-        @NotEmpty(message = "제목은 빈값일 수 없습니다.")
+        @NotBlank(message = "제목은 빈값일 수 없습니다.")
         private String title;
-        @NotEmpty(message = "설명은 빈값일 수 없습니다.")
+        @NotBlank(message = "설명은 빈값일 수 없습니다.")
         private String description;
-        @NotEmpty(message = "이미지는 빈값일 수 없습니다.")
+        @NotBlank(message = "이미지는 빈값일 수 없습니다.")
         private String image;
     }
 
@@ -25,11 +25,11 @@ public class NftRequestDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class SendNftRequestDto {
-        @NotEmpty(message = "비밀번호가 일치하지 않습니다.")
+        @NotBlank(message = "비밀번호가 일치하지 않습니다.")
         private String payPwd;
-        @NotEmpty(message = "Nft Id가 없습니다.")
+        @NotBlank(message = "Nft Id가 없습니다.")
         private Long nftId;
-        @NotEmpty(message = "주소가 없습니다.")
+        @NotBlank(message = "주소가 없습니다.")
         private String address;
     }
 }

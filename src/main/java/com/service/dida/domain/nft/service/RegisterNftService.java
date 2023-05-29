@@ -45,10 +45,6 @@ public class RegisterNftService implements RegisterNftUseCase {
             .contracts(contracts)
             .txHash(txHash)
             .imgUrl(postNftRequestDto.getImage())
-            .isAi(isAi)
-            .marketed(false)
-            .reportCnt(0)
-            .deleted(false)
             .build();
         save(nft);
         return nft.getNftId();

@@ -1,6 +1,7 @@
 package com.service.dida.domain.member.dto;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +13,7 @@ public class MemberRequestDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class SocialLoginToken {
-        @NotEmpty(message = "ID Token이 없습니다.")
+        @NotBlank(message = "ID Token이 없습니다.")
         private String idToken;
     }
 
@@ -20,10 +21,10 @@ public class MemberRequestDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class RegisterMember {
-        @NotEmpty(message = "이메일 형식이 아닙니다.")
+        @NotBlank(message = "이메일 형식이 아닙니다.")
         @Email(message = "이메일 형식이 아닙니다.")
         private String email;
-        @NotEmpty(message = "닉네임은 공백일 수 없습니다.")
+        @NotBlank(message = "닉네임은 공백일 수 없습니다.")
         private String nickname;
     }
 
@@ -31,7 +32,7 @@ public class MemberRequestDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class CheckNickname {
-        @NotEmpty(message = "닉네임은 공백일 수 없습니다.")
+        @NotBlank(message = "닉네임은 공백일 수 없습니다.")
         private String nickname;
     }
 
@@ -39,7 +40,7 @@ public class MemberRequestDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class UpdateDeviceToken {
-        @NotEmpty(message = "Device token은 공백일 수 없습니다.")
+        @NotBlank(message = "Device token은 공백일 수 없습니다.")
         private String deviceToken;
     }
 }
