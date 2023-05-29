@@ -41,8 +41,6 @@ public class RegisterMemberService implements RegisterMemberUseCase {
             .refreshToken("")
             .deviceToken("")
             .role(Role.ROLE_VISITOR)
-            .reportCnt(0)
-            .deleted(false)
             .build();
         save(member);
         return member;
