@@ -1,0 +1,117 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+# github repository Actions 페이지에 나타낼 이름
+name: Dida CI/CD
+
+# 이벤트 트리거
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+# Job
+jobs:
+  CI-CD:
+    runs-on: ubuntu-latest
+    steps:
+
+      # jdk 세팅 -> 프로젝트의 버전과 달라도 무관
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      # gradle 캐싱 -> 빌드 속도 향상
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # yml 파일 생성
+      - name: make application-dev.yml
+        if: contains(github.ref, 'develop')
+        run: |
+          cd ./src/main/resources
+          touch ./application-dev.yml
+          echo "${{ secrets.YML_DEV }}" >./application-dev.yml
+        shell: bash
+
+      - name: make application-prod.yml
+        if: contains(github.ref, 'main')
+        run: |
+          cd ./src/main/resources
+          touch ./application-prod.yml
+          echo "${{ secrets.YML_PROD }}" >./application-prod.yml
+        shell: bash
+
+      # firebase 파일 생성
+      - name: create firebase key
+        run: |
+          cd ./src/main/resources
+          touch ./firebase-service-key.json
+          echo "${{secrets.FIREBASE_KEY}}" >./firebase-service-key.json
+        shell: bash
+
+      # build
+      - name: Build with Gradle
+        run: ./gradlew clean build -x test
+
+      # docker build and push
+      - name: Docker build & push to prod
+        if: contains(github.ref, 'main')
+        run: |
+          docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+          docker build -f Dockerfile-prod -t ${{secrets.DOCKER_REPO}}/dida-prod .
+          docker push ${{secrets.DOCKER_REPO}}/dida-prod
+
+      - name: Docker build & push to dev
+        if: contains(github.ref, 'develop')
+        run: |
+          docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+          docker build -f Dockerfile-dev -t ${{secrets.DOCKER_REPO}}/dida-dev .
+          docker push ${{secrets.DOCKER_REPO}}/dida-dev
+
+      # deploy
+      - name: Deploy to prod
+        uses: appleboy/ssh-action@master
+        id: deploy-prod
+        if: contains(github.ref, 'main')
+        with:
+          host: ${{ secrets.HOST_PROD }}
+          username: ec2-user
+          key: ${{ secrets.PRIVATE_KEY }}
+          envs: GITHUB_SHA
+          script: |
+            sudo docker rm -f $(docker ps -qa)
+            sudo docker pull ${{ secrets.DOCKER_REPO }}/dida-prod
+            docker-compose up -d
+            docker image prune -f
+
+      - name: Deploy to dev
+        uses: appleboy/ssh-action@master
+        id: deploy-dev
+        if: contains(github.ref, 'develop')
+        with:
+          host: ${{ secrets.HOST_DEV }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: 22
+          #key: ${{ secrets.PRIVATE_KEY }}
+          script: |
+            sudo docker rm -f $(docker ps -qa)
+            sudo docker pull ${{ secrets.DOCKER_REPO }}/dida-dev
+            docker-compose up -d
+            docker image prune -f
