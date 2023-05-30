@@ -2,10 +2,9 @@ package com.service.dida.domain.post.service;
 
 import com.service.dida.domain.comment.dto.CommentResponseDto;
 import com.service.dida.domain.comment.service.GetCommentService;
+import com.service.dida.domain.hide.usecase.GetHideUseCase;
 import com.service.dida.domain.member.dto.MemberResponseDto;
 import com.service.dida.domain.member.entity.Member;
-import com.service.dida.domain.member.repository.MemberRepository;
-import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.nft.dto.NftResponseDto;
 import com.service.dida.domain.post.Post;
 import com.service.dida.domain.post.dto.PostResponseDto;
@@ -16,7 +15,6 @@ import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.PostErrorCode;
-import com.service.dida.global.util.UtilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,8 +29,9 @@ import java.util.List;
 public class GetPostService implements GetPostUseCase {
 
     private final PostRepository postRepository;
-    private final UtilService utilService;
+    private final GetHideUseCase getHideUseCase;
     private final GetCommentService getCommentService;
+
 
     /**
      * 게시글 조회에서 공통으로 사용 될 PageRequest 를 정의하는 함수
@@ -46,6 +45,7 @@ public class GetPostService implements GetPostUseCase {
     /**
      * 나의 게시글인지를 나타내는 type 을 반환하는 함수
      */
+    @Override
     public String checkIsMe(Member member, Member owner) {
         String type;
         if (member == null) {  // 로그인하지 않았다면
@@ -98,7 +98,10 @@ public class GetPostService implements GetPostUseCase {
         List<GetPostResponseDto> res = new ArrayList<>();
         // Page<Post>의 content 는 페이지 요청대로 가져온 List<Post>를 나타낸다.
         for (Post p : posts.getContent()) {
-            // 숨김 로직 추가 필요
+            // 로그인했다면 숨김 NFT 인지 확인 후 넘어가줌
+            if (member != null && getHideUseCase.checkIsHided(member, p.getNft())) {
+                continue;
+            }
             res.add(makeGetPostResForm(member, p, needComment));
         }
         return new PageResponseDto<>(

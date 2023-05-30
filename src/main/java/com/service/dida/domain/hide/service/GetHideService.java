@@ -59,4 +59,12 @@ public class GetHideService implements GetHideUseCase {
         return new PageResponseDto<>(
                 hides.getNumber(), hides.getSize(), hides.hasNext(), res);
     }
+
+    /**
+     * 숨긴 NFT 인지 확인하는 함수, 숨긴 NFT 라면 true 리턴
+     * Member, Nft 검증 기능 포함 X
+     */
+    public boolean checkIsHided(Member member, Nft nft) {
+        return hideRepository.findByMemberAndNft(member, nft).isPresent();
+    }
 }
