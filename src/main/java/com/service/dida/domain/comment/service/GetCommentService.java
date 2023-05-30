@@ -100,12 +100,9 @@ public class GetCommentService implements GetCommentUseCase {
         // 미리보기로 받을 댓글 개수
         int commentCounts = 3;
         for (int i = comments.size() - 1; i >= 0; i--) {
-            if (commentCounts == 0) break;
-
+            if (commentCounts-- == 0) break;
             Comment c = comments.get(i);
             res.add(makeGetCommentResForm(null, c, false));
-
-            commentCounts--;
         }
         return res;
     }
