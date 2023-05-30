@@ -1,8 +1,7 @@
 package com.service.dida.domain.post.controller;
 
 import com.service.dida.domain.post.dto.PostResponseDto;
-import com.service.dida.domain.post.dto.PostResponseDto.GetPostResponseDto;
-import com.service.dida.domain.post.service.GetPostService;
+import com.service.dida.domain.post.usecase.GetPostUseCase;
 import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
 import com.service.dida.global.config.exception.BaseException;
@@ -20,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GetPostController {
 
-    private final GetPostService getPostService;
+    private final GetPostUseCase getPostUseCase;
 
     /**
      * 게시글 전체 조회하기
@@ -31,7 +30,7 @@ public class GetPostController {
             @RequestBody PageRequestDto pageRequestDto)
             throws BaseException {
         Long memberId = 0L;
-        return new ResponseEntity<>(getPostService.getAllPosts(memberId, pageRequestDto), HttpStatus.OK);
+        return new ResponseEntity<>(getPostUseCase.getAllPosts(memberId, pageRequestDto), HttpStatus.OK);
     }
 
     /**
@@ -43,7 +42,7 @@ public class GetPostController {
             @PathVariable("nftId") Long nftId, @RequestBody PageRequestDto pageRequestDto)
             throws BaseException {
         Long memberId = 0L;
-        return new ResponseEntity<>(getPostService.getPostsByNftId(memberId, nftId, pageRequestDto), HttpStatus.OK);
+        return new ResponseEntity<>(getPostUseCase.getPostsByNftId(memberId, nftId, pageRequestDto), HttpStatus.OK);
     }
 
     /**
@@ -54,6 +53,6 @@ public class GetPostController {
     public ResponseEntity<PostResponseDto.GetPostResponseDto> getPost(@PathVariable("postId") Long postId)
             throws BaseException {
         Long memberId = 0L;
-        return new ResponseEntity<>(getPostService.getPost(memberId, postId), HttpStatus.OK);
+        return new ResponseEntity<>(getPostUseCase.getPost(memberId, postId), HttpStatus.OK);
     }
 }

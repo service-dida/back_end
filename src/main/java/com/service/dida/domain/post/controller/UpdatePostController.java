@@ -1,7 +1,7 @@
 package com.service.dida.domain.post.controller;
 
 import com.service.dida.domain.post.dto.EditPostRequestDto;
-import com.service.dida.domain.post.service.UpdatePostService;
+import com.service.dida.domain.post.usecase.UpdatePostUseCase;
 import com.service.dida.global.config.exception.BaseException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UpdatePostController {
 
-    private final UpdatePostService updatePostService;
+    private final UpdatePostUseCase updatePostUseCase;
 
     /**
      * 게시글 수정하기
@@ -24,7 +24,7 @@ public class UpdatePostController {
             @RequestBody @Valid EditPostRequestDto editPostRequestDto)
             throws BaseException {
         Long memberId = 0L;
-        updatePostService.editPost(memberId, editPostRequestDto);
+        updatePostUseCase.editPost(memberId, editPostRequestDto);
         return new ResponseEntity<Integer>(200, HttpStatus.OK);
     }
 
@@ -37,7 +37,7 @@ public class UpdatePostController {
             @RequestParam("postId") Long postId)
             throws BaseException {
         Long memberId = 0L;
-        updatePostService.deletePost(memberId, postId);
+        updatePostUseCase.deletePost(memberId, postId);
         return new ResponseEntity<Integer>(200, HttpStatus.OK);
     }
 }
