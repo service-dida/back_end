@@ -50,17 +50,4 @@ public class RegisterLikeService implements RegisterLikeUseCase {
         }
     }
 
-    /**
-     * 좋아요를 누른 상태라면 true 를, 누르지 않은 상태라면 false 리턴
-     * Member, Nft 검증 기능 포함 X
-     */
-    public boolean checkIsLiked(Member member, Nft nft) {
-        Like like = likeRepository.findByMemberAndNft(member, nft).orElse(null);
-        if (like == null) {
-            return false;
-        } else {
-            return like.isStatus();
-        }
-    }
-
 }
