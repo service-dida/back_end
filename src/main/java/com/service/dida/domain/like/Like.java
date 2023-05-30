@@ -3,15 +3,13 @@ package com.service.dida.domain.like;
 import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.member.entity.Member;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Builder
 @Getter
 @AllArgsConstructor
+@RequiredArgsConstructor
 @NoArgsConstructor
 @Table(name = "nft_like")
 public class Like {
@@ -30,4 +28,9 @@ public class Like {
 
     @Column(name = "status", nullable = false, columnDefinition = "boolean default true")
     private boolean status;
+
+    public boolean changeStatus() {
+        this.status = !this.status;
+        return this.status;
+    }
 }

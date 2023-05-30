@@ -3,7 +3,7 @@ package com.service.dida.domain.market;
 import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 
 import com.service.dida.global.config.exception.BaseException;
-import com.service.dida.domain.like.LikeRepository;
+import com.service.dida.domain.like.repository.LikeRepository;
 import com.service.dida.domain.market.dto.*;
 import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.member.entity.Member;
