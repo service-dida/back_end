@@ -1,10 +1,12 @@
 package com.service.dida.domain.post.controller;
 
+import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.post.dto.PostResponseDto;
 import com.service.dida.domain.post.usecase.GetPostUseCase;
 import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
 import com.service.dida.global.config.exception.BaseException;
+import com.service.dida.global.config.security.auth.CurrentMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +29,9 @@ public class GetPostController {
      */
     @GetMapping("/posts")
     public ResponseEntity<PageResponseDto<List<PostResponseDto.GetPostResponseDto>>> getAllPosts(
-            @RequestBody PageRequestDto pageRequestDto)
+            @RequestBody PageRequestDto pageRequestDto, @CurrentMember Member member)
             throws BaseException {
-        Long memberId = 0L;
-        return new ResponseEntity<>(getPostUseCase.getAllPosts(memberId, pageRequestDto), HttpStatus.OK);
+        return new ResponseEntity<>(getPostUseCase.getAllPosts(member, pageRequestDto), HttpStatus.OK);
     }
 
     /**
@@ -39,10 +40,10 @@ public class GetPostController {
      */
     @GetMapping("/posts/{nftId}")
     public ResponseEntity<PageResponseDto<List<PostResponseDto.GetPostResponseDto>>> getPostsByNft(
-            @PathVariable("nftId") Long nftId, @RequestBody PageRequestDto pageRequestDto)
+            @PathVariable("nftId") Long nftId, @RequestBody PageRequestDto pageRequestDto,
+            @CurrentMember Member member)
             throws BaseException {
-        Long memberId = 0L;
-        return new ResponseEntity<>(getPostUseCase.getPostsByNftId(memberId, nftId, pageRequestDto), HttpStatus.OK);
+        return new ResponseEntity<>(getPostUseCase.getPostsByNftId(member, nftId, pageRequestDto), HttpStatus.OK);
     }
 
     /**
@@ -50,9 +51,9 @@ public class GetPostController {
      * [GET] /post/{postId}
      */
     @GetMapping("/post/{postId}")
-    public ResponseEntity<PostResponseDto.GetPostResponseDto> getPost(@PathVariable("postId") Long postId)
+    public ResponseEntity<PostResponseDto.GetPostResponseDto> getPost(
+            @PathVariable("postId") Long postId, @CurrentMember Member member)
             throws BaseException {
-        Long memberId = 0L;
-        return new ResponseEntity<>(getPostUseCase.getPost(memberId, postId), HttpStatus.OK);
+        return new ResponseEntity<>(getPostUseCase.getPost(member, postId), HttpStatus.OK);
     }
 }

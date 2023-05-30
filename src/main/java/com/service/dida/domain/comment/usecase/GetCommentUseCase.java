@@ -10,8 +10,8 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface GetCommentUseCase {
-    CommentResponseDto.GetCommentResponseDto makeGetCommentResForm(Long memberId, Comment comment, boolean needType);
-    PageResponseDto<List<CommentResponseDto.GetCommentResponseDto>> makeCommentListForm(Long memberId, Page<Comment> comments);
+    CommentResponseDto.GetCommentResponseDto makeGetCommentResForm(Member member, Comment comment, boolean needType);
+    PageResponseDto<List<CommentResponseDto.GetCommentResponseDto>> makeCommentListForm(Member member, Page<Comment> comments);
     List<CommentResponseDto.GetCommentResponseDto> getPreviewComments(Long postId);
     PageResponseDto<List<CommentResponseDto.GetCommentResponseDto>> getAllComments(Member member, Long postId, PageRequestDto pageRequestDto);
 }

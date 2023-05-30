@@ -41,11 +41,11 @@ public class GetCommentService implements GetCommentUseCase {
     /**
      * 나의 댓글인지를 나타내는 type 을 반환하는 함수
      */
-    public String checkIsMe(Long memberId, Long ownerId) {
+    public String checkIsMe(Member member, Member owner) {
         String type;
-        if (memberId == 0L) {  // 로그인하지 않았다면
+        if (member.getMemberId() == 0L) {  // 로그인하지 않았다면
             type = "NEED LOGIN";
-        } else if (memberId.equals(ownerId)) {  // 내 게시물이라면
+        } else if (member.equals(owner)) {  // 내 게시물이라면
             type = "MINE";
         } else {  // 내 게시물이 아니라면
             type = "NOT MINE";
@@ -54,7 +54,7 @@ public class GetCommentService implements GetCommentUseCase {
     }
 
     @Override
-    public GetCommentResponseDto makeGetCommentResForm(Long memberId, Comment comment, boolean needType) {
+    public GetCommentResponseDto makeGetCommentResForm(Member member, Comment comment, boolean needType) {
         CommentInfo commentInfo = new CommentInfo(
                 comment.getCommentId(), comment.getContent());
 
@@ -64,7 +64,7 @@ public class GetCommentService implements GetCommentUseCase {
 
         String type = "";
         if (needType) {
-            type = checkIsMe(memberId, comment.getMember().getMemberId());
+            type = checkIsMe(member, comment.getMember());
         }
         return GetCommentResponseDto.builder()
                 .commentInfo(commentInfo)
@@ -74,11 +74,11 @@ public class GetCommentService implements GetCommentUseCase {
     }
 
     @Override
-    public PageResponseDto<List<GetCommentResponseDto>> makeCommentListForm(Long memberId, Page<Comment> comments) {
+    public PageResponseDto<List<GetCommentResponseDto>> makeCommentListForm(Member member, Page<Comment> comments) {
         List<GetCommentResponseDto> res = new ArrayList<>();
 
         for (Comment c : comments.getContent()) {
-            res.add(makeGetCommentResForm(memberId, c, true));
+            res.add(makeGetCommentResForm(member, c, true));
         }
         return new PageResponseDto<>(
                 comments.getNumber(), comments.getSize(), comments.hasNext(), res);
@@ -103,7 +103,7 @@ public class GetCommentService implements GetCommentUseCase {
             if (commentCounts == 0) break;
 
             Comment c = comments.get(i);
-            res.add(makeGetCommentResForm(0L, c, false));
+            res.add(makeGetCommentResForm(null, c, false));
 
             commentCounts--;
         }
@@ -118,7 +118,7 @@ public class GetCommentService implements GetCommentUseCase {
         postRepository.findByPostIdWithDeleted(postId)
                 .orElseThrow(() -> new BaseException(PostErrorCode.EMPTY_POST));
         Page<Comment> comments = commentRepository.findByPostIdWithDeleted(postId, pageReq(pageRequestDto));
-        return makeCommentListForm(member.getMemberId(), comments);
+        return makeCommentListForm(member, comments);
     }
 
 }
