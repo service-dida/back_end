@@ -1,6 +1,6 @@
 package com.service.dida.domain.comment.controller;
 
-import com.service.dida.domain.comment.service.UpdateCommentService;
+import com.service.dida.domain.comment.usecase.UpdateCommentUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.security.auth.CurrentMember;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UpdateCommentController {
 
-    private final UpdateCommentService updateCommentService;
+    private final UpdateCommentUseCase updateCommentUseCase;
 
     /**
      * 댓글 삭제하기
@@ -26,7 +26,7 @@ public class UpdateCommentController {
             @CurrentMember Member member,
             @RequestParam("commentId") Long commentId)
             throws BaseException {
-        updateCommentService.deleteComment(member, commentId);
+        updateCommentUseCase.deleteComment(member, commentId);
         return new ResponseEntity<Integer>(200, HttpStatus.OK);
     }
 }

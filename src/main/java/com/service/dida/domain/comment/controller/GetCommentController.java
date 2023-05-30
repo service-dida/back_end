@@ -1,8 +1,7 @@
 package com.service.dida.domain.comment.controller;
 
-import com.service.dida.domain.comment.dto.CommentResponseDto;
 import com.service.dida.domain.comment.dto.CommentResponseDto.GetCommentResponseDto;
-import com.service.dida.domain.comment.service.GetCommentService;
+import com.service.dida.domain.comment.usecase.GetCommentUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
@@ -22,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GetCommentController {
 
-    private final GetCommentService getCommentService;
+    private final GetCommentUseCase getCommentUseCase;
 
     /**
      * 게시글 별 댓글 조회
@@ -35,6 +34,6 @@ public class GetCommentController {
             @RequestBody PageRequestDto pageRequestDto)
             throws BaseException {
         return new ResponseEntity<>(
-                getCommentService.getAllComments(member, postId, pageRequestDto), HttpStatus.OK);
+                getCommentUseCase.getAllComments(member, postId, pageRequestDto), HttpStatus.OK);
     }
 }
