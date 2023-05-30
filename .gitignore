@@ -6,7 +6,9 @@ build/
 !**/src/test/**/build/
 
 #*.properties
-*.yml
+application.yml
+application-dev.yml
+application-prod.yml
 *.json
 #resources
 *.p12
