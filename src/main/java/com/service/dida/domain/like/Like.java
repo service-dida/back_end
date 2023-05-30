@@ -9,7 +9,6 @@ import lombok.*;
 @Builder
 @Getter
 @AllArgsConstructor
-@RequiredArgsConstructor
 @NoArgsConstructor
 @Table(name = "nft_like")
 public class Like {

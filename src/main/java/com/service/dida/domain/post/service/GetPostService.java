@@ -59,17 +59,6 @@ public class GetPostService implements GetPostUseCase {
     }
 
     /**
-     * 마켓에 등록되었다면 price 를 반환하는 함수
-     */
-    public String getPrice(Nft nft) {
-        String price = "NOT SALE";
-        if (nft.isMarketed()) {
-            price = utilService.doubleToString(nft.getMarkets().get(nft.getMarkets().size() - 1).getPrice());
-        }
-        return price;
-    }
-
-    /**
      * 1개의 Post 를 GetPostResponseDto 형태로 만들어주는 함수
      * GetPostResponseDto 는 PostInfo, MemberInfo, NftInfo, comments, type 을 가진다.
      */
@@ -83,7 +72,7 @@ public class GetPostService implements GetPostUseCase {
 
         NftResponseDto.NftInfo nftInfo = new NftResponseDto.NftInfo(
                 post.getNft().getNftId(), post.getNft().getTitle(), post.getNft().getImgUrl(),
-                getPrice(post.getNft()));
+                post.getNft().getPrice());
 
         List<CommentResponseDto.GetCommentResponseDto> comments = new ArrayList<>();
         if (needComment) {
