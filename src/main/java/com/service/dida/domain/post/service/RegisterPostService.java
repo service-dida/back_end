@@ -30,9 +30,11 @@ public class RegisterPostService implements RegisterPostUseCase {
     @Override
     @Transactional
     public void createPost(Member member, PostPostRequestDto postPostRequestDto) {
+        if (member == null) {
+            throw new BaseException(MemberErrorCode.EMPTY_MEMBER);
+        }
         Nft nft = nftRepository.findByNftIdWithDeleted(postPostRequestDto.getNftId())
                 .orElseThrow(() -> new BaseException(NftErrorCode.EMPTY_NFT));
-
         Post post = Post.builder()
                 .title(postPostRequestDto.getTitle())
                 .content(postPostRequestDto.getContent())

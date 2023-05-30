@@ -25,7 +25,9 @@ public class UpdatePostService implements UpdatePostUseCase {
      * 나의 게시글인지 체크하는 함수
      */
     public boolean checkIsMe(Member member, Member owner) {
-        if (member.equals(owner)) {
+        if (member == null) {
+            throw new BaseException(MemberErrorCode.EMPTY_MEMBER);
+        } else if (member.equals(owner)) {
             return true;
         } else {
             throw new BaseException(PostErrorCode.NOT_OWN_POST);

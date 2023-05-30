@@ -48,7 +48,7 @@ public class GetPostService implements GetPostUseCase {
      */
     public String checkIsMe(Member member, Member owner) {
         String type;
-        if (member.getMemberId() == 0L) {  // 로그인하지 않았다면
+        if (member == null) {  // 로그인하지 않았다면
             type = "NEED LOGIN";
         } else if (member.equals(owner)) {  // 내 게시물이라면
             type = "MINE";

@@ -22,11 +22,11 @@ public class UpdateCommentService implements UpdateCommentUseCase {
     /**
      * 나의 댓글인지 체크하는 함수
      */
-    public boolean checkIsMe(Long memberId, Long ownerId) {
-        memberRepository.findByMemberIdWithDeleted((memberId))
-                .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER));
-
-        if (memberId.equals(ownerId)) {
+    public boolean checkIsMe(Member member, Long ownerId) {
+        if (member == null) {
+            throw new BaseException(MemberErrorCode.EMPTY_MEMBER);
+        }
+        else if(member.getMemberId().equals(ownerId)) {
             return true;
         } else {
             throw new BaseException(CommentErrorCode.NOT_OWN_COMMENT);
@@ -39,7 +39,7 @@ public class UpdateCommentService implements UpdateCommentUseCase {
         Comment comment = commentRepository.findByCommentIdWithDeleted(commentId)
                 .orElseThrow(() -> new BaseException(CommentErrorCode.EMPTY_COMMENT));
 
-        if (checkIsMe(member.getMemberId(), comment.getMember().getMemberId())) {
+        if (checkIsMe(member, comment.getMember().getMemberId())) {
             comment.setDeleted();
         }
     }
