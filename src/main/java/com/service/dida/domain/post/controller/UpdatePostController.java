@@ -1,8 +1,10 @@
 package com.service.dida.domain.post.controller;
 
+import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.post.dto.EditPostRequestDto;
-import com.service.dida.domain.post.service.UpdatePostService;
+import com.service.dida.domain.post.usecase.UpdatePostUseCase;
 import com.service.dida.global.config.exception.BaseException;
+import com.service.dida.global.config.security.auth.CurrentMember;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UpdatePostController {
 
-    private final UpdatePostService updatePostService;
+    private final UpdatePostUseCase updatePostUseCase;
 
     /**
      * 게시글 수정하기
@@ -21,10 +23,10 @@ public class UpdatePostController {
      */
     @PatchMapping("/post")
     public ResponseEntity<Integer> editPost(
-            @RequestBody @Valid EditPostRequestDto editPostRequestDto)
+            @RequestBody @Valid EditPostRequestDto editPostRequestDto,
+            @CurrentMember Member member)
             throws BaseException {
-        Long memberId = 0L;
-        updatePostService.editPost(memberId, editPostRequestDto);
+        updatePostUseCase.editPost(member, editPostRequestDto);
         return new ResponseEntity<Integer>(200, HttpStatus.OK);
     }
 
@@ -34,10 +36,9 @@ public class UpdatePostController {
      */
     @PatchMapping("/post/delete")
     public ResponseEntity<Integer> deletePost(
-            @RequestParam("postId") Long postId)
+            @RequestParam("postId") Long postId, @CurrentMember Member member)
             throws BaseException {
-        Long memberId = 0L;
-        updatePostService.deletePost(memberId, postId);
+        updatePostUseCase.deletePost(member, postId);
         return new ResponseEntity<Integer>(200, HttpStatus.OK);
     }
 }

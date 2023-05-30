@@ -3,6 +3,7 @@ package com.service.dida.domain.post.service;
 import com.service.dida.domain.comment.dto.CommentResponseDto;
 import com.service.dida.domain.comment.service.GetCommentService;
 import com.service.dida.domain.member.dto.MemberResponseDto;
+import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.member.repository.MemberRepository;
 import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.nft.dto.NftResponseDto;
@@ -30,7 +31,6 @@ import java.util.List;
 public class GetPostService implements GetPostUseCase {
 
     private final PostRepository postRepository;
-    private final MemberRepository memberRepository;
     private final UtilService utilService;
     private final GetCommentService getCommentService;
 
@@ -46,11 +46,11 @@ public class GetPostService implements GetPostUseCase {
     /**
      * 나의 게시글인지를 나타내는 type 을 반환하는 함수
      */
-    public String checkIsMe(Long memberId, Long ownerId) {
+    public String checkIsMe(Member member, Member owner) {
         String type;
-        if (memberId == 0L) {  // 로그인하지 않았다면
+        if (member == null) {  // 로그인하지 않았다면
             type = "NEED LOGIN";
-        } else if (memberId.equals(ownerId)) {  // 내 게시물이라면
+        } else if (member.equals(owner)) {  // 내 게시물이라면
             type = "MINE";
         } else {  // 내 게시물이 아니라면
             type = "NOT MINE";
@@ -74,7 +74,7 @@ public class GetPostService implements GetPostUseCase {
      * GetPostResponseDto 는 PostInfo, MemberInfo, NftInfo, comments, type 을 가진다.
      */
     @Override
-    public GetPostResponseDto makeGetPostResForm(Long memberId, Post post, boolean comment) {
+    public GetPostResponseDto makeGetPostResForm(Member member, Post post, boolean needComment) {
         PostResponseDto.PostInfo postInfo = new PostResponseDto.PostInfo(
                 post.getPostId(), post.getTitle(), post.getContent());
 
@@ -85,9 +85,9 @@ public class GetPostService implements GetPostUseCase {
                 post.getNft().getNftId(), post.getNft().getTitle(), post.getNft().getImgUrl(),
                 getPrice(post.getNft()));
 
-        List<CommentResponseDto.GetCommentsResponseDto> comments = new ArrayList<>();
-        if (comment) {
-            getCommentService.getPreviewComments(post.getPostId());
+        List<CommentResponseDto.GetCommentResponseDto> comments = new ArrayList<>();
+        if (needComment) {
+            comments = getCommentService.getPreviewComments(post.getPostId());
         }
 
         return GetPostResponseDto.builder()
@@ -95,7 +95,7 @@ public class GetPostService implements GetPostUseCase {
                 .memberInfo(memberInfo)
                 .nftInfo(nftInfo)
                 // 로그인 상태 및 나의 게시글인지를 나타내는 정보
-                .type(checkIsMe(memberId, post.getMember().getMemberId()))
+                .type(checkIsMe(member, post.getMember()))
                 .comments(comments)
                 .build();
     }
@@ -105,12 +105,12 @@ public class GetPostService implements GetPostUseCase {
      * PageResponseDto 로 감싸서 반환
      */
     @Override
-    public PageResponseDto<List<GetPostResponseDto>> makePostListForm(Long memberId, Page<Post> posts, boolean comment) {
+    public PageResponseDto<List<GetPostResponseDto>> makePostListForm(Member member, Page<Post> posts, boolean needComment) {
         List<GetPostResponseDto> res = new ArrayList<>();
         // Page<Post>의 content 는 페이지 요청대로 가져온 List<Post>를 나타낸다.
         for (Post p : posts.getContent()) {
             // 숨김 로직 추가 필요
-            res.add(makeGetPostResForm(memberId, p, comment));
+            res.add(makeGetPostResForm(member, p, needComment));
         }
         return new PageResponseDto<>(
                 posts.getNumber(), posts.getSize(), posts.hasNext(), res);
@@ -121,9 +121,9 @@ public class GetPostService implements GetPostUseCase {
      * List<GetPostResponseDto> 를 PageResponseDto 로 감싸서 반환
      */
     @Override
-    public PageResponseDto<List<GetPostResponseDto>> getAllPosts(Long memberId, PageRequestDto pageRequestDto) {
+    public PageResponseDto<List<GetPostResponseDto>> getAllPosts(Member member, PageRequestDto pageRequestDto) {
         Page<Post> posts = postRepository.findAllWithDeleted(pageReq(pageRequestDto));
-        return makePostListForm(memberId, posts, true);
+        return makePostListForm(member, posts, true);
     }
 
     /**
@@ -131,18 +131,18 @@ public class GetPostService implements GetPostUseCase {
      * List<GetPostResponseDto> 를 PageResponseDto 로 감싸서 반환
      */
     @Override
-    public PageResponseDto<List<GetPostResponseDto>> getPostsByNftId(Long memberId, Long nftId, PageRequestDto pageRequestDto) {
+    public PageResponseDto<List<GetPostResponseDto>> getPostsByNftId(Member member, Long nftId, PageRequestDto pageRequestDto) {
         Page<Post> posts = postRepository.findByNftIdWithDeleted(nftId, pageReq(pageRequestDto));
-        return makePostListForm(memberId, posts, true);
+        return makePostListForm(member, posts, true);
     }
 
     /**
      * 게시글을 상세 조회하는 함수
      */
     @Override
-    public GetPostResponseDto getPost(Long memberId, Long postId) {
+    public GetPostResponseDto getPost(Member member, Long postId) {
         Post post = postRepository.findByPostIdWithDeleted(postId)
                 .orElseThrow(() -> new BaseException(PostErrorCode.EMPTY_POST));
-        return makeGetPostResForm(memberId, post, false);
+        return makeGetPostResForm(member, post, false);
     }
 }
