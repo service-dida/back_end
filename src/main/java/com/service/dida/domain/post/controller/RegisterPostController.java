@@ -1,9 +1,11 @@
 package com.service.dida.domain.post.controller;
 
 
+import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.post.dto.PostPostRequestDto;
 import com.service.dida.domain.post.usecase.RegisterPostUseCase;
 import com.service.dida.global.config.exception.BaseException;
+import com.service.dida.global.config.security.auth.CurrentMember;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,10 +23,10 @@ public class RegisterPostController {
      */
     @PostMapping("/post")
     public ResponseEntity<Integer> createPost(
-            @RequestBody @Valid PostPostRequestDto postPostRequestDto)
+            @RequestBody @Valid PostPostRequestDto postPostRequestDto,
+            @CurrentMember Member member)
             throws BaseException {
-        Long memberId = 0L;
-        registerPostUseCase.createPost(memberId, postPostRequestDto);
+        registerPostUseCase.createPost(member, postPostRequestDto);
         return new ResponseEntity<Integer>(200, HttpStatus.OK);
     }
 

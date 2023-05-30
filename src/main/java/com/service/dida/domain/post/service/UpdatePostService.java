@@ -24,11 +24,8 @@ public class UpdatePostService implements UpdatePostUseCase {
     /**
      * 나의 게시글인지 체크하는 함수
      */
-    public boolean checkIsMe(Long memberId, Long ownerId) {
-        memberRepository.findByMemberIdWithDeleted((memberId))
-                .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER));
-
-        if (memberId.equals(ownerId)) {
+    public boolean checkIsMe(Member member, Member owner) {
+        if (member.equals(owner)) {
             return true;
         } else {
             throw new BaseException(PostErrorCode.NOT_OWN_POST);
@@ -37,22 +34,22 @@ public class UpdatePostService implements UpdatePostUseCase {
 
     @Override
     @Transactional
-    public void editPost(Long memberId, EditPostRequestDto editPostRequestDto) {
+    public void editPost(Member member, EditPostRequestDto editPostRequestDto) {
         Post post = postRepository.findByPostIdWithDeleted(editPostRequestDto.getPostId())
                 .orElseThrow(() -> new BaseException(PostErrorCode.EMPTY_POST));
 
-        if (checkIsMe(memberId, post.getMember().getMemberId())) {
+        if (checkIsMe(member, post.getMember())) {
             post.editPost(editPostRequestDto.getTitle(), editPostRequestDto.getContent());
         }
     }
 
     @Override
     @Transactional
-    public void deletePost(Long memberId, Long postId) {
+    public void deletePost(Member member, Long postId) {
         Post post = postRepository.findByPostIdWithDeleted(postId)
                 .orElseThrow(() -> new BaseException(PostErrorCode.EMPTY_POST));
 
-        if (checkIsMe(memberId, post.getMember().getMemberId())) {
+        if (checkIsMe(member, post.getMember())) {
             post.setDeleted();
         }
     }

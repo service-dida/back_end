@@ -31,7 +31,6 @@ import java.util.List;
 public class GetPostService implements GetPostUseCase {
 
     private final PostRepository postRepository;
-    private final MemberRepository memberRepository;
     private final UtilService utilService;
     private final GetCommentService getCommentService;
 
