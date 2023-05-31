@@ -1,5 +1,5 @@
-FROM amazoncorretto:11
+FROM openjdk:17
 EXPOSE 8000
-ARG JAR_FILE=build/libs/dida-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=build/libs/DIDA-0.0.1-SNAPSHOT.jar
 COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","-Dspring.profiles.active=dev","/app.jar"]
+ENTRYPOINT ["java","-jar","-Dspring.profiles.active=dev",dd"/app.jar"]
