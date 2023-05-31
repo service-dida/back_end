@@ -19,9 +19,9 @@ public class UpdateCommentController {
 
     /**
      * 댓글 삭제하기
-     * [PATCH] /comment/delete
+     * [PATCH] /common/comment/delete
      */
-    @PatchMapping("/comment/delete")
+    @PatchMapping("/common/comment/delete")
     public ResponseEntity<Integer> deleteComment(
             @CurrentMember Member member,
             @RequestParam("commentId") Long commentId)

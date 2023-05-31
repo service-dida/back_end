@@ -21,9 +21,9 @@ public class RegisterCommentController {
 
     /**
      * 댓글 생성하기
-     * [POST] /comment
+     * [POST] /common/comment
      */
-    @PostMapping("comment")
+    @PostMapping("/common/comment")
     public ResponseEntity<Integer> registerComment(
             @CurrentMember Member member,
             @RequestBody @Valid PostCommentRequestDto postCommentRequestDto)

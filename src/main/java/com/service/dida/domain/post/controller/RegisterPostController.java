@@ -19,9 +19,9 @@ public class RegisterPostController {
 
     /**
      * 게시글 생성하기
-     * [POST] /post
+     * [POST] /common/post
      */
-    @PostMapping("/post")
+    @PostMapping("/common/post")
     public ResponseEntity<Integer> createPost(
             @RequestBody @Valid PostPostRequestDto postPostRequestDto,
             @CurrentMember Member member)

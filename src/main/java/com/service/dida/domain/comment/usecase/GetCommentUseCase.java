@@ -14,4 +14,6 @@ public interface GetCommentUseCase {
     PageResponseDto<List<CommentResponseDto.GetCommentResponseDto>> makeCommentListForm(Member member, Page<Comment> comments);
     List<CommentResponseDto.GetCommentResponseDto> getPreviewComments(Long postId);
     PageResponseDto<List<CommentResponseDto.GetCommentResponseDto>> getAllComments(Member member, Long postId, PageRequestDto pageRequestDto);
+    String checkIsMe(Member member, Member owner);
+
 }

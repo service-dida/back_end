@@ -64,4 +64,13 @@ public class Nft extends BaseEntity {
     public void changeDeleted(boolean flag) {
         this.deleted = flag;
     }
+
+    public String getPrice() {
+        String price = "NOT SALE";
+        if (this.isMarketed()) {
+            price = String.format("%.6f", Double.valueOf(
+                    this.getMarkets().get(this.getMarkets().size() - 1).getPrice() * 1000000).longValue() / 1000000f);
+        }
+        return price;
+    }
 }

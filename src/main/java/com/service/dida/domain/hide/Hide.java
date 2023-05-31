@@ -1,7 +1,7 @@
-package com.service.dida.domain.like;
+package com.service.dida.domain.hide;
 
-import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.member.entity.Member;
+import com.service.dida.domain.nft.Nft;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,12 +10,12 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "nft_like")
-public class Like {
+@Table(name = "nft_hide")
+public class Hide {
     @Id
-    @Column(name = "like_id")
+    @Column(name = "hide_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long likeId;
+    private Long hideId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

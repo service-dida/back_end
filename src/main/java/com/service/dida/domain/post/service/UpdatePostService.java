@@ -11,6 +11,7 @@ import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 import com.service.dida.global.config.exception.errorCode.PostErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,10 +25,9 @@ public class UpdatePostService implements UpdatePostUseCase {
     /**
      * 나의 게시글인지 체크하는 함수
      */
+    @PreAuthorize("hasAnyRole('VISITOR, MEMBER')")
     public boolean checkIsMe(Member member, Member owner) {
-        if (member == null) {
-            throw new BaseException(MemberErrorCode.EMPTY_MEMBER);
-        } else if (member.equals(owner)) {
+        if (member.equals(owner)) {
             return true;
         } else {
             throw new BaseException(PostErrorCode.NOT_OWN_POST);
