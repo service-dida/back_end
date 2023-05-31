@@ -41,6 +41,7 @@ public class GetCommentService implements GetCommentUseCase {
     /**
      * 나의 댓글인지를 나타내는 type 을 반환하는 함수
      */
+    @Override
     public String checkIsMe(Member member, Member owner) {
         String type;
         if (member == null) {  // 로그인하지 않았다면

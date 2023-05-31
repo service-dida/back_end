@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -46,9 +47,6 @@ public class GetHideService implements GetHideUseCase {
 
     @Override
     public PageResponseDto<List<GetHideNft>> getHideNftList(Member member, PageRequestDto pageRequestDto) {
-        if(member == null) {
-            throw new BaseException(MemberErrorCode.UN_REGISTERED_MEMBER);
-        }
         Page<Hide> hides = hideRepository.findByMember(member, pageReq(pageRequestDto));
 
         List<GetHideNft> res = new ArrayList<>();
@@ -62,8 +60,10 @@ public class GetHideService implements GetHideUseCase {
 
     /**
      * 숨긴 NFT 인지 확인하는 함수, 숨긴 NFT 라면 true 리턴
-     * Member, Nft 검증 기능 포함 X
+     * Nft 검증 기능 포함 X
      */
+    @Override
+    @PreAuthorize("hasAnyRole('VISITOR, MEMBER')")
     public boolean checkIsHided(Member member, Nft nft) {
         return hideRepository.findByMemberAndNft(member, nft).isPresent();
     }

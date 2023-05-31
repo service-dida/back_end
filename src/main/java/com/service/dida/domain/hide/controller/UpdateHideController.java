@@ -17,9 +17,9 @@ public class UpdateHideController {
 
     /**
      * NFT 숨기기 취소
-     * [DELETE] /nft/hide
+     * [DELETE] /common/nft/hide
      */
-    @DeleteMapping("/nft/hide")
+    @DeleteMapping("/common/nft/hide")
     public ResponseEntity<Integer> unhideNft(
             @RequestParam("nftId") Long nftId, @CurrentMember Member member)
             throws BaseException {

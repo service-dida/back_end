@@ -23,9 +23,9 @@ public class GetHideController {
 
     /**
      * NFT 숨김 목록 조회
-     * [GET] /nft/hide
+     * [GET] /common/nft/hide
      */
-    @GetMapping("nft/hide")
+    @GetMapping("/common/nft/hide")
     public ResponseEntity<PageResponseDto<List<GetHideNft>>> getHideNftList(
             @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto)
             throws BaseException {

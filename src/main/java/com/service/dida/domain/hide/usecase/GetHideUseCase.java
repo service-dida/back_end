@@ -11,4 +11,5 @@ import java.util.List;
 public interface GetHideUseCase {
     public PageResponseDto<List<HideResponseDto.GetHideNft>> getHideNftList(Member member, PageRequestDto pageRequestDto);
     boolean checkIsHided(Member member, Nft nft);
+
 }

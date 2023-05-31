@@ -20,9 +20,9 @@ public class RegisterLikeController {
 
     /**
      * 좋아요 누르기
-     * [POST] /nft/like
+     * [POST] /common/nft/like
      */
-    @PostMapping("/nft/like")
+    @PostMapping("/common/nft/like")
     public ResponseEntity<Boolean> pushLike(
             @RequestParam("nftId") Long nftId, @CurrentMember Member member)
             throws BaseException {

@@ -19,9 +19,9 @@ public class UpdatePostController {
 
     /**
      * 게시글 수정하기
-     * [PATCH] /post
+     * [PATCH] /common/post
      */
-    @PatchMapping("/post")
+    @PatchMapping("/common/post")
     public ResponseEntity<Integer> editPost(
             @RequestBody @Valid EditPostRequestDto editPostRequestDto,
             @CurrentMember Member member)
@@ -32,9 +32,9 @@ public class UpdatePostController {
 
     /**
      * 게시글 삭제하기
-     * [PATCH] /post/delete
+     * [PATCH] /common/post/delete
      */
-    @PatchMapping("/post/delete")
+    @PatchMapping("/common/post/delete")
     public ResponseEntity<Integer> deletePost(
             @RequestParam("postId") Long postId, @CurrentMember Member member)
             throws BaseException {

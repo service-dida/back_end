@@ -27,9 +27,6 @@ public class RegisterCommentService implements RegisterCommentUseCase {
     @Override
     @Transactional
     public void registerComment(Member member, PostCommentRequestDto postCommentRequestDto) {
-        if (member == null) {
-            throw new BaseException(MemberErrorCode.EMPTY_MEMBER);
-        }
         Post post = postRepository.findByPostIdWithDeleted(postCommentRequestDto.getPostId()).orElse(null);
 
         Comment comment = Comment.builder()

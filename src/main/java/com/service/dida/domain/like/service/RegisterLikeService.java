@@ -35,9 +35,6 @@ public class RegisterLikeService implements RegisterLikeUseCase {
     @Override
     @Transactional
     public boolean pushLike(Member member, Long nftId) {
-        if (member == null) {
-            throw new BaseException(MemberErrorCode.UN_REGISTERED_MEMBER);
-        }
         Nft nft = nftRepository.findByNftIdWithDeleted(nftId)
                 .orElseThrow(() -> new BaseException(NftErrorCode.EMPTY_NFT));
 

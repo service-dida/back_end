@@ -18,9 +18,9 @@ public class RegisterHideController {
 
     /**
      * NFT 숨기기
-     * [POST] /nft/hide
+     * [POST] /common/nft/hide
      */
-    @PostMapping("/nft/hide")
+    @PostMapping("/common/nft/hide")
     public ResponseEntity<Integer> hideCard(
             @RequestParam("nftId") Long nftId, @CurrentMember Member member)
             throws BaseException {
