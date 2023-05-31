@@ -45,10 +45,8 @@ public class WalletService implements WalletUseCase {
     }
 
     @Override
-    public void registerWallet(Long memberId, WalletRequestDto walletRequestDto)
+    public void registerWallet(Member member, WalletRequestDto walletRequestDto)
         throws IOException, ParseException, InterruptedException {
-        Member member = memberRepository.findByMemberId(memberId)
-            .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER));
         if (checkPassword(walletRequestDto)) {
             register(member, walletRequestDto.getPayPwd());
         } else {
