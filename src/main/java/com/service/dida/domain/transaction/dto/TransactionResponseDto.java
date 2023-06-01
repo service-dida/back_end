@@ -14,7 +14,7 @@ public class TransactionResponseDto {
     public static class SwapHistory{
         private Long transactionId;
         private Type type;
-        private double sendAmount;
+        private double coin;
         private LocalDateTime time;
     }
 }
