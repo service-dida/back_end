@@ -7,7 +7,7 @@ import com.service.dida.domain.transaction.Type;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.MintingTransactionDto;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.SwapTransactionDto;
 import com.service.dida.domain.transaction.repository.TransactionRepository;
-import com.service.dida.domain.transaction.usecase.TransactionUseCase;
+import com.service.dida.domain.transaction.usecase.RegisterTransactionUseCase;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class TransactionService implements TransactionUseCase {
+public class RegisterTransactionService implements RegisterTransactionUseCase {
 
     private final TransactionRepository transactionRepository;
 

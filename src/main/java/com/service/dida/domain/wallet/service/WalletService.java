@@ -7,7 +7,7 @@ import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.transaction.Type;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.SwapTransactionDto;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.TransactionSetDto;
-import com.service.dida.domain.transaction.usecase.TransactionUseCase;
+import com.service.dida.domain.transaction.usecase.RegisterTransactionUseCase;
 import com.service.dida.domain.wallet.Wallet;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.ChangeCoin;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.CheckPwd;
@@ -30,7 +30,7 @@ import org.springframework.stereotype.Service;
 public class WalletService implements WalletUseCase {
 
     private final WalletRepository walletRepository;
-    private final TransactionUseCase transactionUseCase;
+    private final RegisterTransactionUseCase registerTransactionUseCase;
     private final KasUseCase kasUseCase;
 
     public void save(Wallet wallet) {
@@ -99,7 +99,7 @@ public class WalletService implements WalletUseCase {
         if (SWAP_FEE != 0D) {
             sendFee = kasUseCase.sendDidaToFeeAccount(wallet, SWAP_FEE);
         }
-        transactionUseCase.saveSwapTransaction(Type.SWAP2,
+        registerTransactionUseCase.saveSwapTransaction(Type.SWAP2,
             new SwapTransactionDto(member.getMemberId(), coin - SWAP_FEE,
                 new TransactionSetDto(sendDida, receiveKlay, sendFee)));
     }
@@ -113,7 +113,7 @@ public class WalletService implements WalletUseCase {
         if (SWAP_FEE != 0D) {
             sendFee = kasUseCase.sendKlayToFeeAccount(wallet, SWAP_FEE);
         }
-        transactionUseCase.saveSwapTransaction(Type.SWAP1,
+        registerTransactionUseCase.saveSwapTransaction(Type.SWAP1,
             new SwapTransactionDto(member.getMemberId(), coin - SWAP_FEE,
                 new TransactionSetDto(sendKlay, receiveDida, sendFee)));
     }
