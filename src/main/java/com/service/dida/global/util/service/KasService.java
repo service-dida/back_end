@@ -50,6 +50,9 @@ public class KasService implements KasUseCase {
             .build();
         HttpResponse<String> response = HttpClient.newHttpClient()
             .send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() != 200) {
+            System.out.println(response.body());
+        }
         return checkResponse(response, parameter, errorCode);
     }
 
@@ -123,6 +126,15 @@ public class KasService implements KasUseCase {
     }
 
     @Override
+    public double getDida(Wallet wallet) throws IOException, ParseException, InterruptedException {
+        String url = "https://kip7-api.klaytnapi.com/v1/contract/" + kasProperties.getFtContract()
+            + "/account/" + wallet.getAddress() + "/balance";
+        String dida = useKasApi(url, "GET", HttpRequest.BodyPublishers.noBody(), "balance",
+            WalletErrorCode.FAILED_GET_DIDA);
+        return Double.parseDouble(utilService.pebToHexToDecimal(dida));
+    }
+
+    @Override
     public String mintDida(Wallet wallet, double coin)
         throws IOException, ParseException, InterruptedException {
         String url =
@@ -141,45 +153,63 @@ public class KasService implements KasUseCase {
     @Override
     public String sendKlayToLiquidPool(Wallet sender, double coin)
         throws IOException, ParseException, InterruptedException {
-        return sendKlay(sender, coin, false);
+        return sendKlay(sender.getAddress(), kasProperties.getLiquidPoolAccount(), coin);
     }
 
     @Override
     public String sendKlayToFeeAccount(Wallet sender, double coin)
         throws IOException, ParseException, InterruptedException {
-        return sendKlay(sender, coin, true);
+        return sendKlay(sender.getAddress(), kasProperties.getFeeAccount(), coin);
     }
 
-    private String sendKlay(Wallet sender, double coin, boolean isFee)
+    @Override
+    public String sendKlayFromLiquidPoolToUser(Wallet sender, double coin)
+        throws IOException, ParseException, InterruptedException {
+        return sendKlay(kasProperties.getLiquidPoolAccount(), sender.getAddress(), coin);
+    }
+
+    @Override
+    public String sendDidaToLiquidPool(Wallet sender, double coin)
+        throws IOException, ParseException, InterruptedException {
+        return sendDida(sender, kasProperties.getLiquidPoolAccount(), coin);
+    }
+
+    @Override
+    public String sendDidaToFeeAccount(Wallet sender, double coin)
+        throws IOException, ParseException, InterruptedException {
+        return sendDida(sender, kasProperties.getFeeAccount(), coin);
+    }
+
+    private String sendDida(Wallet sender, String receiverAddress, double coin)
+        throws IOException, ParseException, InterruptedException {
+        String url = "https://kip7-api.klaytnapi.com/v1/contract/" + kasProperties.getFtContract()
+            + "/transfer";
+        String hexAmount = utilService.decimalToHexToPeb(coin);
+        HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(
+            "{\n  " +
+                "\"from\": \"" + sender.getAddress() + "\",\n  " +
+                "\"to\": \"" + receiverAddress + "\",\n  " +
+                "\"amount\": \"" + hexAmount + "\"\n" +
+                "}"
+        );
+        return useKasApi(url, "POST", body, "transactionHash", WalletErrorCode.FAILED_SEND_DIDA);
+    }
+
+    private String sendKlay(String senderAddress, String receiverAddress, double coin)
         throws IOException, ParseException, InterruptedException {
         String url = "https://wallet-api.klaytnapi.com/v2/tx/fd-user/value";
         String hexPay = utilService.decimalToHexToPeb(coin);
-        HttpRequest.BodyPublisher body = null;
-        if (isFee) {
-            body = HttpRequest.BodyPublishers.ofString(
-                "{\n  " +
-                    "\"from\": \"" + sender.getAddress() + "\",\n  " +
-                    "\"value\": \"" + hexPay + "\",\n  " +
-                    "\"to\": \"" + kasProperties.getFeeAccount() + "\",\n  " +
-                    "\"memo\": \"0x123\",\n  " +
-                    "\"nonce\": 0,\n  " +
-                    "\"gas\": 0,\n  " +
-                    "\"submit\": true,\n  " +
-                    "\"feePayer\": \"" + kasProperties.getFeePayerAccount() + "\"\n" +
-                    "}");
-        } else {
-            HttpRequest.BodyPublishers.ofString(
-                "{\n  " +
-                    "\"from\": \"" + sender.getAddress() + "\",\n  " +
-                    "\"value\": \"" + hexPay + "\",\n  " +
-                    "\"to\": \"" + kasProperties.getLiquidPoolAccount() + "\",\n  " +
-                    "\"memo\": \"0x123\",\n  " +
-                    "\"nonce\": 0,\n  " +
-                    "\"gas\": 0,\n  " +
-                    "\"submit\": true,\n  " +
-                    "\"feePayer\": \"" + kasProperties.getFeePayerAccount() + "\"\n" +
-                    "}");
-        }
+        HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(
+            "{\n  " +
+                "\"from\": \"" + senderAddress + "\",\n  " +
+                "\"value\": \"" + hexPay + "\",\n  " +
+                "\"to\": \"" + receiverAddress + "\",\n  " +
+                "\"memo\": \"0x123\",\n  " +
+                "\"nonce\": 0,\n  " +
+                "\"gas\": 0,\n  " +
+                "\"submit\": true,\n  " +
+                "\"feePayer\": \"" + kasProperties.getFeePayerAccount() + "\"\n" +
+                "}");
         return useKasApi(url, "POST", body, "transactionHash", WalletErrorCode.FAILED_SEND_KLAY);
     }
 

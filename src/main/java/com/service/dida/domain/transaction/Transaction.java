@@ -45,7 +45,7 @@ public class Transaction extends BaseEntity {
     private String payTransaction;
     @Column(name = "pay_back_transaction")
     private String payBackTransaction;
-    @Column(name = "ree_transaction")
+    @Column(name = "fee_transaction")
     private String feeTransaction;
 
     public void setTransactionSet(TransactionSetDto transactionSet) {

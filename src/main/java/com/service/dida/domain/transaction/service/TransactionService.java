@@ -38,9 +38,9 @@ public class TransactionService implements TransactionUseCase {
     }
 
     @Override
-    public void saveSwapKlayToDidaTransaction(SwapTransactionDto swapTransactionDto) {
+    public void saveSwapTransaction(Type type, SwapTransactionDto swapTransactionDto) {
         Transaction transaction = Transaction.builder()
-            .type(Type.SWAP1)
+            .type(type)
             .buyerId(swapTransactionDto.getSwaperId())
             .payAmount(swapTransactionDto.getCoin())
             .payBackAmount(swapTransactionDto.getCoin())
