@@ -1,8 +1,11 @@
 package com.service.dida.domain.transaction.service;
 
+import static com.service.dida.global.config.constants.ServerConstants.MINTING_FEE;
+
 import com.service.dida.domain.transaction.Transaction;
 import com.service.dida.domain.transaction.Type;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.MintingTransactionDto;
+import com.service.dida.domain.transaction.dto.TransactionRequestDto.SwapTransactionDto;
 import com.service.dida.domain.transaction.repository.TransactionRepository;
 import com.service.dida.domain.transaction.usecase.TransactionUseCase;
 import jakarta.transaction.Transactional;
@@ -26,11 +29,26 @@ public class TransactionService implements TransactionUseCase {
             .type(Type.MINTING)
             .buyerId(mintingTransactionDto.getBuyerId())
             .sellerId(null)
-            .payAmount(1D)  // 고정 금액으로 수정 필요
+            .payAmount(MINTING_FEE)
             .payBackAmount(null)
             .nftId(mintingTransactionDto.getNftId())
             .build();
         transaction.setTransactionSet(mintingTransactionDto.getTransactionSetDto());
         save(transaction);
     }
+
+    @Override
+    public void saveSwapKlayToDidaTransaction(SwapTransactionDto swapTransactionDto) {
+        Transaction transaction = Transaction.builder()
+            .type(Type.SWAP1)
+            .buyerId(swapTransactionDto.getSwaperId())
+            .payAmount(swapTransactionDto.getCoin())
+            .payBackAmount(swapTransactionDto.getCoin())
+            .nftId(null)
+            .build();
+        transaction.setTransactionSet(swapTransactionDto.getTransactionSetDto());
+        save(transaction);
+    }
+
+
 }

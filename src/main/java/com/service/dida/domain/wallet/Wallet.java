@@ -49,4 +49,16 @@ public class Wallet extends BaseEntity {
             super.updateEntity();
         }
     }
+
+    public void checkPayPwd(String pwd) {
+        if (this.wrongCnt == 5) {
+            throw new BaseException(WalletErrorCode.FIVE_ERRORS_FOR_PWD);
+        }
+        if (this.getPayPwd().equals(pwd)) {
+            this.wrongCnt = 0;
+        } else {
+            this.wrongCnt += 1;
+            throw new BaseException(WalletErrorCode.WRONG_PWD);
+        }
+    }
 }
