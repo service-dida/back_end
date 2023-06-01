@@ -1,6 +1,5 @@
 package com.service.dida.domain.wallet;
 
-import com.service.dida.domain.member.entity.Member;
 import com.service.dida.global.common.BaseEntity;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.WalletErrorCode;
@@ -9,10 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,17 +34,6 @@ public class Wallet extends BaseEntity {
 
     @Column(name = "wrong_cnt", nullable = false)
     private int wrongCnt;
-
-    @OneToOne(mappedBy = "wallet")
-    private Member member;
-
-    public void useWallet() {
-        if (Duration.between(this.getUpdatedAt(), LocalDateTime.now()).getSeconds() < 180) {
-            throw new BaseException(WalletErrorCode.FAILED_USE_WALLET);
-        } else {
-            super.updateEntity();
-        }
-    }
 
     public void checkPayPwd(String pwd) {
         if (this.wrongCnt == 5) {

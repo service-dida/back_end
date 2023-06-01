@@ -12,6 +12,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -91,5 +92,9 @@ public class Member extends BaseEntity {
 
     public void changeDeleted(boolean flag) {
         this.deleted = flag;
+    }
+
+    public void updateWallet(Wallet wallet) {
+        this.wallet = wallet;
     }
 }

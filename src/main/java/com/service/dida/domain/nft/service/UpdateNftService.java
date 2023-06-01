@@ -6,6 +6,7 @@ import com.service.dida.domain.nft.dto.NftRequestDto.SendNftRequestDto;
 import com.service.dida.domain.nft.repository.NftRepository;
 import com.service.dida.domain.nft.usecase.UpdateNftUseCase;
 import com.service.dida.domain.wallet.repository.WalletRepository;
+import com.service.dida.domain.wallet.usecase.WalletUseCase;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.NftErrorCode;
 import com.service.dida.global.config.exception.errorCode.WalletErrorCode;
@@ -24,6 +25,7 @@ public class UpdateNftService implements UpdateNftUseCase {
     private final NftRepository nftRepository;
     private final WalletRepository walletRepository;
     private final KasUseCase kasUseCase;
+    private final WalletUseCase walletUseCase;
 
     @Override
     public void deleteNft(Member member, Long nftId) {
@@ -36,7 +38,8 @@ public class UpdateNftService implements UpdateNftUseCase {
     public void sendNftOutside(Member member, SendNftRequestDto sendNftRequestDto)
         throws IOException, ParseException, InterruptedException {
         checkSendNftOutside(member, sendNftRequestDto);
-        member.getWallet().useWallet();
+        walletUseCase.useWallet(member.getWallet());
+
         Nft nft = nftRepository.findByNftIdWithDeletedAndMember(member,
                 sendNftRequestDto.getNftId())
             .orElseThrow(() -> new BaseException(NftErrorCode.EMPTY_NFT));
