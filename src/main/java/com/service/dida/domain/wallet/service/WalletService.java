@@ -1,11 +1,15 @@
 package com.service.dida.domain.wallet.service;
 
 import static com.service.dida.global.config.constants.ServerConstants.SEND_KLAY_OUTSIDE_FEE;
+import static com.service.dida.global.config.constants.ServerConstants.SEND_NFT_OUTSIDE_FEE;
 import static com.service.dida.global.config.constants.ServerConstants.SWAP_FEE;
 
 import com.service.dida.domain.member.Role;
 import com.service.dida.domain.member.entity.Member;
+import com.service.dida.domain.nft.Nft;
+import com.service.dida.domain.nft.repository.NftRepository;
 import com.service.dida.domain.transaction.TransactionType;
+import com.service.dida.domain.transaction.dto.TransactionRequestDto.MintingTransactionDto;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.SendKlayOutsideTransactionDto;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.SwapTransactionDto;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.TransactionSetDto;
@@ -14,9 +18,11 @@ import com.service.dida.domain.wallet.Wallet;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.ChangeCoin;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.CheckPwd;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.SendKlayOutside;
+import com.service.dida.domain.wallet.dto.WalletRequestDto.SendNftRequestDto;
 import com.service.dida.domain.wallet.repository.WalletRepository;
 import com.service.dida.domain.wallet.usecase.WalletUseCase;
 import com.service.dida.global.config.exception.BaseException;
+import com.service.dida.global.config.exception.errorCode.NftErrorCode;
 import com.service.dida.global.config.exception.errorCode.WalletErrorCode;
 import com.service.dida.global.util.usecase.KasUseCase;
 import jakarta.transaction.Transactional;
@@ -33,6 +39,7 @@ import org.springframework.stereotype.Service;
 public class WalletService implements WalletUseCase {
 
     private final WalletRepository walletRepository;
+    private final NftRepository nftRepository;
     private final RegisterTransactionUseCase registerTransactionUseCase;
     private final KasUseCase kasUseCase;
 
@@ -101,6 +108,42 @@ public class WalletService implements WalletUseCase {
         sendKlayOutsideFun(member, sendKlayOutside);
     }
 
+    @Override
+    public void sendNftOutside(Member member, SendNftRequestDto sendNftRequestDto)
+        throws IOException, ParseException, InterruptedException {
+        checkSendNftOutside(member, sendNftRequestDto);
+
+        Nft nft = nftRepository.findByNftIdWithDeletedAndMember(member,
+                sendNftRequestDto.getNftId())
+            .orElseThrow(() -> new BaseException(NftErrorCode.EMPTY_NFT));
+        sendNftOutsideFun(member, nft, sendNftRequestDto);
+    }
+
+    private void checkSendNftOutside(Member member, SendNftRequestDto sendNftRequestDto)
+        throws IOException, ParseException, InterruptedException {
+        if (walletRepository.existsWalletByAddress(sendNftRequestDto.getAddress()).orElse(false)) {
+            throw new BaseException(WalletErrorCode.IN_MEMBER_ADDRESS);
+        }
+        member.getWallet().checkPayPwd(sendNftRequestDto.getPayPwd());
+        useWallet(member.getWallet());
+        checkDida(member.getWallet(), SEND_NFT_OUTSIDE_FEE);
+    }
+
+    private void sendNftOutsideFun(Member member, Nft nft, SendNftRequestDto sendNftRequestDto)
+        throws IOException, ParseException, InterruptedException {
+        Wallet wallet = member.getWallet();
+        String sendNft = kasUseCase.sendNftOutside(member.getWallet().getAddress(),
+            sendNftRequestDto.getAddress(), nft.getId());
+        String sendFee = "";
+        if (SEND_NFT_OUTSIDE_FEE != 0D) {
+            sendFee = kasUseCase.sendDidaToFeeAccount(wallet, SEND_NFT_OUTSIDE_FEE);
+        }
+        registerTransactionUseCase.saveSendNftOutsideTransaction(
+            new MintingTransactionDto(member.getMemberId(), nft.getNftId(),
+                new TransactionSetDto(sendNft, null, sendFee)));
+        nft.changeDeleted(true);
+    }
+
     private void checkForSendKlayOutside(Wallet wallet, SendKlayOutside sendKlayOutside)
         throws IOException, ParseException, InterruptedException {
         if (walletRepository.existsWalletByAddress(sendKlayOutside.getAddress()).orElse(false)) {
@@ -157,14 +200,14 @@ public class WalletService implements WalletUseCase {
 
     private void checkDida(Wallet wallet, double coin)
         throws IOException, ParseException, InterruptedException {
-        if (kasUseCase.getDida(wallet) < coin - SWAP_FEE) {
+        if (kasUseCase.getDida(wallet) < coin) {
             throw new BaseException(WalletErrorCode.NOT_ENOUGH_COIN);
         }
     }
 
     private void checkKlay(Wallet wallet, double coin)
         throws IOException, ParseException, InterruptedException {
-        if (kasUseCase.getKlay(wallet) < coin - SWAP_FEE) {
+        if (kasUseCase.getKlay(wallet) < coin) {
             throw new BaseException(WalletErrorCode.NOT_ENOUGH_COIN);
         }
     }

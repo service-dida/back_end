@@ -4,6 +4,7 @@ import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.wallet.dto.WalletRequestDto;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.ChangeCoin;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.SendKlayOutside;
+import com.service.dida.domain.wallet.dto.WalletRequestDto.SendNftRequestDto;
 import com.service.dida.domain.wallet.usecase.WalletUseCase;
 import com.service.dida.global.config.security.auth.CurrentMember;
 import jakarta.validation.Valid;
@@ -56,13 +57,25 @@ public class WalletController {
     }
 
     /**
-     * 클레이를 외부 전송하
+     * 클레이를 외부 전송하기
      */
     @PostMapping("/member/klay/outside")
     public ResponseEntity<Integer> sendKlayOutside(@CurrentMember Member member,
         @Valid @RequestBody SendKlayOutside sendKlayOutside)
         throws IOException, ParseException, InterruptedException {
         walletUseCase.sendKlayOutside(member, sendKlayOutside);
+        return new ResponseEntity<>(200, HttpStatus.OK);
+    }
+
+
+    /**
+     * NFT 전송하기 Api
+     */
+    @PostMapping("/member/nft/outside")
+    public ResponseEntity<Integer> sendNftOutside(@CurrentMember Member member,
+        @RequestBody SendNftRequestDto sendNftRequestDto)
+        throws IOException, ParseException, InterruptedException {
+        walletUseCase.sendNftOutside(member, sendNftRequestDto);
         return new ResponseEntity<>(200, HttpStatus.OK);
     }
 }

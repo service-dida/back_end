@@ -35,7 +35,7 @@ public class Transaction extends BaseEntity {
     private Long buyerId;
     @Column(name = "seller_id")
     private Long sellerId;
-    @Column(name = "pay_amount", nullable = false)
+    @Column(name = "pay_amount")
     private Double payAmount;
     @Column(name = "pay_back_amount")
     private Double payBackAmount;

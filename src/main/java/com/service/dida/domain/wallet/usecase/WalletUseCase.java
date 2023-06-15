@@ -5,6 +5,7 @@ import com.service.dida.domain.wallet.Wallet;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.ChangeCoin;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.CheckPwd;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.SendKlayOutside;
+import com.service.dida.domain.wallet.dto.WalletRequestDto.SendNftRequestDto;
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
 
@@ -21,5 +22,8 @@ public interface WalletUseCase {
         throws IOException, ParseException, InterruptedException;
 
     void sendKlayOutside(Member member, SendKlayOutside sendKlayOutside)
+        throws IOException, ParseException, InterruptedException;
+
+    void sendNftOutside(Member member, SendNftRequestDto sendNftRequestDto)
         throws IOException, ParseException, InterruptedException;
 }

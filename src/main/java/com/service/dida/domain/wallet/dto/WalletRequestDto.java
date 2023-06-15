@@ -35,4 +35,15 @@ public class WalletRequestDto {
         private String address;
     }
 
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SendNftRequestDto {
+        @NotBlank(message = "비밀번호가 일치하지 않습니다.")
+        private String payPwd;
+        @NotBlank(message = "Nft Id가 없습니다.")
+        private Long nftId;
+        @NotBlank(message = "주소가 없습니다.")
+        private String address;
+    }
 }

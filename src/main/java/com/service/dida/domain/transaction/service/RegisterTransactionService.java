@@ -63,5 +63,15 @@ public class RegisterTransactionService implements RegisterTransactionUseCase {
         save(transaction);
     }
 
+    @Override
+    public void saveSendNftOutsideTransaction(MintingTransactionDto mintingTransactionDto) {
+        Transaction transaction = Transaction.builder()
+            .buyerId(mintingTransactionDto.getBuyerId())
+            .nftId(mintingTransactionDto.getNftId())
+            .build();
+        transaction.setTransactionSet(mintingTransactionDto.getTransactionSetDto());
+        save(transaction);
+    }
+
 
 }

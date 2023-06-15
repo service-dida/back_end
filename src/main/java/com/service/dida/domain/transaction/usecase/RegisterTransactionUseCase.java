@@ -12,4 +12,6 @@ public interface RegisterTransactionUseCase {
 
     void saveSendKlayOutsideTransaction(
         SendKlayOutsideTransactionDto sendKlayOutsideTransactionDto);
+
+    void saveSendNftOutsideTransaction(MintingTransactionDto mintingTransactionDto);
 }
