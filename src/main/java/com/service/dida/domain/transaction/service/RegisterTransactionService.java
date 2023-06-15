@@ -3,8 +3,9 @@ package com.service.dida.domain.transaction.service;
 import static com.service.dida.global.config.constants.ServerConstants.MINTING_FEE;
 
 import com.service.dida.domain.transaction.Transaction;
-import com.service.dida.domain.transaction.Type;
+import com.service.dida.domain.transaction.TransactionType;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.MintingTransactionDto;
+import com.service.dida.domain.transaction.dto.TransactionRequestDto.SendKlayOutsideTransactionDto;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.SwapTransactionDto;
 import com.service.dida.domain.transaction.repository.TransactionRepository;
 import com.service.dida.domain.transaction.usecase.RegisterTransactionUseCase;
@@ -26,7 +27,7 @@ public class RegisterTransactionService implements RegisterTransactionUseCase {
     @Override
     public void saveMintingTransaction(MintingTransactionDto mintingTransactionDto) {
         Transaction transaction = Transaction.builder()
-            .type(Type.MINTING)
+            .type(TransactionType.MINTING)
             .buyerId(mintingTransactionDto.getBuyerId())
             .sellerId(null)
             .payAmount(MINTING_FEE)
@@ -38,7 +39,7 @@ public class RegisterTransactionService implements RegisterTransactionUseCase {
     }
 
     @Override
-    public void saveSwapTransaction(Type type, SwapTransactionDto swapTransactionDto) {
+    public void saveSwapTransaction(TransactionType type, SwapTransactionDto swapTransactionDto) {
         Transaction transaction = Transaction.builder()
             .type(type)
             .buyerId(swapTransactionDto.getSwaperId())
@@ -47,6 +48,18 @@ public class RegisterTransactionService implements RegisterTransactionUseCase {
             .nftId(null)
             .build();
         transaction.setTransactionSet(swapTransactionDto.getTransactionSetDto());
+        save(transaction);
+    }
+
+    @Override
+    public void saveSendKlayOutsideTransaction(
+        SendKlayOutsideTransactionDto sendKlayOutsideTransactionDto) {
+        Transaction transaction = Transaction.builder()
+            .type(TransactionType.SEND_OUT_KLAY)
+            .buyerId(sendKlayOutsideTransactionDto.getSenderId())
+            .payAmount(sendKlayOutsideTransactionDto.getCoin())
+            .build();
+        transaction.setTransactionSet(sendKlayOutsideTransactionDto.getTransactionSetDto());
         save(transaction);
     }
 

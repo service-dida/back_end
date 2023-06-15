@@ -111,6 +111,12 @@ public class KasService implements KasUseCase {
     }
 
     @Override
+    public String sendKlayOutside(String sendAddress, String receiveAddress, double coin)
+        throws IOException, ParseException, InterruptedException {
+        return sendKlay(sendAddress,receiveAddress,coin);
+    }
+
+    @Override
     public double getKlay(Wallet wallet) throws IOException, ParseException, InterruptedException {
         String url = "https://node-api.klaytnapi.com/v1/klaytn";
         HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(

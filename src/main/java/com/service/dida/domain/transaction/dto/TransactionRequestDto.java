@@ -32,4 +32,13 @@ public class TransactionRequestDto {
         private double coin;        // 수수료를 제외한 양
         private TransactionSetDto transactionSetDto;
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SendKlayOutsideTransactionDto {
+        private Long senderId;
+        private double coin;        // 수수료를 제외한 양
+        private TransactionSetDto transactionSetDto;
+    }
 }

@@ -42,4 +42,7 @@ public interface KasUseCase {
 
     String sendNftOutside(String sendAddress, String receiveAddress, String id)
         throws IOException, ParseException, InterruptedException;
+
+    String sendKlayOutside(String sendAddress, String receiveAddress, double coin)
+        throws IOException, ParseException, InterruptedException;
 }

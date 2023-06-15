@@ -1,16 +1,19 @@
 package com.service.dida.domain.wallet.service;
 
+import static com.service.dida.global.config.constants.ServerConstants.SEND_KLAY_OUTSIDE_FEE;
 import static com.service.dida.global.config.constants.ServerConstants.SWAP_FEE;
 
 import com.service.dida.domain.member.Role;
 import com.service.dida.domain.member.entity.Member;
-import com.service.dida.domain.transaction.Type;
+import com.service.dida.domain.transaction.TransactionType;
+import com.service.dida.domain.transaction.dto.TransactionRequestDto.SendKlayOutsideTransactionDto;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.SwapTransactionDto;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.TransactionSetDto;
 import com.service.dida.domain.transaction.usecase.RegisterTransactionUseCase;
 import com.service.dida.domain.wallet.Wallet;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.ChangeCoin;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.CheckPwd;
+import com.service.dida.domain.wallet.dto.WalletRequestDto.SendKlayOutside;
 import com.service.dida.domain.wallet.repository.WalletRepository;
 import com.service.dida.domain.wallet.usecase.WalletUseCase;
 import com.service.dida.global.config.exception.BaseException;
@@ -90,6 +93,40 @@ public class WalletService implements WalletUseCase {
         exchangeDida(member, changeCoin.getCoin());
     }
 
+    @Override
+    public void sendKlayOutside(Member member, SendKlayOutside sendKlayOutside)
+        throws IOException, ParseException, InterruptedException {
+        Wallet wallet = member.getWallet();
+        checkForSendKlayOutside(wallet, sendKlayOutside);
+        sendKlayOutsideFun(member, sendKlayOutside);
+    }
+
+    private void checkForSendKlayOutside(Wallet wallet, SendKlayOutside sendKlayOutside)
+        throws IOException, ParseException, InterruptedException {
+        if (walletRepository.existsWalletByAddress(sendKlayOutside.getAddress()).orElse(false)) {
+            throw new BaseException(WalletErrorCode.IN_MEMBER_ADDRESS);
+        }
+        wallet.checkPayPwd(sendKlayOutside.getChangeCoin().getPayPwd());
+        useWallet(wallet);
+        checkKlay(wallet, sendKlayOutside.getChangeCoin().getCoin());
+    }
+
+    private void sendKlayOutsideFun(Member member, SendKlayOutside sendKlayOutside)
+        throws IOException, ParseException, InterruptedException {
+        Wallet wallet = member.getWallet();
+        String sendKlay = kasUseCase.sendKlayOutside(wallet.getAddress(),
+            sendKlayOutside.getAddress(), sendKlayOutside.getChangeCoin().getCoin());
+        String sendFee = "";
+        if (SEND_KLAY_OUTSIDE_FEE != 0D) {
+            sendFee = kasUseCase.sendDidaToFeeAccount(wallet, SEND_KLAY_OUTSIDE_FEE);
+        }
+        registerTransactionUseCase.saveSendKlayOutsideTransaction(
+            new SendKlayOutsideTransactionDto(member.getMemberId(),
+                sendKlayOutside.getChangeCoin().getCoin(),
+                new TransactionSetDto(sendKlay, null, sendFee)));
+    }
+
+
     private void exchangeDida(Member member, double coin)
         throws IOException, ParseException, InterruptedException {
         Wallet wallet = member.getWallet();
@@ -99,7 +136,7 @@ public class WalletService implements WalletUseCase {
         if (SWAP_FEE != 0D) {
             sendFee = kasUseCase.sendDidaToFeeAccount(wallet, SWAP_FEE);
         }
-        registerTransactionUseCase.saveSwapTransaction(Type.SWAP2,
+        registerTransactionUseCase.saveSwapTransaction(TransactionType.SWAP2,
             new SwapTransactionDto(member.getMemberId(), coin - SWAP_FEE,
                 new TransactionSetDto(sendDida, receiveKlay, sendFee)));
     }
@@ -113,7 +150,7 @@ public class WalletService implements WalletUseCase {
         if (SWAP_FEE != 0D) {
             sendFee = kasUseCase.sendKlayToFeeAccount(wallet, SWAP_FEE);
         }
-        registerTransactionUseCase.saveSwapTransaction(Type.SWAP1,
+        registerTransactionUseCase.saveSwapTransaction(TransactionType.SWAP1,
             new SwapTransactionDto(member.getMemberId(), coin - SWAP_FEE,
                 new TransactionSetDto(sendKlay, receiveDida, sendFee)));
     }
