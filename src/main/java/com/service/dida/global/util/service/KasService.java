@@ -7,8 +7,8 @@ import com.service.dida.global.config.exception.ErrorCode;
 import com.service.dida.global.config.exception.errorCode.NftErrorCode;
 import com.service.dida.global.config.exception.errorCode.WalletErrorCode;
 import com.service.dida.global.config.properties.KasProperties;
-import com.service.dida.global.util.UtilService;
 import com.service.dida.global.util.usecase.KasUseCase;
+import com.service.dida.global.util.usecase.UtilUseCase;
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 public class KasService implements KasUseCase {
 
     private final KasProperties kasProperties;
-    private final UtilService utilService;
+    private final UtilUseCase utilUseCase;
 
     private String checkResponse(HttpResponse<String> response, String parameter,
         ErrorCode errorCode) throws BaseException, ParseException {
@@ -122,7 +122,7 @@ public class KasService implements KasUseCase {
                 "}"
         );
         String balance = useKasApi(url, "POST", body, "result", WalletErrorCode.FAILED_GET_KLAY);
-        return Double.parseDouble(utilService.pebToHexToDecimal(balance));
+        return Double.parseDouble(utilUseCase.pebToDecimal(balance));
     }
 
     @Override
@@ -131,7 +131,7 @@ public class KasService implements KasUseCase {
             + "/account/" + wallet.getAddress() + "/balance";
         String dida = useKasApi(url, "GET", HttpRequest.BodyPublishers.noBody(), "balance",
             WalletErrorCode.FAILED_GET_DIDA);
-        return Double.parseDouble(utilService.pebToHexToDecimal(dida));
+        return Double.parseDouble(utilUseCase.pebToDecimal(dida));
     }
 
     @Override
@@ -139,7 +139,7 @@ public class KasService implements KasUseCase {
         throws IOException, ParseException, InterruptedException {
         String url =
             "https://kip7-api.klaytnapi.com/v1/contract/" + kasProperties.getFtContract() + "/mint";
-        String hexAmount = utilService.decimalToHexToPeb(coin);
+        String hexAmount = utilUseCase.decimalToPeb(coin);
         HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(
             "{\n  " +
                 "\"from\": \"\",\n  " +
@@ -184,7 +184,7 @@ public class KasService implements KasUseCase {
         throws IOException, ParseException, InterruptedException {
         String url = "https://kip7-api.klaytnapi.com/v1/contract/" + kasProperties.getFtContract()
             + "/transfer";
-        String hexAmount = utilService.decimalToHexToPeb(coin);
+        String hexAmount = utilUseCase.decimalToPeb(coin);
         HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(
             "{\n  " +
                 "\"from\": \"" + sender.getAddress() + "\",\n  " +
@@ -198,7 +198,7 @@ public class KasService implements KasUseCase {
     private String sendKlay(String senderAddress, String receiverAddress, double coin)
         throws IOException, ParseException, InterruptedException {
         String url = "https://wallet-api.klaytnapi.com/v2/tx/fd-user/value";
-        String hexPay = utilService.decimalToHexToPeb(coin);
+        String hexPay = utilUseCase.decimalToPeb(coin);
         HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(
             "{\n  " +
                 "\"from\": \"" + senderAddress + "\",\n  " +

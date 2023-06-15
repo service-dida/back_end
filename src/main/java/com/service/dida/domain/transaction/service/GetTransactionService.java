@@ -7,6 +7,8 @@ import com.service.dida.domain.transaction.repository.TransactionRepository;
 import com.service.dida.domain.transaction.usecase.GetTransactionUseCase;
 import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
+import com.service.dida.global.util.usecase.UtilUseCase;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 public class GetTransactionService implements GetTransactionUseCase {
 
     private final TransactionRepository transactionRepository;
+    private final UtilUseCase utilUseCase;
 
     public PageRequest pageReq(PageRequestDto pageRequestDto) {
         // pageRequest 는 원하는 page, 한 page 당 size, 최신 순서 정렬 이라는 요청을 담고 있다.
@@ -34,7 +37,8 @@ public class GetTransactionService implements GetTransactionUseCase {
         Page<Transaction> transactions = transactionRepository.findAllSwapHistoryByMemberId(
             member.getMemberId(), pageReq(pageRequestDto));
         transactions.forEach(t -> history.add(
-            new SwapHistory(t.getTransactionId(), t.getType(), t.getPayAmount(), t.getCreatedAt()))
+            new SwapHistory(t.getTransactionId(), t.getType(), t.getPayAmount(),
+                utilUseCase.localDateTimeFormatting(t.getCreatedAt(), LocalDateTime.now())))
         );
         return new PageResponseDto<>(transactions.getNumber(), transactions.getSize(),
             transactions.hasNext(), history);
