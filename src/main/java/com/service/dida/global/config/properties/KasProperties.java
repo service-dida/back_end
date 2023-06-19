@@ -20,9 +20,9 @@ public class KasProperties {
     @Value("${kas.ft-contract}")
     private String ftContract;
     @Value("${kas.fee-account}")
-    private String feeAccount;
+    private String feeAccount;                  // 수수료를 받아놓는 계좌
     @Value("${kas.fee-payer-account}")
-    private String feePayerAccount;
+    private String feePayerAccount;             // KAS에 수수료를 대납해주는 계좌
     @Value("${kas.liquid-pool-account}")
-    private String liquidPoolAccount;
+    private String liquidPoolAccount;           // 유동성 풀 계좌
 }

@@ -29,13 +29,13 @@ public class Transaction extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
-    private Type type;
+    private TransactionType type;
 
     @Column(name = "buyer_id", nullable = false)
     private Long buyerId;
     @Column(name = "seller_id")
     private Long sellerId;
-    @Column(name = "pay_amount", nullable = false)
+    @Column(name = "pay_amount")
     private Double payAmount;
     @Column(name = "pay_back_amount")
     private Double payBackAmount;
@@ -45,7 +45,7 @@ public class Transaction extends BaseEntity {
     private String payTransaction;
     @Column(name = "pay_back_transaction")
     private String payBackTransaction;
-    @Column(name = "ree_transaction")
+    @Column(name = "fee_transaction")
     private String feeTransaction;
 
     public void setTransactionSet(TransactionSetDto transactionSet) {
