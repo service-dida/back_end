@@ -27,8 +27,7 @@ public class Market extends BaseEntity {
     @Column(name = "deleted", nullable = false, columnDefinition = "boolean default false")
     private boolean deleted;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "nft_id")
+    @OneToOne(mappedBy = "market")
     private Nft nft;
 
     @ManyToOne(fetch = FetchType.LAZY)

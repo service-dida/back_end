@@ -1,17 +1,27 @@
 package com.service.dida.domain.nft;
 
-import com.service.dida.global.common.BaseEntity;
 import com.service.dida.domain.like.Like;
 import com.service.dida.domain.market.Market;
-import com.service.dida.domain.post.Post;
 import com.service.dida.domain.member.entity.Member;
-import jakarta.persistence.*;
+import com.service.dida.domain.post.Post;
+import com.service.dida.global.common.BaseEntity;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Builder
@@ -40,8 +50,6 @@ public class Nft extends BaseEntity {
 
     @Column(name = "is_ai", nullable = false, columnDefinition = "boolean default false")
     private boolean isAi;
-    @Column(name= "marketed", nullable = false, columnDefinition = "boolean default false")
-    private boolean marketed;
 
     @Column(name = "report_cnt", nullable = false, columnDefinition = "int default 0")
     private int reportCnt;
@@ -55,8 +63,9 @@ public class Nft extends BaseEntity {
     @OneToMany(mappedBy = "nft", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "nft", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<Market> markets;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "market_id")
+    private Market market;
 
     @OneToMany(mappedBy = "nft", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Like> likes;
@@ -65,11 +74,15 @@ public class Nft extends BaseEntity {
         this.deleted = flag;
     }
 
+    public boolean isMarketed() {
+        return this.market != null;
+    }
+
     public String getPrice() {
         String price = "NOT SALE";
         if (this.isMarketed()) {
             price = String.format("%.6f", Double.valueOf(
-                    this.getMarkets().get(this.getMarkets().size() - 1).getPrice() * 1000000).longValue() / 1000000f);
+                this.market.getPrice() * 1000000).longValue() / 1000000f);
         }
         return price;
     }
