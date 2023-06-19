@@ -1,6 +1,7 @@
-package com.service.dida.domain.market;
+package com.service.dida.domain.market.service;
 
 import com.service.dida.domain.like.repository.LikeRepository;
+import com.service.dida.domain.market.repository.MarketRepository;
 import com.service.dida.domain.market.dto.GetHotItem;
 import com.service.dida.domain.market.dto.GetHotSeller;
 import com.service.dida.domain.market.dto.GetHotUser;
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class MarketService {
+public class GetMarketService {
 
     private final MemberRepository memberRepository;
     private final MarketRepository marketRepository;
