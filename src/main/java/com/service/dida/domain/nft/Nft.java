@@ -63,8 +63,7 @@ public class Nft extends BaseEntity {
     @OneToMany(mappedBy = "nft", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Post> posts;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "market_id")
+    @OneToOne(mappedBy = "nft", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Market market;
 
     @OneToMany(mappedBy = "nft", cascade = {CascadeType.ALL}, orphanRemoval = true)

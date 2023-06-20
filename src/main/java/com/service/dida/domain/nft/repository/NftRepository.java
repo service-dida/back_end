@@ -10,10 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NftRepository extends JpaRepository<Nft, Long> {
 
-    @Query(value = "select n from Nft n JOIN FETCH n.market where n.nftId = :nftId and n.deleted = false")
+    @Query(value = "select n from Nft n LEFT JOIN FETCH n.market where n.nftId = :nftId and n.deleted = false")
     Optional<Nft> findByNftIdWithDeleted(Long nftId);
 
-    @Query(value = "select n from Nft n JOIN FETCH n.market where n.nftId = :nftId and n.member = :member and n.deleted = false")
+    @Query(value = "select n from Nft n LEFT JOIN FETCH n.market where n.nftId = :nftId and n.member = :member and n.deleted = false")
     Optional<Nft> findByNftIdWithDeletedAndMember(Member member, Long nftId);
-
 }
