@@ -65,7 +65,7 @@ public class RegisterReportService implements RegisterReportUseCase {
 
     @Override
     @Transactional
-    public void registerReportUser(Member member, RegisterReport registerReport) {
+    public void registerReportMember(Member member, RegisterReport registerReport) {
         Member reportedMember = memberRepository.findByMemberIdWithDeleted((registerReport.getReportedId()))
                 .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER));
 

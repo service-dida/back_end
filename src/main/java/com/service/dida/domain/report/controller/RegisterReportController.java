@@ -21,14 +21,14 @@ public class RegisterReportController {
     private RegisterReportUseCase registerReportUseCase;
 
     /**
-     * 유저 신고하기
-     * [POST] /common/report/user
+     * 사용자 신고하기
+     * [POST] /common/report/member
      */
     @ResponseBody
-    @PostMapping("/common/report/user")
-    public ResponseEntity<Integer> registerReportUser(@CurrentMember Member member,
+    @PostMapping("/common/report/member")
+    public ResponseEntity<Integer> registerReportMember(@CurrentMember Member member,
             @RequestBody @Valid RegisterReport registerReport) throws BaseException {
-        registerReportUseCase.registerReportUser(member, registerReport);
+        registerReportUseCase.registerReportMember(member, registerReport);
         return new ResponseEntity<>(200, HttpStatus.OK);
     }
 
