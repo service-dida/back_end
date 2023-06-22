@@ -1,5 +1,6 @@
 package com.service.dida.global.util.usecase;
 
+import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.nft.dto.NftRequestDto.PostNftRequestDto;
 import com.service.dida.domain.wallet.Wallet;
 import java.io.IOException;
@@ -36,9 +37,11 @@ public interface KasUseCase {
     String sendDidaToFeeAccount(Wallet sender, double coin)
         throws IOException, ParseException, InterruptedException;
 
-//    String sendDidaToSeller(Wallet sender,Wallet receiver, double coin);
+    String sendDidaToSeller(Wallet sender,Wallet receiver, double coin)
+        throws IOException, ParseException, InterruptedException;
 
-//    String sendNft(Wallet sender, Wallet receiver, Nft nft);
+    String sendNft(Wallet sender, Wallet receiver, Nft nft)
+        throws IOException, ParseException, InterruptedException;
 
     String sendNftOutside(String sendAddress, String receiveAddress, String id)
         throws IOException, ParseException, InterruptedException;

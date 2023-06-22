@@ -2,6 +2,7 @@ package com.service.dida.domain.transaction.usecase;
 
 import com.service.dida.domain.transaction.TransactionType;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.MintingTransactionDto;
+import com.service.dida.domain.transaction.dto.TransactionRequestDto.PurchaseNftOnMarketTransactionDto;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.SendKlayOutsideTransactionDto;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.SwapTransactionDto;
 
@@ -14,4 +15,7 @@ public interface RegisterTransactionUseCase {
         SendKlayOutsideTransactionDto sendKlayOutsideTransactionDto);
 
     void saveSendNftOutsideTransaction(MintingTransactionDto mintingTransactionDto);
+
+    void savePurchaseNftOnMarketTransaction(
+        PurchaseNftOnMarketTransactionDto purchaseNftOnMarketTransactionDto);
 }

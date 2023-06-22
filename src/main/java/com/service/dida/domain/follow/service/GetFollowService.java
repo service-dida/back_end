@@ -15,7 +15,8 @@ public class GetFollowService implements GetFollowUseCase {
 
     @Override
     public boolean checkIsFollowed(Member member, Member owner) {
-        Follow follow = followRepository.findByMemberWithOwner(member, owner).orElse(null);
+        Follow follow = followRepository.findByMemberWithOwner(member.getMemberId(),
+            owner.getMemberId()).orElse(null);
         if (follow == null) {
             return false;
         } else {

@@ -1,5 +1,6 @@
 package com.service.dida.global.util.service;
 
+import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.nft.dto.NftRequestDto.PostNftRequestDto;
 import com.service.dida.domain.wallet.Wallet;
 import com.service.dida.global.config.exception.BaseException;
@@ -184,6 +185,18 @@ public class KasService implements KasUseCase {
     public String sendDidaToFeeAccount(Wallet sender, double coin)
         throws IOException, ParseException, InterruptedException {
         return sendDida(sender, kasProperties.getFeeAccount(), coin);
+    }
+
+    @Override
+    public String sendDidaToSeller(Wallet sender, Wallet receiver, double coin)
+        throws IOException, ParseException, InterruptedException {
+        return sendDida(sender,receiver.getAddress(),coin);
+    }
+
+    @Override
+    public String sendNft(Wallet sender, Wallet receiver, Nft nft)
+        throws IOException, ParseException, InterruptedException {
+        return sendNftOutside(sender.getAddress(),receiver.getAddress(),nft.getId());
     }
 
     private String sendDida(Wallet sender, String receiverAddress, double coin)

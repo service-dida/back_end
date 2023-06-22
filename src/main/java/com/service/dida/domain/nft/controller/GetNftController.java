@@ -19,7 +19,7 @@ public class GetNftController {
     /**
      * NFT 상세 보기 Api
      */
-    @GetMapping("/common/nft/{nftId}")
+    @GetMapping("/nft/{nftId}")
     public ResponseEntity<NftDetailInfo> getNftDetail(@CurrentMember Member member,
         @PathVariable(value = "nftId") Long nftId) {
         return new ResponseEntity<>(getNftUseCase.getNftDetail(member, nftId), HttpStatus.OK);
