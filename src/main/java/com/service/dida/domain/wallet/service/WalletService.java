@@ -248,10 +248,6 @@ public class WalletService implements WalletUseCase {
         }
     }
 
-    private void checkWallet(Wallet wallet) {
-        useWallet(wallet);
-    }
-
     private void checkWallet(Wallet wallet, String payPwd) {
         wallet.checkPayPwd(payPwd);
         useWallet(wallet);
