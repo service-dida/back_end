@@ -1,6 +1,7 @@
-package com.service.dida.domain.market;
+package com.service.dida.domain.market.service;
 
 import com.service.dida.domain.like.repository.LikeRepository;
+import com.service.dida.domain.market.repository.MarketRepository;
 import com.service.dida.domain.market.dto.GetHotItem;
 import com.service.dida.domain.market.dto.GetHotSeller;
 import com.service.dida.domain.market.dto.GetHotUser;
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class MarketService {
+public class GetMarketService {
 
     private final MemberRepository memberRepository;
     private final MarketRepository marketRepository;
@@ -38,16 +39,16 @@ public class MarketService {
         // 2. 가격 처리
         String price = "";
         if (nft.isMarketed()) {
-            price = utilUseCase.doubleToString(nft.getMarkets().get(nft.getMarkets().size() - 1).getPrice());
+            price = utilUseCase.doubleToString(nft.getMarket().getPrice());
         }
 
         return GetHotItem.builder()
-                .nftId(nft.getNftId())
-                .nftImgUrl(nft.getImgUrl())
-                .nftName(nft.getTitle())
-                .price(price)
-                .likeCount(like)
-                .build();
+            .nftId(nft.getNftId())
+            .nftImgUrl(nft.getImgUrl())
+            .nftName(nft.getTitle())
+            .price(price)
+            .likeCount(like)
+            .build();
     }
 
     public List<GetHotItem> getHotItems(Member member) {
@@ -70,7 +71,7 @@ public class MarketService {
 
     public GetMainPageWithoutSoldOut getMainPage(Long memberId) {
         Member member = memberRepository.findByMemberIdWithDeleted((memberId))
-                .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER));
+            .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER));
 
         List<GetHotItem> hotItems = new ArrayList<>();
         List<GetHotSeller> hotSellers = new ArrayList<>();

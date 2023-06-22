@@ -1,9 +1,18 @@
 package com.service.dida.domain.market;
 
-import com.service.dida.global.common.BaseEntity;
-import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.member.entity.Member;
-import jakarta.persistence.*;
+import com.service.dida.domain.nft.Nft;
+import com.service.dida.global.common.BaseEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,11 +36,15 @@ public class Market extends BaseEntity {
     @Column(name = "deleted", nullable = false, columnDefinition = "boolean default false")
     private boolean deleted;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "nft_id")
     private Nft nft;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    public void delete() {
+        this.deleted = true;
+    }
 }
