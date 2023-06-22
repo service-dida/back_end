@@ -39,7 +39,7 @@ public class UpdateCommentService implements UpdateCommentUseCase {
                 .orElseThrow(() -> new BaseException(CommentErrorCode.EMPTY_COMMENT));
 
         if (checkIsMe(member, comment.getMember())) {
-            comment.changeDeleted(true);
+            comment.setDeleted();
         }
     }
 }

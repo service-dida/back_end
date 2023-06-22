@@ -78,7 +78,7 @@ public class RegisterReportService implements RegisterReportUseCase {
 
         // 누적 신고 횟수가 기준치 이상이라면 유저 임시 삭제 처리 및 이메일 전송
         if (reportedMember.getReportCnt() >= REPORT_STANDARD) {
-            reportedMember.changeDeleted(true);
+            reportedMember.setDeleted();
             mailUseCase.sendReportMail(reportedMember.getEmail());
         }
     }
@@ -98,7 +98,7 @@ public class RegisterReportService implements RegisterReportUseCase {
 
         // 누적 신고 횟수가 기준치 이상이라면 삭제
         if (reportedPost.getReportCnt() >= REPORT_STANDARD) {
-            reportedPost.changeDeleted(true);
+            reportedPost.setDeleted();
         }
     }
 
@@ -117,7 +117,7 @@ public class RegisterReportService implements RegisterReportUseCase {
 
         // 누적 신고 횟수가 기준치 이상이라면 삭제
         if (reportedComment.getReportCnt() >= REPORT_STANDARD) {
-            reportedComment.changeDeleted(true);
+            reportedComment.setDeleted();
         }
     }
 
@@ -136,7 +136,7 @@ public class RegisterReportService implements RegisterReportUseCase {
 
         // 누적 신고 횟수가 기준치 이상이라면 삭제
         if (reportedNft.getReportCnt() >= REPORT_STANDARD) {
-            reportedNft.changeDeleted(true);
+            reportedNft.setDeleted();
         }
     }
 }

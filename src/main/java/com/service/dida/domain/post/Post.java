@@ -49,8 +49,8 @@ public class Post extends BaseEntity {
         this.title = title;
         this.content = content;
     }
-    public void changeDeleted(boolean flag) {
-        this.deleted = flag;
+    public void setDeleted() {
+        this.deleted = true;
     }
     public void plusReportCnt() {
         this.reportCnt++;

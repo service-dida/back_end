@@ -52,7 +52,7 @@ public class UpdatePostService implements UpdatePostUseCase {
                 .orElseThrow(() -> new BaseException(PostErrorCode.EMPTY_POST));
 
         if (checkIsMe(member, post.getMember())) {
-            post.changeDeleted(true);
+            post.setDeleted();
         }
     }
 

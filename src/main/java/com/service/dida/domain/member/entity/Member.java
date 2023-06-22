@@ -19,7 +19,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -89,13 +91,14 @@ public class Member extends BaseEntity {
         this.deviceToken = deviceToken;
     }
 
-    public void changeDeleted(boolean flag) {
-        this.deleted = flag;
+    public void setDeleted() {
+        this.deleted = true;
     }
 
     public void updateWallet(Wallet wallet) {
         this.wallet = wallet;
     }
+
     public void plusReportCnt() {
         this.reportCnt++;
     }
