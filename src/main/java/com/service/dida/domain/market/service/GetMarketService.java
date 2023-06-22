@@ -1,30 +1,33 @@
-package com.service.dida.domain.market;
+package com.service.dida.domain.market.service;
 
-import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
-
-import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.domain.like.repository.LikeRepository;
-import com.service.dida.domain.market.dto.*;
-import com.service.dida.domain.nft.Nft;
+import com.service.dida.domain.market.repository.MarketRepository;
+import com.service.dida.domain.market.dto.GetHotItem;
+import com.service.dida.domain.market.dto.GetHotSeller;
+import com.service.dida.domain.market.dto.GetHotUser;
+import com.service.dida.domain.market.dto.GetMainPageWithoutSoldOut;
+import com.service.dida.domain.market.dto.GetRecentNft;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.member.repository.MemberRepository;
-import com.service.dida.global.util.UtilService;
+import com.service.dida.domain.nft.Nft;
+import com.service.dida.global.config.exception.BaseException;
+import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
+import com.service.dida.global.util.usecase.UtilUseCase;
+import java.awt.print.Pageable;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
-public class MarketService {
+public class GetMarketService {
 
     private final MemberRepository memberRepository;
     private final MarketRepository marketRepository;
     private final LikeRepository likeRepository;
-    private final UtilService utilService;
+    private final UtilUseCase utilUseCase;
 
     public GetHotItem makeHotItemForm(Nft nft) {
         // 1. 좋아요 처리
@@ -36,16 +39,16 @@ public class MarketService {
         // 2. 가격 처리
         String price = "";
         if (nft.isMarketed()) {
-            price = utilService.doubleToString(nft.getMarkets().get(nft.getMarkets().size() - 1).getPrice());
+            price = utilUseCase.doubleToString(nft.getMarket().getPrice());
         }
 
         return GetHotItem.builder()
-                .nftId(nft.getNftId())
-                .nftImgUrl(nft.getImgUrl())
-                .nftName(nft.getTitle())
-                .price(price)
-                .likeCount(like)
-                .build();
+            .nftId(nft.getNftId())
+            .nftImgUrl(nft.getImgUrl())
+            .nftName(nft.getTitle())
+            .price(price)
+            .likeCount(like)
+            .build();
     }
 
     public List<GetHotItem> getHotItems(Member member) {
@@ -68,7 +71,7 @@ public class MarketService {
 
     public GetMainPageWithoutSoldOut getMainPage(Long memberId) {
         Member member = memberRepository.findByMemberIdWithDeleted((memberId))
-                .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER));
+            .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER));
 
         List<GetHotItem> hotItems = new ArrayList<>();
         List<GetHotSeller> hotSellers = new ArrayList<>();

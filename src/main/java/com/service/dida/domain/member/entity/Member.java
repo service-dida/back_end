@@ -92,6 +92,10 @@ public class Member extends BaseEntity {
     public void changeDeleted(boolean flag) {
         this.deleted = flag;
     }
+
+    public void updateWallet(Wallet wallet) {
+        this.wallet = wallet;
+    }
     public void plusReportCnt() {
         this.reportCnt++;
     }

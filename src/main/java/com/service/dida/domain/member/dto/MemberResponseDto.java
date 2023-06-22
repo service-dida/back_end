@@ -3,6 +3,7 @@ package com.service.dida.domain.member.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class MemberResponseDto {
 
@@ -26,5 +27,12 @@ public class MemberResponseDto {
         private Long memberId;
         private String memberName;
         private String profileImgUrl;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class WalletExists {
+        private boolean existed;
     }
 }

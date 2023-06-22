@@ -1,5 +1,7 @@
 package com.service.dida.domain.nft.service;
 
+import static com.service.dida.global.config.constants.ServerConstants.MINTING_FEE;
+
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.nft.dto.NftRequestDto.PostNftRequestDto;
@@ -7,11 +9,10 @@ import com.service.dida.domain.nft.repository.NftRepository;
 import com.service.dida.domain.nft.usecase.RegisterNftUseCase;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.MintingTransactionDto;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.TransactionSetDto;
-import com.service.dida.domain.transaction.usecase.TransactionUseCase;
+import com.service.dida.domain.transaction.usecase.RegisterTransactionUseCase;
 import com.service.dida.domain.wallet.Wallet;
+import com.service.dida.domain.wallet.usecase.WalletUseCase;
 import com.service.dida.global.common.manage.ManageUseCase;
-import com.service.dida.global.config.exception.BaseException;
-import com.service.dida.global.config.exception.errorCode.WalletErrorCode;
 import com.service.dida.global.config.properties.KasProperties;
 import com.service.dida.global.util.usecase.KasUseCase;
 import jakarta.transaction.Transactional;
@@ -29,7 +30,8 @@ public class RegisterNftService implements RegisterNftUseCase {
     private final KasUseCase kasUseCase;
     private final ManageUseCase manageUseCase;
     private final KasProperties kasProperties;
-    private final TransactionUseCase transactionUseCase;
+    private final RegisterTransactionUseCase registerTransactionUseCase;
+    private final WalletUseCase walletUseCase;
 
     public void save(Nft nft) {
         nftRepository.save(nft);
@@ -54,20 +56,21 @@ public class RegisterNftService implements RegisterNftUseCase {
     public void registerNft(Member member, PostNftRequestDto postNftRequestDto)
         throws IOException, ParseException, InterruptedException {
         Wallet wallet = member.getWallet();
-        if (!wallet.getPayPwd().equals(postNftRequestDto.getPayPwd())) {
-            throw new BaseException(WalletErrorCode.WRONG_PWD);
-        }
-        wallet.useWallet();
+        wallet.checkPayPwd(postNftRequestDto.getPayPwd());
+        walletUseCase.useWallet(wallet);
 
         // 사용료 납부 부분 없음
-
+        String sendFee = "";
+        if (MINTING_FEE != 0D) {
+            sendFee = kasUseCase.sendDidaToFeeAccount(wallet, MINTING_FEE);
+        }
         String uri = kasUseCase.uploadMetadata(postNftRequestDto);
         String id = Long.toHexString(manageUseCase.getNftIdAndPlusOne());
         String transactionHash = kasUseCase.createNft(wallet.getAddress(), id, uri);
         Long nftId = register(postNftRequestDto, id, kasProperties.getNftContractAddress(),
             transactionHash, false, member);
-        transactionUseCase.saveMintingTransaction(
+        registerTransactionUseCase.saveMintingTransaction(
             new MintingTransactionDto(member.getMemberId(), nftId,
-                new TransactionSetDto("", transactionHash, null))); // 사용료 정해져야함
+                new TransactionSetDto("", transactionHash, sendFee)));
     }
 }
