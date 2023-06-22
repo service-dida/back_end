@@ -24,6 +24,9 @@ public class Comment extends BaseEntity {
     @Column(name = "content", nullable = false, length = 200)
     private String content;
 
+    @Column(name = "report_cnt", nullable = false, columnDefinition = "int default 0")
+    private int reportCnt;
+
     @Column(name = "deleted", nullable = false, columnDefinition = "boolean default false")
     private boolean deleted;
 
@@ -37,5 +40,8 @@ public class Comment extends BaseEntity {
 
     public void setDeleted() {
         this.deleted = true;
+    }
+    public void plusReportCnt() {
+        this.reportCnt++;
     }
 }

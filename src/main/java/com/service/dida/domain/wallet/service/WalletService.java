@@ -141,7 +141,7 @@ public class WalletService implements WalletUseCase {
         registerTransactionUseCase.saveSendNftOutsideTransaction(
             new MintingTransactionDto(member.getMemberId(), nft.getNftId(),
                 new TransactionSetDto(sendNft, null, sendFee)));
-        nft.changeDeleted(true);
+        nft.setDeleted();
     }
 
     private void checkForSendKlayOutside(Wallet wallet, SendKlayOutside sendKlayOutside)

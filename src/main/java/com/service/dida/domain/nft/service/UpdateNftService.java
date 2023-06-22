@@ -21,6 +21,6 @@ public class UpdateNftService implements UpdateNftUseCase {
     public void deleteNft(Member member, Long nftId) {
         Nft nft = nftRepository.findByNftIdWithDeletedAndMember(member, nftId)
             .orElseThrow(() -> new BaseException(NftErrorCode.EMPTY_NFT));
-        nft.changeDeleted(true);
+        nft.setDeleted();
     }
 }

@@ -38,7 +38,7 @@ public class UpdateMemberService implements UpdateMemberUseCase {
 
     @Override
     public void deleteMember(Member member) {
-        member.changeDeleted(true);
+        member.setDeleted();
         save(member);
     }
 }

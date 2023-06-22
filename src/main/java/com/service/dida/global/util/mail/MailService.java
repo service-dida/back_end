@@ -17,6 +17,11 @@ public class MailService implements MailUseCase {
         return sendMail(createAuthMail(email));
     }
 
+    @Override
+    public String sendReportMail(String email) {
+        return sendMail(createReportMemberMail(email));
+    }
+
     public String getTmpPwd() {
         char[] numSet = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
         StringBuilder pwd = new StringBuilder();
@@ -55,17 +60,13 @@ public class MailService implements MailUseCase {
         return mailDto;
     }
 
-    public MailDto createUserReportMail(String email) {
+    public MailDto createReportMemberMail(String email) {
         String pwd = "";
         String title = "DIDA 신고 누적으로 인한 계정 임시 삭제 처리 안내";
         String message = "회원님의 계정이 신고 누적으로 인해 임시 삭제 처리 되었습니다." + "감사합니다.";
-        MailDto mailDto = new MailDto(
-            email,
-            title,
-            message,
-            pwd
+        return new MailDto(
+            email, title, message, pwd
         );
-        return mailDto;
     }
 
     public String sendMail(MailDto mailDto) {
