@@ -19,7 +19,7 @@ public class MailService implements MailUseCase {
 
     @Override
     public String sendReportMail(String email) {
-        return sendMail(createReportUserMail(email));
+        return sendMail(createReportMemberMail(email));
     }
 
     public String getTmpPwd() {
@@ -60,7 +60,7 @@ public class MailService implements MailUseCase {
         return mailDto;
     }
 
-    public MailDto createReportUserMail(String email) {
+    public MailDto createReportMemberMail(String email) {
         String pwd = "";
         String title = "DIDA 신고 누적으로 인한 계정 임시 삭제 처리 안내";
         String message = "회원님의 계정이 신고 누적으로 인해 임시 삭제 처리 되었습니다." + "감사합니다.";
