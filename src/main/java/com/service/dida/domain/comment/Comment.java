@@ -38,8 +38,8 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    public void setDeleted() {
-        this.deleted = true;
+    public void changeDeleted(boolean flag) {
+        this.deleted = flag;
     }
     public void plusReportCnt() {
         this.reportCnt++;

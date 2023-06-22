@@ -98,7 +98,7 @@ public class RegisterReportService implements RegisterReportUseCase {
 
         // 누적 신고 횟수가 기준치 이상이라면 삭제
         if (reportedPost.getReportCnt() >= standard) {
-            reportedPost.setDeleted();
+            reportedPost.changeDeleted(true);
         }
     }
 
@@ -117,7 +117,7 @@ public class RegisterReportService implements RegisterReportUseCase {
 
         // 누적 신고 횟수가 기준치 이상이라면 삭제
         if (reportedComment.getReportCnt() >= standard) {
-            reportedComment.setDeleted();
+            reportedComment.changeDeleted(true);
         }
     }
 
