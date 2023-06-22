@@ -52,4 +52,7 @@ public class Post extends BaseEntity {
     public void setDeleted() {
         this.deleted = true;
     }
+    public void plusReportCnt() {
+        this.reportCnt++;
+    }
 }
