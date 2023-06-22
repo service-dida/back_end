@@ -92,4 +92,7 @@ public class Member extends BaseEntity {
     public void changeDeleted(boolean flag) {
         this.deleted = flag;
     }
+    public void plusReportCnt() {
+        this.reportCnt++;
+    }
 }
