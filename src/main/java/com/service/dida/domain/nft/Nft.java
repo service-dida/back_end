@@ -73,4 +73,7 @@ public class Nft extends BaseEntity {
         }
         return price;
     }
+    public void plusReportCnt() {
+        this.reportCnt++;
+    }
 }

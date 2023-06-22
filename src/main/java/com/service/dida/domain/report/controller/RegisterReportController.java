@@ -55,4 +55,16 @@ public class RegisterReportController {
         registerReportUseCase.registerReportComment(member, registerReport);
         return new ResponseEntity<>(200, HttpStatus.OK);
     }
+
+    /**
+     * NFT 신고하기
+     * [POST] /common/report/nft
+     */
+    @ResponseBody
+    @PostMapping("/common/report/nft")
+    public ResponseEntity<Integer> registerReportNft(@CurrentMember Member member,
+                                                         @RequestBody @Valid RegisterReport registerReport) throws BaseException {
+        registerReportUseCase.registerReportNft(member, registerReport);
+        return new ResponseEntity<>(200, HttpStatus.OK);
+    }
 }

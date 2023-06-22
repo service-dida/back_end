@@ -7,4 +7,5 @@ public interface RegisterReportUseCase {
     void registerReportUser(Member member, ReportRequestDto.RegisterReport registerReport);
     void registerReportPost(Member member, ReportRequestDto.RegisterReport registerReport);
     void registerReportComment(Member member, ReportRequestDto.RegisterReport registerReport);
+    void registerReportNft(Member member, ReportRequestDto.RegisterReport registerReport);
 }

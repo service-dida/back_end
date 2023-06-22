@@ -4,6 +4,7 @@ import com.service.dida.domain.comment.Comment;
 import com.service.dida.domain.comment.repository.CommentRepository;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.member.repository.MemberRepository;
+import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.nft.repository.NftRepository;
 import com.service.dida.domain.post.Post;
 import com.service.dida.domain.post.repository.PostRepository;
@@ -13,10 +14,7 @@ import com.service.dida.domain.report.dto.ReportRequestDto.RegisterReport;
 import com.service.dida.domain.report.repository.ReportRepository;
 import com.service.dida.domain.report.usecase.RegisterReportUseCase;
 import com.service.dida.global.config.exception.BaseException;
-import com.service.dida.global.config.exception.errorCode.CommentErrorCode;
-import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
-import com.service.dida.global.config.exception.errorCode.PostErrorCode;
-import com.service.dida.global.config.exception.errorCode.ReportErrorCode;
+import com.service.dida.global.config.exception.errorCode.*;
 import com.service.dida.global.util.mail.MailUseCase;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -120,6 +118,25 @@ public class RegisterReportService implements RegisterReportUseCase {
         // 누적 신고 횟수가 기준치 이상이라면 삭제
         if (reportedComment.getReportCnt() >= standard) {
             reportedComment.setDeleted();
+        }
+    }
+
+    @Override
+    @Transactional
+    public void registerReportNft(Member member, RegisterReport registerReport) {
+        Nft reportedNft = nftRepository.findByNftIdWithDeleted((registerReport.getReportedId()))
+                .orElseThrow(() -> new BaseException(NftErrorCode.EMPTY_NFT));
+
+        checkSelfReport(member.getMemberId(), reportedNft.getMember().getMemberId());
+        checkAlreadyReport(member, registerReport.getReportedId(), ReportType.NFT);
+
+        createReport(member, registerReport, ReportType.NFT);
+        reportedNft.plusReportCnt();
+        // 숨김 처리 추가 필요
+
+        // 누적 신고 횟수가 기준치 이상이라면 삭제
+        if (reportedNft.getReportCnt() >= standard) {
+            reportedNft.changeDeleted(true);
         }
     }
 }
