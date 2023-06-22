@@ -1,5 +1,6 @@
 package com.service.dida.domain.report.service;
 
+import com.service.dida.domain.comment.Comment;
 import com.service.dida.domain.comment.repository.CommentRepository;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.member.repository.MemberRepository;
@@ -12,6 +13,7 @@ import com.service.dida.domain.report.dto.ReportRequestDto.RegisterReport;
 import com.service.dida.domain.report.repository.ReportRepository;
 import com.service.dida.domain.report.usecase.RegisterReportUseCase;
 import com.service.dida.global.config.exception.BaseException;
+import com.service.dida.global.config.exception.errorCode.CommentErrorCode;
 import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 import com.service.dida.global.config.exception.errorCode.PostErrorCode;
 import com.service.dida.global.config.exception.errorCode.ReportErrorCode;
@@ -99,6 +101,25 @@ public class RegisterReportService implements RegisterReportUseCase {
         // 누적 신고 횟수가 기준치 이상이라면 삭제
         if (reportedPost.getReportCnt() >= standard) {
             reportedPost.setDeleted();
+        }
+    }
+
+    @Override
+    @Transactional
+    public void registerReportComment(Member member, RegisterReport registerReport) {
+        Comment reportedComment = commentRepository.findByCommentIdWithDeleted((registerReport.getReportedId()))
+                .orElseThrow(() -> new BaseException(CommentErrorCode.EMPTY_COMMENT));
+
+        checkSelfReport(member.getMemberId(), reportedComment.getMember().getMemberId());
+        checkAlreadyReport(member, registerReport.getReportedId(), ReportType.COMMENT);
+
+        createReport(member, registerReport, ReportType.COMMENT);
+        reportedComment.plusReportCnt();
+        // 숨김 처리 추가 필요
+
+        // 누적 신고 횟수가 기준치 이상이라면 삭제
+        if (reportedComment.getReportCnt() >= standard) {
+            reportedComment.setDeleted();
         }
     }
 }
