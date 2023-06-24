@@ -1,5 +1,6 @@
 package com.service.dida.domain.transaction.dto;
 
+import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.transaction.TransactionType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +23,7 @@ public class TransactionResponseDto {
     @NoArgsConstructor
     public static class DealingHistory {
         private Long transactionId;
-        private Long nftId;
+        private Nft nft;
         private String nftTitle;
         private double price;
     }

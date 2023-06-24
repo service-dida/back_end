@@ -1,8 +1,6 @@
 package com.service.dida.domain.transaction.service;
 
 import com.service.dida.domain.member.entity.Member;
-import com.service.dida.domain.member.repository.MemberRepository;
-import com.service.dida.domain.nft.repository.NftRepository;
 import com.service.dida.domain.transaction.Transaction;
 import com.service.dida.domain.transaction.dto.TransactionResponseDto.AllTypeDealingHistory;
 import com.service.dida.domain.transaction.dto.TransactionResponseDto.DealingHistory;
@@ -26,8 +24,6 @@ import org.springframework.stereotype.Service;
 public class GetTransactionService implements GetTransactionUseCase {
 
     private final TransactionRepository transactionRepository;
-    private final NftRepository nftRepository;
-    private final MemberRepository memberRepository;
     private final UtilUseCase utilUseCase;
 
     public PageRequest pageReq(PageRequestDto pageRequestDto) {
@@ -57,9 +53,22 @@ public class GetTransactionService implements GetTransactionUseCase {
         Page<Transaction> transactions = transactionRepository.findAllDealingHistoryByMemberId(
             member.getMemberId(), pageReq(pageRequestDto));
         transactions.forEach(t -> histories.add(new AllTypeDealingHistory(
-            new DealingHistory(t.getTransactionId(), t.getNft().getNftId(), t.getNft().getTitle(),
+            new DealingHistory(t.getTransactionId(), t.getNft(), t.getNft().getTitle(),
                 t.getPriceByDealingType(member.getMemberId())),
             t.getIsPurchased(member.getMemberId()))));
+        return new PageResponseDto<>(transactions.getNumber(), transactions.getSize(),
+            transactions.hasNext(), histories);
+    }
+
+    @Override
+    public PageResponseDto<List<DealingHistory>> getPurchaseDealingHistory(Member member,
+        PageRequestDto pageRequestDto) {
+        List<DealingHistory> histories = new ArrayList<>();
+        Page<Transaction> transactions = transactionRepository.findPurchaseDealingHistoryByMemberId(
+            member.getMemberId(), pageReq(pageRequestDto));
+        transactions.forEach(t -> histories.add(
+            new DealingHistory(t.getTransactionId(), t.getNft(), t.getNft().getTitle(),
+                t.getPayAmount())));
         return new PageResponseDto<>(transactions.getNumber(), transactions.getSize(),
             transactions.hasNext(), histories);
     }

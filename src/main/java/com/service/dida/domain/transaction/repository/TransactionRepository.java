@@ -12,4 +12,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     @Query(value = "SELECT t FROM Transaction t WHERE (t.buyerId = :memberId OR t.sellerId = :memberId) and t.type = 'DEAL'")
     Page<Transaction> findAllDealingHistoryByMemberId(Long memberId, PageRequest pageRequest);
+
+    @Query(value = "SELECT t FROM Transaction t WHERE t.buyerId = :memberId AND t.type = 'DEAL'")
+    Page<Transaction> findPurchaseDealingHistoryByMemberId(Long memberId, PageRequest pageRequest);
 }
