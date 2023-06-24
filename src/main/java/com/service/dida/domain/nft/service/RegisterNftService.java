@@ -37,7 +37,7 @@ public class RegisterNftService implements RegisterNftUseCase {
         nftRepository.save(nft);
     }
 
-    public Long register(PostNftRequestDto postNftRequestDto, String id, String contracts,
+    public Nft register(PostNftRequestDto postNftRequestDto, String id, String contracts,
         String txHash, boolean isAi, Member member) {
         Nft nft = Nft.builder()
             .member(member)
@@ -49,7 +49,7 @@ public class RegisterNftService implements RegisterNftUseCase {
             .imgUrl(postNftRequestDto.getImage())
             .build();
         save(nft);
-        return nft.getNftId();
+        return nft;
     }
 
     @Override
@@ -67,10 +67,10 @@ public class RegisterNftService implements RegisterNftUseCase {
         String uri = kasUseCase.uploadMetadata(postNftRequestDto);
         String id = Long.toHexString(manageUseCase.getNftIdAndPlusOne());
         String transactionHash = kasUseCase.createNft(wallet.getAddress(), id, uri);
-        Long nftId = register(postNftRequestDto, id, kasProperties.getNftContractAddress(),
+        Nft nft = register(postNftRequestDto, id, kasProperties.getNftContractAddress(),
             transactionHash, false, member);
         registerTransactionUseCase.saveMintingTransaction(
-            new MintingTransactionDto(member.getMemberId(), nftId,
+            new MintingTransactionDto(member.getMemberId(), nft,
                 new TransactionSetDto("", transactionHash, sendFee)));
     }
 }

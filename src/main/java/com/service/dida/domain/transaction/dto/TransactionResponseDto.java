@@ -16,4 +16,22 @@ public class TransactionResponseDto {
         private double coin;
         private String time;
     }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DealingHistory {
+        private Long transactionId;
+        private Long nftId;
+        private String nftTitle;
+        private double price;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class AllTypeDealingHistory {
+        private DealingHistory dealingHistory;
+        private boolean isPurchased;
+    }
 }

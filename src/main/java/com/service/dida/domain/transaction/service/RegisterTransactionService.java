@@ -33,7 +33,7 @@ public class RegisterTransactionService implements RegisterTransactionUseCase {
             .sellerId(null)
             .payAmount(MINTING_FEE)
             .payBackAmount(null)
-            .nftId(mintingTransactionDto.getNftId())
+            .nft(mintingTransactionDto.getNft())
             .build();
         transaction.setTransactionSet(mintingTransactionDto.getTransactionSetDto());
         save(transaction);
@@ -46,7 +46,7 @@ public class RegisterTransactionService implements RegisterTransactionUseCase {
             .buyerId(swapTransactionDto.getSwaperId())
             .payAmount(swapTransactionDto.getCoin())
             .payBackAmount(swapTransactionDto.getCoin())
-            .nftId(null)
+            .nft(null)
             .build();
         transaction.setTransactionSet(swapTransactionDto.getTransactionSetDto());
         save(transaction);
@@ -68,7 +68,7 @@ public class RegisterTransactionService implements RegisterTransactionUseCase {
     public void saveSendNftOutsideTransaction(MintingTransactionDto mintingTransactionDto) {
         Transaction transaction = Transaction.builder()
             .buyerId(mintingTransactionDto.getBuyerId())
-            .nftId(mintingTransactionDto.getNftId())
+            .nft(mintingTransactionDto.getNft())
             .build();
         transaction.setTransactionSet(mintingTransactionDto.getTransactionSetDto());
         save(transaction);
@@ -78,10 +78,11 @@ public class RegisterTransactionService implements RegisterTransactionUseCase {
     public void savePurchaseNftOnMarketTransaction(
         PurchaseNftOnMarketTransactionDto purchaseNftOnMarketTransactionDto) {
         Transaction transaction = Transaction.builder()
+            .type(TransactionType.DEAL)
             .buyerId(purchaseNftOnMarketTransactionDto.getBuyerId())
             .sellerId(purchaseNftOnMarketTransactionDto.getSellerId())
             .payAmount(purchaseNftOnMarketTransactionDto.getCoin())
-            .nftId(purchaseNftOnMarketTransactionDto.getNftId())
+            .nft(purchaseNftOnMarketTransactionDto.getNft())
             .build();
         transaction.setTransactionSet(purchaseNftOnMarketTransactionDto.getTransactionSetDto());
         save(transaction);

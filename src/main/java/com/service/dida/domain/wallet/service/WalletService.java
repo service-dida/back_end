@@ -150,7 +150,7 @@ public class WalletService implements WalletUseCase {
         String sendNft = kasUseCase.sendNft(sellerWallet, buyerWallet, nft);
         registerTransactionUseCase.savePurchaseNftOnMarketTransaction(
             new PurchaseNftOnMarketTransactionDto(buyer.getMemberId(), seller.getMemberId(),
-                market.getPrice() - PURCHASE_FEE, nft.getNftId(),
+                market.getPrice() - PURCHASE_FEE, nft,
                 new TransactionSetDto(sendDida, sendNft, sendFee))
         );
         nft.changeMember(buyer);
@@ -176,7 +176,7 @@ public class WalletService implements WalletUseCase {
             sendFee = kasUseCase.sendDidaToFeeAccount(wallet, SEND_NFT_OUTSIDE_FEE);
         }
         registerTransactionUseCase.saveSendNftOutsideTransaction(
-            new MintingTransactionDto(member.getMemberId(), nft.getNftId(),
+            new MintingTransactionDto(member.getMemberId(), nft,
                 new TransactionSetDto(sendNft, null, sendFee)));
         nft.setDeleted();
     }

@@ -1,6 +1,7 @@
 package com.service.dida.domain.transaction.controller;
 
 import com.service.dida.domain.member.entity.Member;
+import com.service.dida.domain.transaction.dto.TransactionResponseDto.AllTypeDealingHistory;
 import com.service.dida.domain.transaction.dto.TransactionResponseDto.SwapHistory;
 import com.service.dida.domain.transaction.usecase.GetTransactionUseCase;
 import com.service.dida.global.common.dto.PageRequestDto;
@@ -24,9 +25,31 @@ public class TransactionController {
      * 스왑 내역 확인 Api
      */
     @GetMapping("/member/swap")
-    public ResponseEntity<PageResponseDto<List<SwapHistory>>> getSwapHistoryList(@CurrentMember
-        Member member, @RequestBody PageRequestDto pageRequestDto) {
+    public ResponseEntity<PageResponseDto<List<SwapHistory>>> getSwapHistoryList(
+        @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto) {
         return new ResponseEntity<>(
             getTransactionUseCase.getSwapHistoryList(member, pageRequestDto), HttpStatus.OK);
     }
+
+    /**
+     * 전체 거래 내역 확인 Api
+     */
+    @GetMapping("/member/transaction")
+    public ResponseEntity<PageResponseDto<List<AllTypeDealingHistory>>> getAllDealingHistory(
+        @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto) {
+        return new ResponseEntity<>(
+            getTransactionUseCase.getAllTypeDealingHistory(member, pageRequestDto), HttpStatus.OK);
+    }
+
+//    @GetMapping("/member/transaction/1")
+//    public ResponseEntity<List<DealingHistory>> getPurchasedDealingHistory(
+//        @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto) {
+//
+//    }
+//
+//    @GetMapping("/member/transaction/2")
+//    public ResponseEntity<List<DealingHistory>> getSoldDealingHistory(
+//        @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto) {
+//
+//    }
 }
