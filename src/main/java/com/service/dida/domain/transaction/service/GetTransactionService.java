@@ -72,4 +72,17 @@ public class GetTransactionService implements GetTransactionUseCase {
         return new PageResponseDto<>(transactions.getNumber(), transactions.getSize(),
             transactions.hasNext(), histories);
     }
+
+    @Override
+    public PageResponseDto<List<DealingHistory>> getSoldDealingHistory(Member member,
+        PageRequestDto pageRequestDto) {
+        List<DealingHistory> histories = new ArrayList<>();
+        Page<Transaction> transactions = transactionRepository.findSoldDealingHistoryByMemberId(
+            member.getMemberId(), pageReq(pageRequestDto));
+        transactions.forEach(t -> histories.add(
+            new DealingHistory(t.getTransactionId(), t.getNft(), t.getNft().getTitle(),
+                t.getPayAmount())));
+        return new PageResponseDto<>(transactions.getNumber(), transactions.getSize(),
+            transactions.hasNext(), histories);
+    }
 }

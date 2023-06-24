@@ -51,10 +51,14 @@ public class TransactionController {
         return new ResponseEntity<>(
             getTransactionUseCase.getPurchaseDealingHistory(member, pageRequestDto), HttpStatus.OK);
     }
-//
-//    @GetMapping("/member/transaction/2")
-//    public ResponseEntity<List<DealingHistory>> getSoldDealingHistory(
-//        @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto) {
-//
-//    }
+
+    /**
+     * 판매 내역 확인 Api
+     */
+    @GetMapping("/member/transaction/2")
+    public ResponseEntity<PageResponseDto<List<DealingHistory>>> getSoldDealingHistory(
+        @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto) {
+        return new ResponseEntity<>(
+            getTransactionUseCase.getSoldDealingHistory(member, pageRequestDto), HttpStatus.OK);
+    }
 }

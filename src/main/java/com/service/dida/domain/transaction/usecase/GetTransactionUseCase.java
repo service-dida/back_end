@@ -18,4 +18,6 @@ public interface GetTransactionUseCase {
     PageResponseDto<List<DealingHistory>> getPurchaseDealingHistory(Member member,
         PageRequestDto pageRequestDto);
 
+    PageResponseDto<List<DealingHistory>> getSoldDealingHistory(Member member,
+        PageRequestDto pageRequestDto);
 }
