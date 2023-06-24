@@ -1,5 +1,6 @@
 package com.service.dida.domain.member.contorller;
 
+import com.service.dida.domain.member.dto.MemberResponseDto.MemberDetailInfo;
 import com.service.dida.domain.member.dto.MemberResponseDto.WalletExists;
 import com.service.dida.domain.member.dto.SendAuthEmailDto;
 import com.service.dida.domain.member.entity.Member;
@@ -25,8 +26,21 @@ public class GetMemberController {
         return new ResponseEntity<>(getUserUseCase.isExistWallet(member), HttpStatus.OK);
     }
 
+    /**
+     * 인증 메일 보내기 Api
+     */
     @GetMapping("/visitor/auth")
     public ResponseEntity<SendAuthEmailDto> sendAuthEmail(@CurrentMember Member member) {
         return new ResponseEntity<>(getUserUseCase.sendAuthMail(member), HttpStatus.OK);
     }
+
+    /**
+     * 내 프로필 확인하기 Api
+     */
+    @GetMapping("/common/profile")
+    public ResponseEntity<MemberDetailInfo> getDetailInfo(@CurrentMember Member member) {
+        return new ResponseEntity<>(getUserUseCase.getMemberDetailInfo(member),HttpStatus.OK);
+    }
+
+
 }
