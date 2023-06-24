@@ -88,4 +88,8 @@ public class Nft extends BaseEntity {
     public void plusReportCnt() {
         this.reportCnt++;
     }
+
+    public void changeMember(Member member) {
+        this.member = member;
+    }
 }

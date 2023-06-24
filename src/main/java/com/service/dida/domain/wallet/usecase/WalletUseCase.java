@@ -1,5 +1,6 @@
 package com.service.dida.domain.wallet.usecase;
 
+import com.service.dida.domain.market.Market;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.wallet.Wallet;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.ChangeCoin;
@@ -25,5 +26,8 @@ public interface WalletUseCase {
         throws IOException, ParseException, InterruptedException;
 
     void sendNftOutside(Member member, SendNftRequestDto sendNftRequestDto)
+        throws IOException, ParseException, InterruptedException;
+
+    void purchaseNftInMarket(Member buyer, String payPwd, Market market)
         throws IOException, ParseException, InterruptedException;
 }

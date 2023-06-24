@@ -1,15 +1,18 @@
 package com.service.dida.domain.wallet.service;
 
+import static com.service.dida.global.config.constants.ServerConstants.PURCHASE_FEE;
 import static com.service.dida.global.config.constants.ServerConstants.SEND_KLAY_OUTSIDE_FEE;
 import static com.service.dida.global.config.constants.ServerConstants.SEND_NFT_OUTSIDE_FEE;
 import static com.service.dida.global.config.constants.ServerConstants.SWAP_FEE;
 
+import com.service.dida.domain.market.Market;
 import com.service.dida.domain.member.Role;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.nft.repository.NftRepository;
 import com.service.dida.domain.transaction.TransactionType;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.MintingTransactionDto;
+import com.service.dida.domain.transaction.dto.TransactionRequestDto.PurchaseNftOnMarketTransactionDto;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.SendKlayOutsideTransactionDto;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.SwapTransactionDto;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.TransactionSetDto;
@@ -119,13 +122,47 @@ public class WalletService implements WalletUseCase {
         sendNftOutsideFun(member, nft, sendNftRequestDto);
     }
 
+    @Override
+    public void purchaseNftInMarket(Member buyer, String payPwd, Market market)
+        throws IOException, ParseException, InterruptedException {
+        Member seller = market.getMember();
+        checkForDeal(buyer.getWallet(), payPwd, market.getPrice());
+        purchaseNftOnMarketFun(buyer, seller, market);
+    }
+
+    private void checkForDeal(Wallet buyerWallet, String payPwd, double price)
+        throws IOException, ParseException, InterruptedException {
+        checkWallet(buyerWallet, payPwd);
+        checkDida(buyerWallet, price);
+    }
+
+    private void purchaseNftOnMarketFun(Member buyer, Member seller, Market market)
+        throws IOException, ParseException, InterruptedException {
+        Nft nft = market.getNft();
+        Wallet buyerWallet = buyer.getWallet();
+        Wallet sellerWallet = seller.getWallet();
+        String sendFee = null;
+        if (PURCHASE_FEE != 0D) {
+            sendFee = kasUseCase.sendDidaToFeeAccount(buyerWallet, PURCHASE_FEE);
+        }
+        String sendDida = kasUseCase.sendDidaToSeller(buyerWallet, sellerWallet,
+            market.getPrice() - PURCHASE_FEE);
+        String sendNft = kasUseCase.sendNft(sellerWallet, buyerWallet, nft);
+        registerTransactionUseCase.savePurchaseNftOnMarketTransaction(
+            new PurchaseNftOnMarketTransactionDto(buyer.getMemberId(), seller.getMemberId(),
+                market.getPrice() - PURCHASE_FEE, nft.getNftId(),
+                new TransactionSetDto(sendDida, sendNft, sendFee))
+        );
+        nft.changeMember(buyer);
+        market.delete();
+    }
+
     private void checkSendNftOutside(Member member, SendNftRequestDto sendNftRequestDto)
         throws IOException, ParseException, InterruptedException {
         if (walletRepository.existsWalletByAddress(sendNftRequestDto.getAddress()).orElse(false)) {
             throw new BaseException(WalletErrorCode.IN_MEMBER_ADDRESS);
         }
-        member.getWallet().checkPayPwd(sendNftRequestDto.getPayPwd());
-        useWallet(member.getWallet());
+        checkWallet(member.getWallet(), sendNftRequestDto.getPayPwd());
         checkDida(member.getWallet(), SEND_NFT_OUTSIDE_FEE);
     }
 
@@ -149,8 +186,7 @@ public class WalletService implements WalletUseCase {
         if (walletRepository.existsWalletByAddress(sendKlayOutside.getAddress()).orElse(false)) {
             throw new BaseException(WalletErrorCode.IN_MEMBER_ADDRESS);
         }
-        wallet.checkPayPwd(sendKlayOutside.getChangeCoin().getPayPwd());
-        useWallet(wallet);
+        checkWallet(wallet, sendKlayOutside.getChangeCoin().getPayPwd());
         checkKlay(wallet, sendKlayOutside.getChangeCoin().getCoin());
     }
 
@@ -210,6 +246,11 @@ public class WalletService implements WalletUseCase {
         if (kasUseCase.getKlay(wallet) < coin) {
             throw new BaseException(WalletErrorCode.NOT_ENOUGH_COIN);
         }
+    }
+
+    private void checkWallet(Wallet wallet, String payPwd) {
+        wallet.checkPayPwd(payPwd);
+        useWallet(wallet);
     }
 
     private boolean checkPassword(CheckPwd checkPwd) {

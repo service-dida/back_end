@@ -5,6 +5,7 @@ import static com.service.dida.global.config.constants.ServerConstants.MINTING_F
 import com.service.dida.domain.transaction.Transaction;
 import com.service.dida.domain.transaction.TransactionType;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.MintingTransactionDto;
+import com.service.dida.domain.transaction.dto.TransactionRequestDto.PurchaseNftOnMarketTransactionDto;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.SendKlayOutsideTransactionDto;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.SwapTransactionDto;
 import com.service.dida.domain.transaction.repository.TransactionRepository;
@@ -70,6 +71,19 @@ public class RegisterTransactionService implements RegisterTransactionUseCase {
             .nftId(mintingTransactionDto.getNftId())
             .build();
         transaction.setTransactionSet(mintingTransactionDto.getTransactionSetDto());
+        save(transaction);
+    }
+
+    @Override
+    public void savePurchaseNftOnMarketTransaction(
+        PurchaseNftOnMarketTransactionDto purchaseNftOnMarketTransactionDto) {
+        Transaction transaction = Transaction.builder()
+            .buyerId(purchaseNftOnMarketTransactionDto.getBuyerId())
+            .sellerId(purchaseNftOnMarketTransactionDto.getSellerId())
+            .payAmount(purchaseNftOnMarketTransactionDto.getCoin())
+            .nftId(purchaseNftOnMarketTransactionDto.getNftId())
+            .build();
+        transaction.setTransactionSet(purchaseNftOnMarketTransactionDto.getTransactionSetDto());
         save(transaction);
     }
 
