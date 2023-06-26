@@ -36,7 +36,18 @@ public class GetNftController {
     @GetMapping("/common/profile/nft")
     public ResponseEntity<PageResponseDto<List<ProfileNft>>> getProfileNftList(
         @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto) {
-        return new ResponseEntity<>(getNftUseCase.getProfileNftList(member, pageRequestDto),
+        return new ResponseEntity<>(getNftUseCase.getProfileNftList(member, null, pageRequestDto),
             HttpStatus.OK);
+    }
+
+    /**
+     * 다른유저 NFT 목록 보기 Api
+     */
+    @GetMapping("/common/profile/nft/{memberId}")
+    public ResponseEntity<PageResponseDto<List<ProfileNft>>> getOtherProfileNftList(
+        @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto,
+        @PathVariable(name = "memberId") Long memberId) {
+        return new ResponseEntity<>(
+            getNftUseCase.getProfileNftList(member, memberId, pageRequestDto), HttpStatus.OK);
     }
 }

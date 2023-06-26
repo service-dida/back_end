@@ -6,6 +6,7 @@ import com.service.dida.domain.follow.usecase.GetFollowUseCase;
 import com.service.dida.domain.like.usecase.GetLikeUseCase;
 import com.service.dida.domain.member.dto.MemberResponseDto.MemberInfo;
 import com.service.dida.domain.member.entity.Member;
+import com.service.dida.domain.member.repository.MemberRepository;
 import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.nft.dto.NftResponseDto.NftDetailInfo;
 import com.service.dida.domain.nft.dto.NftResponseDto.NftInfo;
@@ -15,6 +16,7 @@ import com.service.dida.domain.nft.usecase.GetNftUseCase;
 import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
 import com.service.dida.global.config.exception.BaseException;
+import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GetNftService implements GetNftUseCase {
     private final NftRepository nftRepository;
+    private final MemberRepository memberRepository;
     private final GetLikeUseCase getLikeUseCase;
     private final GetFollowUseCase getFollowUseCase;
 
@@ -52,10 +55,17 @@ public class GetNftService implements GetNftUseCase {
     }
 
     @Override
-    public PageResponseDto<List<ProfileNft>> getProfileNftList(Member member,
+    public PageResponseDto<List<ProfileNft>> getProfileNftList(Member member, Long memberId,
         PageRequestDto pageRequestDto) {
         List<ProfileNft> profileNfts = new ArrayList<>();
-        Page<Nft> nfts = nftRepository.findAllNftsByMember(member, pageReq(pageRequestDto));
+        Page<Nft> nfts;
+        if (memberId == null) {
+            nfts = nftRepository.findAllNftsByMember(member, pageReq(pageRequestDto));
+        } else {
+            Member other = memberRepository.findByMemberIdWithDeleted(memberId).orElseThrow(() ->
+                new BaseException(MemberErrorCode.EMPTY_MEMBER));
+            nfts = nftRepository.findAllNftsByMember(other,pageReq(pageRequestDto));
+        }
         nfts.forEach(n -> profileNfts.add(new ProfileNft(
             new NftInfo(n.getNftId(), n.getTitle(), n.getImgUrl(), n.getPrice()),
             getLikeUseCase.checkIsLiked(member, n))));

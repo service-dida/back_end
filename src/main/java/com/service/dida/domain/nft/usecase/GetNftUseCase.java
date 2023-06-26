@@ -11,5 +11,5 @@ public interface GetNftUseCase {
 
     NftDetailInfo getNftDetail(Member member,Long nftId);
 
-    PageResponseDto<List<ProfileNft>> getProfileNftList(Member member, PageRequestDto pageRequestDto);
+    PageResponseDto<List<ProfileNft>> getProfileNftList(Member member,Long memberId, PageRequestDto pageRequestDto);
 }
