@@ -38,11 +38,18 @@ public class MemberResponseDto {
 
     @Getter
     @AllArgsConstructor
-    public static class MemberDetailInfo{
+    public static class MemberDetailInfo {
         private MemberInfo memberInfo;
         private String description;
         private int nftCnt;
         private int followerCnt;
         private int followingCnt;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class OtherMemberDetailInfo {
+        private MemberDetailInfo memberDetailInfo;
+        private boolean followed;
     }
 }

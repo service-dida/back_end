@@ -1,13 +1,18 @@
 package com.service.dida.domain.member.service;
 
 import com.service.dida.domain.follow.repository.FollowRepository;
+import com.service.dida.domain.follow.usecase.GetFollowUseCase;
 import com.service.dida.domain.member.dto.MemberResponseDto.MemberDetailInfo;
 import com.service.dida.domain.member.dto.MemberResponseDto.MemberInfo;
+import com.service.dida.domain.member.dto.MemberResponseDto.OtherMemberDetailInfo;
 import com.service.dida.domain.member.dto.MemberResponseDto.WalletExists;
 import com.service.dida.domain.member.dto.SendAuthEmailDto;
 import com.service.dida.domain.member.entity.Member;
+import com.service.dida.domain.member.repository.MemberRepository;
 import com.service.dida.domain.member.usecase.GetMemberUseCase;
 import com.service.dida.domain.nft.repository.NftRepository;
+import com.service.dida.global.config.exception.BaseException;
+import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 import com.service.dida.global.util.mail.MailUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +22,9 @@ import org.springframework.stereotype.Service;
 public class GetMemberService implements GetMemberUseCase {
 
     private final MailUseCase mailUseCase;
+    private final GetFollowUseCase getFollowUseCase;
     private final FollowRepository followRepository;
+    private final MemberRepository memberRepository;
     private final NftRepository nftRepository;
 
     @Override
@@ -41,5 +48,19 @@ public class GetMemberService implements GetMemberUseCase {
             member.getDescription(), nftRepository.countByMemberAndDeleted(member, false),
             followRepository.countByFollowerIdAndStatus(member.getMemberId(), true),
             followRepository.countByFollowingIdAndStatus(member.getMemberId(), true));
+    }
+
+    @Override
+    public OtherMemberDetailInfo getOtherMemberDetailInfo(Member member, Long memberId) {
+        Member other = memberRepository.findByMemberIdWithDeleted(memberId)
+            .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER));
+        return new OtherMemberDetailInfo(
+            new MemberDetailInfo(
+                new MemberInfo(other.getMemberId(), other.getNickname(), other.getProfileUrl()),
+                other.getDescription(), nftRepository.countByMemberAndDeleted(other, false),
+                followRepository.countByFollowerIdAndStatus(memberId, true),
+                followRepository.countByFollowingIdAndStatus(memberId, true)
+            ), getFollowUseCase.checkIsFollowed(member, other)
+        );
     }
 }
