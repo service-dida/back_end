@@ -44,4 +44,15 @@ public class FollowController {
         return new ResponseEntity<>(getFollowUseCase.getFollowerList(member, pageRequestDto),
             HttpStatus.OK);
     }
+
+    /**
+     * 내 팔로잉 목록 보기
+     */
+    @GetMapping("/common/following")
+    public ResponseEntity<PageResponseDto<List<FollowList>>> getFollowingList(
+        @CurrentMember Member member,
+        @RequestBody PageRequestDto pageRequestDto) {
+        return new ResponseEntity<>(getFollowUseCase.getFollowingList(member, pageRequestDto),
+            HttpStatus.OK);
+    }
 }

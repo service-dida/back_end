@@ -11,4 +11,6 @@ public interface GetFollowUseCase {
     boolean checkIsFollowed(Member member, Member owner);
 
     PageResponseDto<List<FollowList>> getFollowerList(Member member, PageRequestDto pageRequestDto);
+
+    PageResponseDto<List<FollowList>> getFollowingList(Member member, PageRequestDto pageRequestDto);
 }

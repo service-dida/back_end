@@ -47,4 +47,15 @@ public class GetFollowService implements GetFollowUseCase {
         return new PageResponseDto<>(follows.getNumber(), follows.getSize(), follows.hasNext(),
             followLists);
     }
+
+    @Override
+    public PageResponseDto<List<FollowList>> getFollowingList(Member member,
+        PageRequestDto pageRequestDto) {
+        List<FollowList> followLists = new ArrayList<>();
+        Page<Follow> follows = followRepository.findAllFollowingByMember(member,
+            pageReq(pageRequestDto));
+        follows.forEach(f -> followLists.add(f.getFollowerMember().setFollowList()));
+        return new PageResponseDto<>(follows.getNumber(), follows.getSize(), follows.hasNext(),
+            followLists);
+    }
 }

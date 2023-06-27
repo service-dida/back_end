@@ -22,4 +22,7 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     @Query(value = "SELECT f FROM Follow f WHERE f.followerMember = :member AND f.status = TRUE")
     Page<Follow> findAllFollowerByMember(Member member, PageRequest pageRequest);
+
+    @Query(value = "SELECT f FROM Follow f WHERE f.followingMember = :member AND f.status = TRUE")
+    Page<Follow> findAllFollowingByMember(Member member, PageRequest pageRequest);
 }
