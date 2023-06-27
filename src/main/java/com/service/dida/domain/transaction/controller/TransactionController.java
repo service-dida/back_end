@@ -45,7 +45,7 @@ public class TransactionController {
     /**
      * 구매 내역 확인 Api
      */
-    @GetMapping("/member/transaction/1")
+    @GetMapping("/member/transaction/purchase")
     public ResponseEntity<PageResponseDto<List<DealingHistory>>> getPurchasedDealingHistory(
         @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto) {
         return new ResponseEntity<>(
@@ -55,7 +55,7 @@ public class TransactionController {
     /**
      * 판매 내역 확인 Api
      */
-    @GetMapping("/member/transaction/2")
+    @GetMapping("/member/transaction/sale")
     public ResponseEntity<PageResponseDto<List<DealingHistory>>> getSoldDealingHistory(
         @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto) {
         return new ResponseEntity<>(
