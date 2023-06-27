@@ -19,4 +19,7 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     Optional<Long> getLikeCountsByNftId(Nft nft);
 
     Optional<Like> findByMemberAndNft(Member member, Nft nft);
+
+    void deleteByMemberAndNft(Member member, Nft nft);
+
 }

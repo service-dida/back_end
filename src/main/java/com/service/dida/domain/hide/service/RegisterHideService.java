@@ -3,6 +3,8 @@ package com.service.dida.domain.hide.service;
 import com.service.dida.domain.hide.Hide;
 import com.service.dida.domain.hide.repository.HideRepository;
 import com.service.dida.domain.hide.usecase.RegisterHideUseCase;
+import com.service.dida.domain.like.repository.LikeRepository;
+import com.service.dida.domain.like.usecase.UpdateLikeUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.nft.repository.NftRepository;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class RegisterHideService implements RegisterHideUseCase {
     private final HideRepository hideRepository;
     private final NftRepository nftRepository;
+    private final UpdateLikeUseCase updateLikeUseCase;
 
     @Transactional
     public void save(Hide hide) {
@@ -37,9 +40,9 @@ public class RegisterHideService implements RegisterHideUseCase {
     public void hideCard(Member member, Long nftId) {
         Nft nft = nftRepository.findByNftIdWithDeleted(nftId)
                 .orElseThrow(() -> new BaseException(NftErrorCode.EMPTY_NFT));
-        Hide hide = hideRepository.findByMemberAndNft(member, nft).orElse(null);
-        if (hide == null) {
+        if (hideRepository.findByMemberAndNft(member, nft).isEmpty()) {
             createHide(member, nft);
+            updateLikeUseCase.checkAndDeleteLike(member, nft);
         } else {
             throw new BaseException(HideErrorCode.ALREADY_HIDE);
         }
