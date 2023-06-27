@@ -2,6 +2,8 @@ package com.service.dida.domain.transaction.service;
 
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.transaction.Transaction;
+import com.service.dida.domain.transaction.dto.TransactionResponseDto.AllTypeDealingHistory;
+import com.service.dida.domain.transaction.dto.TransactionResponseDto.DealingHistory;
 import com.service.dida.domain.transaction.dto.TransactionResponseDto.SwapHistory;
 import com.service.dida.domain.transaction.repository.TransactionRepository;
 import com.service.dida.domain.transaction.usecase.GetTransactionUseCase;
@@ -42,5 +44,45 @@ public class GetTransactionService implements GetTransactionUseCase {
         );
         return new PageResponseDto<>(transactions.getNumber(), transactions.getSize(),
             transactions.hasNext(), history);
+    }
+
+    @Override
+    public PageResponseDto<List<AllTypeDealingHistory>> getAllTypeDealingHistory(Member member,
+        PageRequestDto pageRequestDto) {
+        List<AllTypeDealingHistory> histories = new ArrayList<>();
+        Page<Transaction> transactions = transactionRepository.findAllDealingHistoryByMemberId(
+            member.getMemberId(), pageReq(pageRequestDto));
+        transactions.forEach(t -> histories.add(new AllTypeDealingHistory(
+            new DealingHistory(t.getTransactionId(), t.getNft(), t.getNft().getTitle(),
+                t.getPriceByDealingType(member.getMemberId())),
+            t.getIsPurchased(member.getMemberId()))));
+        return new PageResponseDto<>(transactions.getNumber(), transactions.getSize(),
+            transactions.hasNext(), histories);
+    }
+
+    @Override
+    public PageResponseDto<List<DealingHistory>> getPurchaseDealingHistory(Member member,
+        PageRequestDto pageRequestDto) {
+        List<DealingHistory> histories = new ArrayList<>();
+        Page<Transaction> transactions = transactionRepository.findPurchaseDealingHistoryByMemberId(
+            member.getMemberId(), pageReq(pageRequestDto));
+        transactions.forEach(t -> histories.add(
+            new DealingHistory(t.getTransactionId(), t.getNft(), t.getNft().getTitle(),
+                t.getPayAmount())));
+        return new PageResponseDto<>(transactions.getNumber(), transactions.getSize(),
+            transactions.hasNext(), histories);
+    }
+
+    @Override
+    public PageResponseDto<List<DealingHistory>> getSoldDealingHistory(Member member,
+        PageRequestDto pageRequestDto) {
+        List<DealingHistory> histories = new ArrayList<>();
+        Page<Transaction> transactions = transactionRepository.findSoldDealingHistoryByMemberId(
+            member.getMemberId(), pageReq(pageRequestDto));
+        transactions.forEach(t -> histories.add(
+            new DealingHistory(t.getTransactionId(), t.getNft(), t.getNft().getTitle(),
+                t.getPayAmount())));
+        return new PageResponseDto<>(transactions.getNumber(), transactions.getSize(),
+            transactions.hasNext(), histories);
     }
 }
