@@ -43,7 +43,7 @@ public class GetNftController {
     /**
      * 다른유저 NFT 목록 보기 Api
      */
-    @GetMapping("/common/profile/nft/{memberId}")
+    @GetMapping("/profile/nft/{memberId}")
     public ResponseEntity<PageResponseDto<List<ProfileNft>>> getOtherProfileNftList(
         @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto,
         @PathVariable(name = "memberId") Long memberId) {

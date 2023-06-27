@@ -47,7 +47,7 @@ public class GetMemberController {
     /**
      * 다른 유저 프로필 확인하기 Api
      */
-    @GetMapping("/common/profile/{memberId}")
+    @GetMapping("/profile/{memberId}")
     public ResponseEntity<OtherMemberDetailInfo> getOtherProfileDetailInfo(
         @CurrentMember Member member, @PathVariable(name = "memberId") Long memberId) {
         return new ResponseEntity<>(getUserUseCase.getOtherMemberDetailInfo(member, memberId),

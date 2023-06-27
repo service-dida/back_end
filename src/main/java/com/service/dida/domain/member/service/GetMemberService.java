@@ -46,8 +46,8 @@ public class GetMemberService implements GetMemberUseCase {
         return new MemberDetailInfo(
             new MemberInfo(member.getMemberId(), member.getNickname(), member.getProfileUrl()),
             member.getDescription(), nftRepository.countByMemberAndDeleted(member, false),
-            followRepository.countByFollowerIdAndStatus(member.getMemberId(), true),
-            followRepository.countByFollowingIdAndStatus(member.getMemberId(), true));
+            followRepository.countByFollowerMemberAndStatus(member, true),
+            followRepository.countByFollowingMemberAndStatus(member, true));
     }
 
     @Override
@@ -58,8 +58,8 @@ public class GetMemberService implements GetMemberUseCase {
             new MemberDetailInfo(
                 new MemberInfo(other.getMemberId(), other.getNickname(), other.getProfileUrl()),
                 other.getDescription(), nftRepository.countByMemberAndDeleted(other, false),
-                followRepository.countByFollowerIdAndStatus(memberId, true),
-                followRepository.countByFollowingIdAndStatus(memberId, true)
+                followRepository.countByFollowerMemberAndStatus(other, true),
+                followRepository.countByFollowingMemberAndStatus(other, true)
             ), getFollowUseCase.checkIsFollowed(member, other)
         );
     }
