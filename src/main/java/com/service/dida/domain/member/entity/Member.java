@@ -1,5 +1,6 @@
 package com.service.dida.domain.member.entity;
 
+import com.service.dida.domain.follow.dto.FollowResponseDto.FollowList;
 import com.service.dida.domain.like.Like;
 import com.service.dida.domain.market.Market;
 import com.service.dida.domain.member.Role;
@@ -101,5 +102,10 @@ public class Member extends BaseEntity {
 
     public void plusReportCnt() {
         this.reportCnt++;
+    }
+
+    public FollowList setFollowList() {
+        int nftSize = (int) nfts.stream().filter(nft -> !nft.isDeleted()).count();
+        return new FollowList(this.memberId, this.nickname, this.profileUrl, nftSize);
     }
 }
