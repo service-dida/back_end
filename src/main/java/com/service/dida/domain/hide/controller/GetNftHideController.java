@@ -1,7 +1,7 @@
 package com.service.dida.domain.hide.controller;
 
-import com.service.dida.domain.hide.dto.HideResponseDto.GetHideNft;
-import com.service.dida.domain.hide.usecase.GetHideUseCase;
+import com.service.dida.domain.hide.dto.NftHideResponseDto.GetNftHide;
+import com.service.dida.domain.hide.usecase.GetNftHideUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
@@ -18,17 +18,17 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class GetHideController {
-    private final GetHideUseCase getHideUseCase;
+public class GetNftHideController {
+    private final GetNftHideUseCase getNftHideUseCase;
 
     /**
      * NFT 숨김 목록 조회
      * [GET] /common/nft/hide
      */
     @GetMapping("/common/nft/hide")
-    public ResponseEntity<PageResponseDto<List<GetHideNft>>> getHideNftList(
+    public ResponseEntity<PageResponseDto<List<GetNftHide>>> getNftHideNftList(
             @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto)
             throws BaseException {
-        return new ResponseEntity<>(getHideUseCase.getHideNftList(member, pageRequestDto), HttpStatus.OK);
+        return new ResponseEntity<>(getNftHideUseCase.getNftHideList(member, pageRequestDto), HttpStatus.OK);
     }
 }

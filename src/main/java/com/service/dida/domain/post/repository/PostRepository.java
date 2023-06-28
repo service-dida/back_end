@@ -19,7 +19,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Optional<Post> findByPostId(Long postId);
 
     /**
-    @Query(value = "SELECT p FROM Post p, (SELECT h FROM Hide h WHERE h.member = :member AND p.nft = h.nft) " +
+    @Query(value = "SELECT p FROM Post p, (SELECT h FROM NftHide h WHERE h.member = :member AND p.nft = h.nft) " +
             "WHERE p.deleted = false AND h.nft != p.nft")
     Page<Post> findAllWithDeleted(Member member, PageRequest pageRequest);
      */

@@ -11,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "nft_hide")
-public class Hide {
+public class NftHide {
     @Id
     @Column(name = "hide_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

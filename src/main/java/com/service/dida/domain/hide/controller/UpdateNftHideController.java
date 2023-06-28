@@ -1,30 +1,29 @@
 package com.service.dida.domain.hide.controller;
 
-import com.service.dida.domain.hide.usecase.RegisterHideUseCase;
+import com.service.dida.domain.hide.usecase.UpdateNftHideUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.security.auth.CurrentMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-public class RegisterHideController {
-    private final RegisterHideUseCase registerHideUseCase;
+public class UpdateNftHideController {
+
+    private final UpdateNftHideUseCase updateNftHideUseCase;
 
     /**
-     * NFT 숨기기
-     * [POST] /common/nft/hide
+     * NFT 숨기기 취소
+     * [DELETE] /common/nft/hide
      */
-    @PostMapping("/common/nft/hide")
-    public ResponseEntity<Integer> hideCard(
+    @DeleteMapping("/common/nft/hide")
+    public ResponseEntity<Integer> unhideNft(
             @RequestParam("nftId") Long nftId, @CurrentMember Member member)
             throws BaseException {
-        registerHideUseCase.hideCard(member, nftId);
+            updateNftHideUseCase.unhideNft(member, nftId);
         return new ResponseEntity<>(200, HttpStatus.OK);
     }
 }

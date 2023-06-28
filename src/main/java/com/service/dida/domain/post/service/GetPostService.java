@@ -2,7 +2,7 @@ package com.service.dida.domain.post.service;
 
 import com.service.dida.domain.comment.dto.CommentResponseDto;
 import com.service.dida.domain.comment.service.GetCommentService;
-import com.service.dida.domain.hide.usecase.GetHideUseCase;
+import com.service.dida.domain.hide.usecase.GetNftHideUseCase;
 import com.service.dida.domain.member.dto.MemberResponseDto;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.nft.dto.NftResponseDto;
@@ -29,7 +29,7 @@ import java.util.List;
 public class GetPostService implements GetPostUseCase {
 
     private final PostRepository postRepository;
-    private final GetHideUseCase getHideUseCase;
+    private final GetNftHideUseCase getNftHideUseCase;
     private final GetCommentService getCommentService;
 
 
@@ -99,7 +99,7 @@ public class GetPostService implements GetPostUseCase {
         // Page<Post>의 content 는 페이지 요청대로 가져온 List<Post>를 나타낸다.
         for (Post p : posts.getContent()) {
             // 로그인했다면 숨김 NFT 인지 확인 후 넘어가줌
-            if (member != null && getHideUseCase.checkIsHided(member, p.getNft())) {
+            if (member != null && getNftHideUseCase.checkIsNftHided(member, p.getNft())) {
                 continue;
             }
             res.add(makeGetPostResForm(member, p, needComment));
