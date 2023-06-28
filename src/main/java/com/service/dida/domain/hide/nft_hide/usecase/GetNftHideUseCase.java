@@ -1,6 +1,6 @@
-package com.service.dida.domain.hide.usecase;
+package com.service.dida.domain.hide.nft_hide.usecase;
 
-import com.service.dida.domain.hide.dto.NftHideResponseDto;
+import com.service.dida.domain.hide.nft_hide.dto.NftHideResponseDto;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.nft.Nft;
 import com.service.dida.global.common.dto.PageRequestDto;

@@ -1,9 +1,9 @@
-package com.service.dida.domain.hide.service;
+package com.service.dida.domain.hide.nft_hide.service;
 
-import com.service.dida.domain.hide.NftHide;
-import com.service.dida.domain.hide.dto.NftHideResponseDto.GetNftHide;
-import com.service.dida.domain.hide.repository.NftHideRepository;
-import com.service.dida.domain.hide.usecase.GetNftHideUseCase;
+import com.service.dida.domain.hide.nft_hide.NftHide;
+import com.service.dida.domain.hide.nft_hide.dto.NftHideResponseDto.GetNftHide;
+import com.service.dida.domain.hide.nft_hide.repository.NftHideRepository;
+import com.service.dida.domain.hide.nft_hide.usecase.GetNftHideUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.nft.Nft;
 import com.service.dida.global.common.dto.PageRequestDto;

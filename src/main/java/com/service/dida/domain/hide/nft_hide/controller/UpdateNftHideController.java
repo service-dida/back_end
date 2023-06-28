@@ -1,6 +1,6 @@
-package com.service.dida.domain.hide.controller;
+package com.service.dida.domain.hide.nft_hide.controller;
 
-import com.service.dida.domain.hide.usecase.UpdateNftHideUseCase;
+import com.service.dida.domain.hide.nft_hide.usecase.UpdateNftHideUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.security.auth.CurrentMember;

@@ -1,4 +1,4 @@
-package com.service.dida.domain.hide.dto;
+package com.service.dida.domain.hide.nft_hide.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

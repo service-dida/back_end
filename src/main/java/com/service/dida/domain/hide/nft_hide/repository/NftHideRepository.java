@@ -1,6 +1,6 @@
-package com.service.dida.domain.hide.repository;
+package com.service.dida.domain.hide.nft_hide.repository;
 
-import com.service.dida.domain.hide.NftHide;
+import com.service.dida.domain.hide.nft_hide.NftHide;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.nft.Nft;
 import org.springframework.data.domain.Page;

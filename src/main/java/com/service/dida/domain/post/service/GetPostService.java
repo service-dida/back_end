@@ -2,7 +2,7 @@ package com.service.dida.domain.post.service;
 
 import com.service.dida.domain.comment.dto.CommentResponseDto;
 import com.service.dida.domain.comment.service.GetCommentService;
-import com.service.dida.domain.hide.usecase.GetNftHideUseCase;
+import com.service.dida.domain.hide.nft_hide.usecase.GetNftHideUseCase;
 import com.service.dida.domain.member.dto.MemberResponseDto;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.nft.dto.NftResponseDto;
