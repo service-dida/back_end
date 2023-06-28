@@ -105,6 +105,7 @@ public class Member extends BaseEntity {
     }
 
     public FollowList setFollowList() {
-        return new FollowList(this.memberId,this.nickname,this.profileUrl,this.nfts.size());
+        int nftSize = (int) nfts.stream().filter(nft -> !nft.isDeleted()).count();
+        return new FollowList(this.memberId, this.nickname, this.profileUrl, nftSize);
     }
 }
