@@ -7,10 +7,14 @@ import com.service.dida.domain.wallet.dto.WalletRequestDto.ChangeCoin;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.CheckPwd;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.SendKlayOutside;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.SendNftRequestDto;
+import com.service.dida.domain.wallet.dto.WalletResponseDto.WalletDetail;
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
 
 public interface WalletUseCase {
+    WalletDetail getWalletDetail(Member member)
+        throws IOException, ParseException, InterruptedException;
+
     void useWallet(Wallet wallet);
 
     void registerWallet(Member member, CheckPwd checkPwd)

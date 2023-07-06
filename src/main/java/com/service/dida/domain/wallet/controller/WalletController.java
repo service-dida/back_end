@@ -5,6 +5,7 @@ import com.service.dida.domain.wallet.dto.WalletRequestDto;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.ChangeCoin;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.SendKlayOutside;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.SendNftRequestDto;
+import com.service.dida.domain.wallet.dto.WalletResponseDto.WalletDetail;
 import com.service.dida.domain.wallet.usecase.WalletUseCase;
 import com.service.dida.global.config.security.auth.CurrentMember;
 import jakarta.validation.Valid;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.json.simple.parser.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class WalletController {
 
     private final WalletUseCase walletUseCase;
+
+    @GetMapping("/member/wallet")
+    public ResponseEntity<WalletDetail> getWalletDetail(@CurrentMember Member member)
+        throws IOException, ParseException, InterruptedException {
+        return new ResponseEntity<>(walletUseCase.getWalletDetail(member), HttpStatus.OK);
+    }
 
     /**
      * 지갑 발급하기 Api

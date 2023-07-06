@@ -22,6 +22,7 @@ import com.service.dida.domain.wallet.dto.WalletRequestDto.ChangeCoin;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.CheckPwd;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.SendKlayOutside;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.SendNftRequestDto;
+import com.service.dida.domain.wallet.dto.WalletResponseDto.WalletDetail;
 import com.service.dida.domain.wallet.repository.WalletRepository;
 import com.service.dida.domain.wallet.usecase.WalletUseCase;
 import com.service.dida.global.config.exception.BaseException;
@@ -61,6 +62,14 @@ public class WalletService implements WalletUseCase {
         save(wallet);
         member.changeRole(Role.ROLE_MEMBER);
         member.updateWallet(wallet);
+    }
+
+    @Override
+    public WalletDetail getWalletDetail(Member member)
+        throws IOException, ParseException, InterruptedException {
+        Wallet wallet = member.getWallet();
+        return new WalletDetail(wallet.getAddress(), kasUseCase.getKlay(wallet),
+            kasUseCase.getDida(wallet));
     }
 
     @Override
