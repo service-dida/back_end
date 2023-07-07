@@ -1,6 +1,7 @@
 package com.service.dida.domain.member.usecase;
 
 import com.service.dida.domain.member.dto.MemberRequestDto;
+import com.service.dida.domain.member.dto.MemberRequestDto.CheckNickname;
 import com.service.dida.domain.member.dto.MemberRequestDto.UpdateProfile;
 import com.service.dida.domain.member.dto.MemberResponseDto;
 import com.service.dida.domain.member.entity.Member;
@@ -17,4 +18,6 @@ public interface UpdateMemberUseCase {
     void updateProfileImg(Member member, UpdateProfile updateProfile);
 
     void updateProfileDescription(Member member, UpdateProfile updateProfile);
+
+    void updateProfileNickname(Member member, CheckNickname checkNickname);
 }

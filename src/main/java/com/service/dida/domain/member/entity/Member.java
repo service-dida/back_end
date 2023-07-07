@@ -116,4 +116,8 @@ public class Member extends BaseEntity {
     public void updateProfileDescription(String description) {
         this.description = description;
     }
+
+    public void updateProfileNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }

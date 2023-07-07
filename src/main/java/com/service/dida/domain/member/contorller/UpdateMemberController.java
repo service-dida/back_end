@@ -1,6 +1,7 @@
 package com.service.dida.domain.member.contorller;
 
 import com.service.dida.domain.member.dto.MemberRequestDto;
+import com.service.dida.domain.member.dto.MemberRequestDto.CheckNickname;
 import com.service.dida.domain.member.dto.MemberRequestDto.UpdateProfile;
 import com.service.dida.domain.member.dto.MemberResponseDto;
 import com.service.dida.domain.member.entity.Member;
@@ -65,6 +66,16 @@ public class UpdateMemberController {
     public ResponseEntity<Integer> updateProfileDescription(@CurrentMember Member member,
         @RequestBody UpdateProfile updateProfile) {
         updateMemberUseCase.updateProfileDescription(member, updateProfile);
+        return new ResponseEntity<>(200, HttpStatus.OK);
+    }
+
+    /**
+     * 프로필 닉네임 변경 Api
+     */
+    @PatchMapping("/common/nickname")
+    public ResponseEntity<Integer> updateProfileNickname(@CurrentMember Member member,
+        @RequestBody CheckNickname checkNickname) {
+        updateMemberUseCase.updateProfileNickname(member, checkNickname);
         return new ResponseEntity<>(200, HttpStatus.OK);
     }
 }
