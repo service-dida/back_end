@@ -1,6 +1,7 @@
 package com.service.dida.domain.member.contorller;
 
 import com.service.dida.domain.member.dto.MemberRequestDto;
+import com.service.dida.domain.member.dto.MemberRequestDto.UpdateProfile;
 import com.service.dida.domain.member.dto.MemberResponseDto;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.member.usecase.UpdateMemberUseCase;
@@ -28,6 +29,9 @@ public class UpdateMemberController {
         return new ResponseEntity<>(updateMemberUseCase.refreshAccessToken(member), HttpStatus.OK);
     }
 
+    /**
+     * 디바이스 토큰 변경 Api
+     */
     @PatchMapping("/member/device")
     public ResponseEntity<Integer> updateDeviceToken(@CurrentMember Member member,
         @Valid @RequestBody MemberRequestDto.UpdateDeviceToken updateDeviceToken) {
@@ -35,9 +39,22 @@ public class UpdateMemberController {
         return new ResponseEntity<>(200, HttpStatus.OK);
     }
 
+    /**
+     * 계정 삭제 Api
+     */
     @DeleteMapping("/member")
     public ResponseEntity<Integer> deleteMember(@CurrentMember Member member) {
         updateMemberUseCase.deleteMember(member);
+        return new ResponseEntity<>(200, HttpStatus.OK);
+    }
+
+    /**
+     * 프로필 이미지 변경 Api
+     */
+    @PatchMapping("/common/image")
+    public ResponseEntity<Integer> updateProfileImg(@CurrentMember Member member,
+        @RequestBody UpdateProfile updateProfile) {
+        updateMemberUseCase.updateProfileImg(member, updateProfile);
         return new ResponseEntity<>(200, HttpStatus.OK);
     }
 }

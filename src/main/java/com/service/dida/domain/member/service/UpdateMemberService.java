@@ -1,6 +1,7 @@
 package com.service.dida.domain.member.service;
 
 import com.service.dida.domain.member.dto.MemberRequestDto.UpdateDeviceToken;
+import com.service.dida.domain.member.dto.MemberRequestDto.UpdateProfile;
 import com.service.dida.domain.member.dto.MemberResponseDto.TokenInfo;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.member.repository.MemberRepository;
@@ -40,5 +41,10 @@ public class UpdateMemberService implements UpdateMemberUseCase {
     public void deleteMember(Member member) {
         member.setDeleted();
         save(member);
+    }
+
+    @Override
+    public void updateProfileImg(Member member, UpdateProfile updateProfile) {
+        member.updateProfileImg(updateProfile.getDescriptionAndImg());
     }
 }

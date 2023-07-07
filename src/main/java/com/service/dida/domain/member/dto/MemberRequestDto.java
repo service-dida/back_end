@@ -43,4 +43,11 @@ public class MemberRequestDto {
         @NotBlank(message = "Device token은 공백일 수 없습니다.")
         private String deviceToken;
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateProfile {
+        private String descriptionAndImg;
+    }
 }

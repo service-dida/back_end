@@ -108,4 +108,8 @@ public class Member extends BaseEntity {
         int nftSize = (int) nfts.stream().filter(nft -> !nft.isDeleted()).count();
         return new FollowList(this.memberId, this.nickname, this.profileUrl, nftSize);
     }
+
+    public void updateProfileImg(String imgUrl) {
+        this.profileUrl = imgUrl;
+    }
 }
