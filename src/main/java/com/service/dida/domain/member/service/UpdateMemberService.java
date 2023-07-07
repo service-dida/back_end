@@ -47,4 +47,9 @@ public class UpdateMemberService implements UpdateMemberUseCase {
     public void updateProfileImg(Member member, UpdateProfile updateProfile) {
         member.updateProfileImg(updateProfile.getDescriptionAndImg());
     }
+
+    @Override
+    public void updateProfileDescription(Member member, UpdateProfile updateProfile) {
+        member.updateProfileDescription(updateProfile.getDescriptionAndImg());
+    }
 }

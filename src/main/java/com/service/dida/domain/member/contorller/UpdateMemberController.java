@@ -57,4 +57,14 @@ public class UpdateMemberController {
         updateMemberUseCase.updateProfileImg(member, updateProfile);
         return new ResponseEntity<>(200, HttpStatus.OK);
     }
+
+    /**
+     * 프로필 설명 변경 Api
+     */
+    @PatchMapping("/common/description")
+    public ResponseEntity<Integer> updateProfileDescription(@CurrentMember Member member,
+        @RequestBody UpdateProfile updateProfile) {
+        updateMemberUseCase.updateProfileDescription(member, updateProfile);
+        return new ResponseEntity<>(200, HttpStatus.OK);
+    }
 }

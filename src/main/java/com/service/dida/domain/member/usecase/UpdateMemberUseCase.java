@@ -15,4 +15,6 @@ public interface UpdateMemberUseCase {
     void deleteMember(Member member);
 
     void updateProfileImg(Member member, UpdateProfile updateProfile);
+
+    void updateProfileDescription(Member member, UpdateProfile updateProfile);
 }

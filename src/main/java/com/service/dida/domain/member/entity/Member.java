@@ -112,4 +112,8 @@ public class Member extends BaseEntity {
     public void updateProfileImg(String imgUrl) {
         this.profileUrl = imgUrl;
     }
+
+    public void updateProfileDescription(String description) {
+        this.description = description;
+    }
 }
