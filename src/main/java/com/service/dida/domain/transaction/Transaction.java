@@ -1,14 +1,18 @@
 package com.service.dida.domain.transaction;
 
+import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.TransactionSetDto;
 import com.service.dida.global.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,8 +43,11 @@ public class Transaction extends BaseEntity {
     private Double payAmount;
     @Column(name = "pay_back_amount")
     private Double payBackAmount;
-    @Column(name = "nft_id")
-    private Long nftId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "nft_id")
+    private Nft nft;
+
     @Column(name = "pay_transaction")
     private String payTransaction;
     @Column(name = "pay_back_transaction")
@@ -52,5 +59,21 @@ public class Transaction extends BaseEntity {
         this.payTransaction = transactionSet.getPayTransaction();
         this.payBackTransaction = transactionSet.getPayBackTransaction();
         this.feeTransaction = transactionSet.getFeeTransaction();
+    }
+
+    public double getPriceByDealingType(Long memberId) {
+        if (memberId == this.buyerId) {
+            return this.payAmount;
+        } else {
+            return this.payBackAmount;
+        }
+    }
+
+    public boolean getIsPurchased(Long memberId) {
+        if (memberId == this.buyerId) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

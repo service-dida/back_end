@@ -15,6 +15,15 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query(value = "select t from Transaction t where t.buyerId = :memberId and (t.type = 'SWAP1' or t.type = 'SWAP2' or t.type = 'SEND_OUT_KLAY')")
     Page<Transaction> findAllSwapHistoryByMemberId(Long memberId, PageRequest pageRequest);
 
+    @Query(value = "SELECT t FROM Transaction t WHERE (t.buyerId = :memberId OR t.sellerId = :memberId) and t.type = 'DEAL'")
+    Page<Transaction> findAllDealingHistoryByMemberId(Long memberId, PageRequest pageRequest);
+
+    @Query(value = "SELECT t FROM Transaction t WHERE t.buyerId = :memberId AND t.type = 'DEAL'")
+    Page<Transaction> findPurchaseDealingHistoryByMemberId(Long memberId, PageRequest pageRequest);
+
+    @Query(value = "SELECT t FROM Transaction t WHERE t.sellerId = :memberId AND t.type = 'DEAL'")
+    Page<Transaction> findSoldDealingHistoryByMemberId(Long memberId, PageRequest pageRequest);
+
     @Query(value = "SELECT t.sellerId FROM Transaction t WHERE t.type='DEAL' " +
             "AND (t.sellerId) NOT IN (SELECT mh.hideMember.memberId FROM MemberHide mh WHERE mh.member=:member) " +
             "AND t.createdAt >:date GROUP BY t.sellerId ORDER BY COUNT(t.sellerId) DESC LIMIT 4")

@@ -29,4 +29,11 @@ public class NftResponseDto {
         private boolean followed;
         private boolean liked;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class ProfileNft {
+        private NftInfo nftInfo;
+        private boolean liked;
+    }
 }
