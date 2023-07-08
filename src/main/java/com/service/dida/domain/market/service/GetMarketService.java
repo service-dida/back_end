@@ -55,20 +55,31 @@ public class GetMarketService implements GetMarketUseCase {
                 likeCountToString(likeRepository.getLikeCountsByNftId(nft).orElse(0L)));
     }
 
-    public GetHotSeller makeHotSellerForm(Member member) {
-        return new GetHotSeller(member.getMemberId(), member.getNickname(), member.getProfileUrl(),
-                nftRepository.getRecentNftImgUrlMinusHide(member).orElse(null));
+    public GetHotSeller makeHotSellerForm(Member member, Member owner) {
+        String nftImgUrl = "";
+        if(member != null) {
+            nftImgUrl = nftRepository.getRecentNftImgUrlMinusHide(member, owner).orElse("");
+        } else {
+            nftImgUrl = nftRepository.getRecentNftImgUrl(owner).orElse("");
+        }
+        return new GetHotSeller(owner.getMemberId(), owner.getNickname(),
+                owner.getProfileUrl(), nftImgUrl);
+
     }
 
     public GetRecentNft makeGetRecentNftForm(Member member, Nft nft) {
+        boolean liked = false;
+        if(member != null) {
+            liked = getLikeUseCase.checkIsLiked(member, nft);
+        }
         return new GetRecentNft(nft.getNftId(), nft.getTitle(), nft.getMember().getNickname(),
-                nft.getImgUrl(), nft.getPrice(), getLikeUseCase.checkIsLiked(member, nft));
+                nft.getImgUrl(), nft.getPrice(), liked);
     }
 
     public GetHotMember makeGetHotMemberForm(Member member, Member hotMember) {
         boolean followed = false;
         boolean isMe = false;
-        if(member != null) {
+        if (member != null) {
             followed = getFollowUseCase.checkIsFollowed(member, hotMember);
             isMe = checkIsMe(member.getMemberId(), hotMember.getMemberId());
         }
@@ -82,7 +93,12 @@ public class GetMarketService implements GetMarketUseCase {
 
     public List<GetHotItem> getHotItems(Member member) {
         List<GetHotItem> hotItems = new ArrayList<>();
-        List<Nft> nfts = likeRepository.getHotItemsMinusHide(member).orElse(null);
+        List<Nft> nfts;
+        if (member != null) { // 로그인 했으면 숨김 리소스 제외
+            nfts = likeRepository.getHotItemsMinusHide(member).orElse(null);
+        } else {
+            nfts = likeRepository.getHotItems().orElse(null);
+        }
         if (nfts != null) {
             for (Nft nft : nfts) {
                 hotItems.add(makeHotItemForm(nft));
@@ -93,13 +109,19 @@ public class GetMarketService implements GetMarketUseCase {
 
     public List<GetHotSeller> getHotSellers(Member member) {
         List<GetHotSeller> hotSellers = new ArrayList<>();
-        List<Long> sellers = transactionRepository.getHotSellersMinusHide(member,
-                LocalDateTime.now().minusDays(7)).orElse(null);
+        List<Long> sellers;
+        if (member != null) { // 로그인 했으면 숨김 리소스 제외
+            sellers = transactionRepository.getHotSellersMinusHide(member,
+                    LocalDateTime.now().minusDays(7)).orElse(null);
+        } else {
+            sellers = transactionRepository.getHotSellers(
+                    LocalDateTime.now().minusDays(7)).orElse(null);
+        }
         if (sellers != null) {
             for (Long sellerId : sellers) {
                 Member seller = memberRepository.findByMemberIdWithDeleted(sellerId)
                         .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER));
-                hotSellers.add(makeHotSellerForm(seller));
+                hotSellers.add(makeHotSellerForm(member, seller));
             }
         }
         return hotSellers;
@@ -107,7 +129,12 @@ public class GetMarketService implements GetMarketUseCase {
 
     public List<GetRecentNft> getRecentNfts(Member member, PageRequest pageRequest) {
         List<GetRecentNft> recentNfts = new ArrayList<>();
-        Page<Nft> nfts = nftRepository.getRecentNftsMinusHide(member, pageRequest);
+        Page<Nft> nfts;
+        if (member != null) { // 로그인 했으면 숨김 리소스 제외
+            nfts = nftRepository.getRecentNftsMinusHide(member, pageRequest);
+        } else {
+            nfts = nftRepository.getRecentNfts(pageRequest);
+        }
         nfts.forEach(nft -> recentNfts.add(makeGetRecentNftForm(member, nft)));
         return recentNfts;
     }
@@ -115,7 +142,7 @@ public class GetMarketService implements GetMarketUseCase {
     public List<GetHotMember> getHotMembers(Member member) {
         List<GetHotMember> hotMembers = new ArrayList<>();
         List<Long> members;
-        if(member != null) { // 로그인 했으면 숨김 리소스 제외
+        if (member != null) { // 로그인 했으면 숨김 리소스 제외
             members = transactionRepository.getHotMembersMinusHide(member, LocalDateTime.now().minusDays(30)).orElse(null);
         } else {
             members = transactionRepository.getHotMembers(LocalDateTime.now().minusDays(30)).orElse(null);
@@ -135,7 +162,7 @@ public class GetMarketService implements GetMarketUseCase {
     public GetMainPageWithoutSoldOut getMainPage(Member member) {
         List<GetHotItem> hotItems = getHotItems(member);
         List<GetHotSeller> hotSellers = getHotSellers(member);
-        List<GetRecentNft> recentNfts = getRecentNfts(member, PageRequest.of(0,4));
+        List<GetRecentNft> recentNfts = getRecentNfts(member, PageRequest.of(0, 4));
         List<GetHotMember> hotMembers = getHotMembers(member);
         return new GetMainPageWithoutSoldOut(hotItems, hotSellers, recentNfts, hotMembers);
     }
