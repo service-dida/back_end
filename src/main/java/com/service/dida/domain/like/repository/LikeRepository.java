@@ -12,7 +12,10 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
-    @Query(value = "SELECT l.nft FROM Like l WHERE l.status = true GROUP BY l.nft ORDER BY COUNT(l.nft) DESC")
+    @Query(value = "SELECT l.nft FROM Like l " +
+            "WHERE (l.nft) NOT IN (SELECT nh.nft FROM NftHide nh WHERE nh.member=:member) " +
+            "AND (l.nft.member) NOT IN (SELECT mh.hideMember FROM MemberHide mh WHERE mh.member=:member) " +
+            "AND l.status = true GROUP BY l.nft ORDER BY COUNT(l.nft) DESC LIMIT 6")
     Optional<List<Nft>> getHotItems(Member member);
 
     @Query(value = "SELECT COUNT(l) FROM Like l WHERE l.nft = :nft AND l.status = true")

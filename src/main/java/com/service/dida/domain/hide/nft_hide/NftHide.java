@@ -5,6 +5,7 @@ import com.service.dida.domain.nft.Nft;
 import com.service.dida.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Builder
@@ -14,9 +15,9 @@ import lombok.*;
 @Table(name = "nft_hide")
 public class NftHide extends BaseEntity {
     @Id
-    @Column(name = "hide_id")
+    @Column(name = "nft_hide_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long hideId;
+    private Long nftHideId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

@@ -15,8 +15,10 @@ import com.service.dida.domain.nft.Nft;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 import com.service.dida.global.util.usecase.UtilUseCase;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,20 +31,17 @@ public class GetMarketService implements GetMarketUseCase {
     private final LikeRepository likeRepository;
     private final UtilUseCase utilUseCase;
 
-    public GetHotItem makeHotItemForm(Nft nft) {
-        String like = "";
-        long likeCount = likeRepository.getLikeCountsByNftId(nft).orElse(0L);
+    public String likeCountToString(long likeCount) {
         if (likeCount >= 1000) {
-            like = likeCount / 1000 + "K";
+            return likeCount / 1000 + "K";
         }
+        else return likeCountToString(likeCount);
+    }
 
-        return GetHotItem.builder()
-            .nftId(nft.getNftId())
-            .nftImgUrl(nft.getImgUrl())
-            .nftName(nft.getTitle())
-            .price(nft.getPrice())
-            .likeCount(like)
-            .build();
+    public GetHotItem makeHotItemForm(Nft nft) {
+        return new GetHotItem(nft.getNftId(), nft.getImgUrl()
+                , nft.getTitle(), nft.getPrice(),
+                likeCountToString(likeRepository.getLikeCountsByNftId(nft).orElse(0L)));
     }
 
     public List<GetHotItem> getHotItems(Member member) {
@@ -51,14 +50,10 @@ public class GetMarketService implements GetMarketUseCase {
         if (nfts != null) {
             for (Nft nft : nfts) {
                 hotItems.add(makeHotItemForm(nft));
-                if (hotItems.size() == 6) {
-                    break;
-                }
             }
         }
         return hotItems;
     }
-
 
     @Override
     public GetMainPageWithoutSoldOut getMainPage(Member member) {

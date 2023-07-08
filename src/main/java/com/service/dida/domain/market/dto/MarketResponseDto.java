@@ -10,7 +10,6 @@ import java.util.List;
 public class MarketResponseDto {
 
     @Getter
-    @Builder
     @AllArgsConstructor
     public static class GetHotItem {
         private Long nftId;         // NFT ID

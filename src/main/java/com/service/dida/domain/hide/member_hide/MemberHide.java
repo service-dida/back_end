@@ -16,9 +16,9 @@ import lombok.NoArgsConstructor;
 @Table(name = "member_hide")
 public class MemberHide extends BaseEntity {
     @Id
-    @Column(name = "hide_id")
+    @Column(name = "member_hide_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long hideId;
+    private Long memberHideId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
