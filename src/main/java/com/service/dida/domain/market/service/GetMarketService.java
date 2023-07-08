@@ -48,12 +48,12 @@ public class GetMarketService implements GetMarketUseCase {
 
     public GetHotSeller makeHotSellerForm(Member member) {
         return new GetHotSeller(member.getMemberId(), member.getNickname(), member.getProfileUrl(),
-                nftRepository.findRecentNftImgUrlMinusHide(member).orElse(null));
+                nftRepository.getRecentNftImgUrlMinusHide(member).orElse(null));
     }
 
     public List<GetHotItem> getHotItems(Member member) {
         List<GetHotItem> hotItems = new ArrayList<>();
-        List<Nft> nfts = likeRepository.getHotItems(member).orElse(null);
+        List<Nft> nfts = likeRepository.getHotItemsMinusHide(member).orElse(null);
         if (nfts != null) {
             for (Nft nft : nfts) {
                 hotItems.add(makeHotItemForm(nft));

@@ -21,5 +21,5 @@ public interface NftRepository extends JpaRepository<Nft, Long> {
     @Query(value = "SELECT n.imgUrl FROM Nft n " +
             "WHERE n NOT IN (SELECT nh.nft FROM NftHide nh WHERE nh.member=:member)" +
             "AND n.member=:member ORDER BY n.createdAt DESC LIMIT 1")
-    Optional<String> findRecentNftImgUrlMinusHide(Member member);
+    Optional<String> getRecentNftImgUrlMinusHide(Member member);
 }
