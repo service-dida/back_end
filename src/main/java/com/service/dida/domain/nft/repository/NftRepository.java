@@ -5,6 +5,8 @@ import com.service.dida.domain.nft.Nft;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -19,7 +21,13 @@ public interface NftRepository extends JpaRepository<Nft, Long> {
     Optional<Nft> findByNftIdWithDeletedAndMember(Member member, Long nftId);
 
     @Query(value = "SELECT n.imgUrl FROM Nft n " +
-            "WHERE n NOT IN (SELECT nh.nft FROM NftHide nh WHERE nh.member=:member)" +
+            "WHERE n NOT IN (SELECT nh.nft FROM NftHide nh WHERE nh.member=:member) " +
             "AND n.member=:member ORDER BY n.createdAt DESC LIMIT 1")
     Optional<String> getRecentNftImgUrlMinusHide(Member member);
+
+    @Query(value = "SELECT n FROM Nft n " +
+            "WHERE (n) NOT IN (SELECT nh.nft FROM NftHide nh WHERE nh.member=:member) " +
+            "AND (n.member) NOT IN (SELECT mh.hideMember FROM MemberHide mh WHERE mh.member=:member) " +
+            "AND n.deleted=false ORDER BY n.createdAt DESC ")
+    Page<Nft> getRecentNftsMinusHide(Member member, PageRequest pageRequest);
 }

@@ -29,7 +29,6 @@ public class MarketResponseDto {
     }
 
     @Getter
-    @Builder
     @AllArgsConstructor
     public static class GetRecentNft {
         private Long nftId;         // NFT ID

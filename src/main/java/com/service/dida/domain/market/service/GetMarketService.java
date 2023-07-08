@@ -1,5 +1,6 @@
 package com.service.dida.domain.market.service;
 
+import com.service.dida.domain.like.usecase.GetLikeUseCase;
 import com.service.dida.domain.market.dto.MarketResponseDto.GetHotItem;
 import com.service.dida.domain.market.dto.MarketResponseDto.GetHotSeller;
 import com.service.dida.domain.market.dto.MarketResponseDto.GetRecentNft;
@@ -23,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,6 +38,7 @@ public class GetMarketService implements GetMarketUseCase {
     private final TransactionRepository transactionRepository;
     private final NftRepository nftRepository;
     private final MemberRepository memberRepository;
+    private final GetLikeUseCase getLikeUseCase;
 
     public String likeCountToString(long likeCount) {
         if (likeCount >= 1000) {
@@ -49,6 +54,11 @@ public class GetMarketService implements GetMarketUseCase {
     public GetHotSeller makeHotSellerForm(Member member) {
         return new GetHotSeller(member.getMemberId(), member.getNickname(), member.getProfileUrl(),
                 nftRepository.getRecentNftImgUrlMinusHide(member).orElse(null));
+    }
+
+    public GetRecentNft makeGetRecentNftForm(Member member, Nft nft) {
+        return new GetRecentNft(nft.getNftId(), nft.getTitle(), nft.getMember().getNickname(),
+                nft.getImgUrl(), nft.getPrice(), getLikeUseCase.checkIsLiked(member, nft));
     }
 
     public List<GetHotItem> getHotItems(Member member) {
@@ -76,11 +86,18 @@ public class GetMarketService implements GetMarketUseCase {
         return hotSellers;
     }
 
+    public List<GetRecentNft> getRecentNfts(Member member, PageRequest pageRequest) {
+        List<GetRecentNft> recentNfts = new ArrayList<>();
+        Page<Nft> nfts = nftRepository.getRecentNftsMinusHide(member, pageRequest);
+        nfts.forEach(nft -> recentNfts.add(makeGetRecentNftForm(member, nft)));
+        return recentNfts;
+    }
+
     @Override
     public GetMainPageWithoutSoldOut getMainPage(Member member) {
         List<GetHotItem> hotItems = getHotItems(member);
         List<GetHotSeller> hotSellers = getHotSellers(member);
-        //List<GetRecentNft> recentNfts = new ArrayList<>();
+        List<GetRecentNft> recentNfts = getRecentNfts(member, PageRequest.of(0,4));
         //List<GetHotUser> hotUsers = new ArrayList<>();
         return new GetMainPageWithoutSoldOut();//hotItems, hotSellers, recentNfts, hotUsers);
     }
