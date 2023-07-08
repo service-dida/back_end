@@ -9,7 +9,6 @@ import com.service.dida.domain.market.dto.MarketResponseDto.GetHotMember;
 import com.service.dida.domain.market.dto.MarketResponseDto.GetMainPageWithoutSoldOut;
 
 import com.service.dida.domain.like.repository.LikeRepository;
-import com.service.dida.domain.market.repository.MarketRepository;
 import com.service.dida.domain.market.usecase.GetMarketUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.member.repository.MemberRepository;
@@ -18,7 +17,6 @@ import com.service.dida.domain.nft.repository.NftRepository;
 import com.service.dida.domain.transaction.repository.TransactionRepository;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
-import com.service.dida.global.util.usecase.UtilUseCase;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,8 +26,6 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 @Service
