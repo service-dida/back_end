@@ -1,10 +1,11 @@
 package com.service.dida.domain.market.service;
 
+import com.service.dida.domain.follow.usecase.GetFollowUseCase;
 import com.service.dida.domain.like.usecase.GetLikeUseCase;
 import com.service.dida.domain.market.dto.MarketResponseDto.GetHotItem;
 import com.service.dida.domain.market.dto.MarketResponseDto.GetHotSeller;
 import com.service.dida.domain.market.dto.MarketResponseDto.GetRecentNft;
-import com.service.dida.domain.market.dto.MarketResponseDto.GetHotUser;
+import com.service.dida.domain.market.dto.MarketResponseDto.GetHotMember;
 import com.service.dida.domain.market.dto.MarketResponseDto.GetMainPageWithoutSoldOut;
 
 import com.service.dida.domain.like.repository.LikeRepository;
@@ -22,11 +23,13 @@ import com.service.dida.global.util.usecase.UtilUseCase;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,6 +42,7 @@ public class GetMarketService implements GetMarketUseCase {
     private final NftRepository nftRepository;
     private final MemberRepository memberRepository;
     private final GetLikeUseCase getLikeUseCase;
+    private final GetFollowUseCase getFollowUseCase;
 
     public String likeCountToString(long likeCount) {
         if (likeCount >= 1000) {
@@ -59,6 +63,21 @@ public class GetMarketService implements GetMarketUseCase {
     public GetRecentNft makeGetRecentNftForm(Member member, Nft nft) {
         return new GetRecentNft(nft.getNftId(), nft.getTitle(), nft.getMember().getNickname(),
                 nft.getImgUrl(), nft.getPrice(), getLikeUseCase.checkIsLiked(member, nft));
+    }
+
+    public GetHotMember makeGetHotMemberForm(Member member, Member hotMember) {
+        boolean followed = false;
+        boolean isMe = false;
+        if(member != null) {
+            followed = getFollowUseCase.checkIsFollowed(member, hotMember);
+            isMe = checkIsMe(member.getMemberId(), hotMember.getMemberId());
+        }
+        return new GetHotMember(hotMember.getMemberId(), hotMember.getNickname(), hotMember.getProfileUrl(),
+                nftRepository.countByMemberWithDeleted(hotMember).orElse(0L), followed, isMe);
+    }
+
+    public boolean checkIsMe(Long memberId, Long ownerId) {
+        return Objects.equals(memberId, ownerId);
     }
 
     public List<GetHotItem> getHotItems(Member member) {
@@ -93,13 +112,32 @@ public class GetMarketService implements GetMarketUseCase {
         return recentNfts;
     }
 
+    public List<GetHotMember> getHotMembers(Member member) {
+        List<GetHotMember> hotMembers = new ArrayList<>();
+        List<Long> members;
+        if(member != null) { // 로그인 했으면 숨김 리소스 제외
+            members = transactionRepository.getHotMembersMinusHide(member, LocalDateTime.now().minusDays(30)).orElse(null);
+        } else {
+            members = transactionRepository.getHotMembers(LocalDateTime.now().minusDays(30)).orElse(null);
+        }
+
+        if (members != null) {
+            for (Long memberId : members) {
+                Member hotMember = memberRepository.findByMemberIdWithDeleted(memberId)
+                        .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER));
+                hotMembers.add(makeGetHotMemberForm(member, hotMember));
+            }
+        }
+        return hotMembers;
+    }
+
     @Override
     public GetMainPageWithoutSoldOut getMainPage(Member member) {
         List<GetHotItem> hotItems = getHotItems(member);
         List<GetHotSeller> hotSellers = getHotSellers(member);
         List<GetRecentNft> recentNfts = getRecentNfts(member, PageRequest.of(0,4));
-        //List<GetHotUser> hotUsers = new ArrayList<>();
-        return new GetMainPageWithoutSoldOut();//hotItems, hotSellers, recentNfts, hotUsers);
+        List<GetHotMember> hotMembers = getHotMembers(member);
+        return new GetMainPageWithoutSoldOut(hotItems, hotSellers, recentNfts, hotMembers);
     }
 
 }

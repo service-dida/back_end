@@ -40,9 +40,8 @@ public class MarketResponseDto {
     }
 
     @Getter
-    @Builder
     @AllArgsConstructor
-    public static class GetHotUser {
+    public static class GetHotMember {
         private Long memberId;              // member ID
         private String memberName;          // member 이름
         private String profileUrl;          // member 프로필 이미지 주소
@@ -58,6 +57,6 @@ public class MarketResponseDto {
         List<GetHotItem> getHotItems;
         List<GetHotSeller> getHotSellers;
         List<GetRecentNft> getRecentNfts;
-        List<GetHotUser> getHotUsers;
+        List<GetHotMember> getHotMembers;
     }
 }

@@ -30,4 +30,7 @@ public interface NftRepository extends JpaRepository<Nft, Long> {
             "AND (n.member) NOT IN (SELECT mh.hideMember FROM MemberHide mh WHERE mh.member=:member) " +
             "AND n.deleted=false ORDER BY n.createdAt DESC ")
     Page<Nft> getRecentNftsMinusHide(Member member, PageRequest pageRequest);
+
+    @Query(value = "SELECT COUNT(n) FROM Nft n WHERE n.deleted=false AND n.member=:member")
+    Optional<Long> countByMemberWithDeleted(Member member);
 }
