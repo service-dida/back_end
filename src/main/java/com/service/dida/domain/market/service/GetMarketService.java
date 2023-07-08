@@ -12,10 +12,13 @@ import com.service.dida.domain.market.usecase.GetMarketUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.member.repository.MemberRepository;
 import com.service.dida.domain.nft.Nft;
+import com.service.dida.domain.nft.repository.NftRepository;
+import com.service.dida.domain.transaction.repository.TransactionRepository;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 import com.service.dida.global.util.usecase.UtilUseCase;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,22 +29,26 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GetMarketService implements GetMarketUseCase {
 
-    private final MemberRepository memberRepository;
-    private final MarketRepository marketRepository;
+
     private final LikeRepository likeRepository;
-    private final UtilUseCase utilUseCase;
+    private final TransactionRepository transactionRepository;
+    private final NftRepository nftRepository;
+    private final MemberRepository memberRepository;
 
     public String likeCountToString(long likeCount) {
         if (likeCount >= 1000) {
             return likeCount / 1000 + "K";
-        }
-        else return likeCountToString(likeCount);
+        } else return likeCountToString(likeCount);
     }
 
     public GetHotItem makeHotItemForm(Nft nft) {
-        return new GetHotItem(nft.getNftId(), nft.getImgUrl()
-                , nft.getTitle(), nft.getPrice(),
+        return new GetHotItem(nft.getNftId(), nft.getImgUrl(), nft.getTitle(), nft.getPrice(),
                 likeCountToString(likeRepository.getLikeCountsByNftId(nft).orElse(0L)));
+    }
+
+    public GetHotSeller makeHotSellerForm(Member member) {
+        return new GetHotSeller(member.getMemberId(), member.getNickname(), member.getProfileUrl(),
+                nftRepository.findRecentNftImgUrlMinusHide(member).orElse(null));
     }
 
     public List<GetHotItem> getHotItems(Member member) {
@@ -55,10 +62,24 @@ public class GetMarketService implements GetMarketUseCase {
         return hotItems;
     }
 
+    public List<GetHotSeller> getHotSellers(Member member) {
+        List<GetHotSeller> hotSellers = new ArrayList<>();
+        List<Long> sellers = transactionRepository.getHotSellersMinusHide(member,
+                LocalDateTime.now().minusDays(7)).orElse(null);
+        if (sellers != null) {
+            for (Long sellerId : sellers) {
+                Member seller = memberRepository.findByMemberIdWithDeleted(sellerId)
+                        .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER));
+                hotSellers.add(makeHotSellerForm(seller));
+            }
+        }
+        return hotSellers;
+    }
+
     @Override
     public GetMainPageWithoutSoldOut getMainPage(Member member) {
         List<GetHotItem> hotItems = getHotItems(member);
-        //List<GetHotSeller> hotSellers = new ArrayList<>();
+        List<GetHotSeller> hotSellers = getHotSellers(member);
         //List<GetRecentNft> recentNfts = new ArrayList<>();
         //List<GetHotUser> hotUsers = new ArrayList<>();
         return new GetMainPageWithoutSoldOut();//hotItems, hotSellers, recentNfts, hotUsers);

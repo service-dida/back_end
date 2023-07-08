@@ -20,7 +20,6 @@ public class MarketResponseDto {
     }
 
     @Getter
-    @Builder
     @AllArgsConstructor
     public static class GetHotSeller {
         private Long memberId;              // member ID
