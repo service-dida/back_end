@@ -48,6 +48,6 @@ public class MemberRequestDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class UpdateProfile {
-        private String descriptionAndImg;
+        private String description;
     }
 }
