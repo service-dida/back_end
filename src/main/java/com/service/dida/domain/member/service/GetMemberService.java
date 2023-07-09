@@ -13,7 +13,7 @@ import com.service.dida.domain.member.usecase.GetMemberUseCase;
 import com.service.dida.domain.nft.repository.NftRepository;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
-import com.service.dida.global.util.mail.MailUseCase;
+import com.service.dida.global.util.usecase.MailUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

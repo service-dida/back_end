@@ -1,5 +1,7 @@
-package com.service.dida.global.util.mail;
+package com.service.dida.global.util.service;
 
+import com.service.dida.global.util.dto.MailDto;
+import com.service.dida.global.util.usecase.MailUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -9,7 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MailService implements MailUseCase {
     private final JavaMailSender javaMailSender;
-    private static final String FROM_ADDRESS = "DIDA";
+    private static final String FROM_ADDRESS = "DIDA_HELP@gmail.com";
 
 
     @Override
@@ -20,6 +22,11 @@ public class MailService implements MailUseCase {
     @Override
     public String sendReportMail(String email) {
         return sendMail(createReportMemberMail(email));
+    }
+
+    @Override
+    public String sendPasswordMail(String email) {
+        return sendMail(createPwdMail(email));
     }
 
     public String getTmpPwd() {
@@ -72,9 +79,9 @@ public class MailService implements MailUseCase {
     public String sendMail(MailDto mailDto) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(mailDto.getAddress());
-        message.setFrom(FROM_ADDRESS);
         message.setSubject(mailDto.getTitle());
         message.setText(mailDto.getMessage());
+        message.setFrom(FROM_ADDRESS);
         javaMailSender.send(message);
         return mailDto.getPwd();
     }

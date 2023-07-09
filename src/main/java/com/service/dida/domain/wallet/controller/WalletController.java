@@ -25,6 +25,9 @@ public class WalletController {
 
     private final WalletUseCase walletUseCase;
 
+    /**
+     * 지갑 정보 가져오기 Api
+     */
     @GetMapping("/member/wallet")
     public ResponseEntity<WalletDetail> getWalletDetail(@CurrentMember Member member)
         throws IOException, ParseException, InterruptedException {
