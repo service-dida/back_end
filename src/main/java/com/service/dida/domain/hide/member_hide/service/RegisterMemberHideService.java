@@ -1,5 +1,6 @@
 package com.service.dida.domain.hide.member_hide.service;
 
+import com.service.dida.domain.follow.usecase.UpdateFollowUseCase;
 import com.service.dida.domain.hide.member_hide.MemberHide;
 import com.service.dida.domain.hide.member_hide.repository.MemberHideRepository;
 import com.service.dida.domain.hide.member_hide.usecase.RegisterMemberHideUseCase;
@@ -18,6 +19,7 @@ public class RegisterMemberHideService implements RegisterMemberHideUseCase {
 
     private final MemberHideRepository hideRepository;
     private final MemberRepository memberRepository;
+    private final UpdateFollowUseCase updateFollowUseCase;
 
     @Transactional
     public void save(MemberHide hide) {
@@ -38,7 +40,7 @@ public class RegisterMemberHideService implements RegisterMemberHideUseCase {
                 .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER));
         if (hideRepository.findByMemberAndHideMember(member, hideMember).isEmpty()) {
             createMemberHide(member, hideMember);
-            // 팔로우 취소 로직
+            updateFollowUseCase.checkAndDeleteFollow(member, hideMember);
         } else {
             throw new BaseException(HideErrorCode.ALREADY_HIDE);
         }
