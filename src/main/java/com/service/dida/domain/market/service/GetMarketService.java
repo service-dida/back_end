@@ -54,7 +54,7 @@ public class GetMarketService implements GetMarketUseCase {
     public GetHotSeller makeHotSellerForm(Member member, Member owner) {
         String nftImgUrl = "";
         if(member != null) {
-            nftImgUrl = nftRepository.getRecentNftImgUrlMinusHide(member, owner).orElse("");
+            nftImgUrl = nftRepository.getRecentNftImgUrlWithoutHide(member, owner).orElse("");
         } else {
             nftImgUrl = nftRepository.getRecentNftImgUrl(owner).orElse("");
         }
@@ -91,7 +91,7 @@ public class GetMarketService implements GetMarketUseCase {
         List<GetHotItem> hotItems = new ArrayList<>();
         List<Nft> nfts;
         if (member != null) { // 로그인 했으면 숨김 리소스 제외
-            nfts = likeRepository.getHotItemsMinusHide(member).orElse(null);
+            nfts = likeRepository.getHotItemsWithoutHide(member).orElse(null);
         } else {
             nfts = likeRepository.getHotItems().orElse(null);
         }
@@ -107,7 +107,7 @@ public class GetMarketService implements GetMarketUseCase {
         List<GetHotSeller> hotSellers = new ArrayList<>();
         List<Long> sellers;
         if (member != null) { // 로그인 했으면 숨김 리소스 제외
-            sellers = transactionRepository.getHotSellersMinusHide(member,
+            sellers = transactionRepository.getHotSellersWithoutHide(member,
                     LocalDateTime.now().minusDays(7)).orElse(null);
         } else {
             sellers = transactionRepository.getHotSellers(
@@ -127,7 +127,7 @@ public class GetMarketService implements GetMarketUseCase {
         List<GetRecentNft> recentNfts = new ArrayList<>();
         Page<Nft> nfts;
         if (member != null) { // 로그인 했으면 숨김 리소스 제외
-            nfts = nftRepository.getRecentNftsMinusHide(member, pageRequest);
+            nfts = nftRepository.getRecentNftsWithoutHide(member, pageRequest);
         } else {
             nfts = nftRepository.getRecentNfts(pageRequest);
         }
@@ -139,7 +139,7 @@ public class GetMarketService implements GetMarketUseCase {
         List<GetHotMember> hotMembers = new ArrayList<>();
         List<Long> members;
         if (member != null) { // 로그인 했으면 숨김 리소스 제외
-            members = transactionRepository.getHotMembersMinusHide(member, LocalDateTime.now().minusDays(30)).orElse(null);
+            members = transactionRepository.getHotMembersWithoutHide(member, LocalDateTime.now().minusDays(30)).orElse(null);
         } else {
             members = transactionRepository.getHotMembers(LocalDateTime.now().minusDays(30)).orElse(null);
         }

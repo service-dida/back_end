@@ -27,7 +27,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query(value = "SELECT t.sellerId FROM Transaction t WHERE t.type='DEAL' " +
             "AND (t.sellerId) NOT IN (SELECT mh.hideMember.memberId FROM MemberHide mh WHERE mh.member=:member) " +
             "AND t.createdAt >:date GROUP BY t.sellerId ORDER BY COUNT(t.sellerId) DESC LIMIT 4")
-    Optional<List<Long>> getHotSellersMinusHide(Member member, LocalDateTime date);
+    Optional<List<Long>> getHotSellersWithoutHide(Member member, LocalDateTime date);
 
     @Query(value = "SELECT t.sellerId FROM Transaction t WHERE t.type='DEAL' " +
             "AND t.createdAt >:date GROUP BY t.sellerId ORDER BY COUNT(t.sellerId) DESC LIMIT 4")
@@ -40,5 +40,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query(value = "SELECT t.buyerId FROM Transaction t WHERE t.type='MINTING' " +
             "AND (t.buyerId) NOT IN (SELECT mh.hideMember.memberId FROM MemberHide mh WHERE mh.member=:member) " +
             "AND t.createdAt >:date AND COUNT(t.buyerId) >= 10 GROUP BY t.buyerId ORDER BY COUNT(t.buyerId) DESC LIMIT 3")
-    Optional<List<Long>> getHotMembersMinusHide(Member member, LocalDateTime date);
+    Optional<List<Long>> getHotMembersWithoutHide(Member member, LocalDateTime date);
 }
