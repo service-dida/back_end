@@ -43,7 +43,7 @@ public class GetMarketService implements GetMarketUseCase {
     public String likeCountToString(long likeCount) {
         if (likeCount >= 1000) {
             return likeCount / 1000 + "K";
-        } else return likeCountToString(likeCount);
+        } else return Long.toString(likeCount);
     }
 
     public GetHotItem makeHotItemForm(Nft nft) {
