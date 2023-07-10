@@ -1,15 +1,13 @@
-package com.service.dida.domain.hide.service;
+package com.service.dida.domain.hide.nft_hide.service;
 
-import com.service.dida.domain.hide.Hide;
-import com.service.dida.domain.hide.dto.HideResponseDto.GetHideNft;
-import com.service.dida.domain.hide.repository.HideRepository;
-import com.service.dida.domain.hide.usecase.GetHideUseCase;
+import com.service.dida.domain.hide.nft_hide.NftHide;
+import com.service.dida.domain.hide.nft_hide.dto.NftHideResponseDto.GetNftHide;
+import com.service.dida.domain.hide.nft_hide.repository.NftHideRepository;
+import com.service.dida.domain.hide.nft_hide.usecase.GetNftHideUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.nft.Nft;
 import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
-import com.service.dida.global.config.exception.BaseException;
-import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,9 +20,9 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class GetHideService implements GetHideUseCase {
+public class GetNftHideService implements GetNftHideUseCase {
 
-    private final HideRepository hideRepository;
+    private final NftHideRepository nftHideRepository;
 
     /**
      * NFT 숨김 목록 조회에서 공통으로 사용 될 PageRequest 를 정의하는 함수
@@ -35,8 +33,8 @@ public class GetHideService implements GetHideUseCase {
                 , Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 
-    public GetHideNft makeGetHideNftForm(Nft nft) {
-        return GetHideNft.builder()
+    public GetNftHide makeGetNftHideNftForm(Nft nft) {
+        return GetNftHide.builder()
                 .nftId(nft.getNftId())
                 .nftName(nft.getTitle())
                 .nftImgUrl(nft.getImgUrl())
@@ -46,13 +44,13 @@ public class GetHideService implements GetHideUseCase {
     }
 
     @Override
-    public PageResponseDto<List<GetHideNft>> getHideNftList(Member member, PageRequestDto pageRequestDto) {
-        Page<Hide> hides = hideRepository.findByMember(member, pageReq(pageRequestDto));
+    public PageResponseDto<List<GetNftHide>> getNftHideList(Member member, PageRequestDto pageRequestDto) {
+        Page<NftHide> hides = nftHideRepository.findByMember(member, pageReq(pageRequestDto));
 
-        List<GetHideNft> res = new ArrayList<>();
+        List<GetNftHide> res = new ArrayList<>();
 
-        for(Hide h : hides.getContent()) {
-            res.add(makeGetHideNftForm(h.getNft()));
+        for(NftHide h : hides.getContent()) {
+            res.add(makeGetNftHideNftForm(h.getNft()));
         }
         return new PageResponseDto<>(
                 hides.getNumber(), hides.getSize(), hides.hasNext(), res);
@@ -64,7 +62,7 @@ public class GetHideService implements GetHideUseCase {
      */
     @Override
     @PreAuthorize("hasAnyRole('VISITOR, MEMBER')")
-    public boolean checkIsHided(Member member, Nft nft) {
-        return hideRepository.findByMemberAndNft(member, nft).isPresent();
+    public boolean checkIsNftHided(Member member, Nft nft) {
+        return nftHideRepository.findByMemberAndNft(member, nft).isPresent();
     }
 }

@@ -1,6 +1,6 @@
-package com.service.dida.domain.hide.controller;
+package com.service.dida.domain.hide.nft_hide.controller;
 
-import com.service.dida.domain.hide.usecase.RegisterHideUseCase;
+import com.service.dida.domain.hide.nft_hide.usecase.RegisterNftHideUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.security.auth.CurrentMember;
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class RegisterHideController {
-    private final RegisterHideUseCase registerHideUseCase;
+public class RegisterNftHideController {
+    private final RegisterNftHideUseCase registerNftHideUseCase;
 
     /**
      * NFT 숨기기
@@ -24,7 +24,7 @@ public class RegisterHideController {
     public ResponseEntity<Integer> hideCard(
             @RequestParam("nftId") Long nftId, @CurrentMember Member member)
             throws BaseException {
-        registerHideUseCase.hideCard(member, nftId);
+        registerNftHideUseCase.hideCard(member, nftId);
         return new ResponseEntity<>(200, HttpStatus.OK);
     }
 }

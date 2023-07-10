@@ -2,7 +2,10 @@ package com.service.dida.domain.follow.repository;
 
 import com.service.dida.domain.follow.Follow;
 import com.service.dida.domain.member.entity.Member;
+
 import java.util.Optional;
+
+import com.service.dida.domain.nft.Nft;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,4 +28,6 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     @Query(value = "SELECT f FROM Follow f WHERE f.followingMember = :member AND f.status = TRUE")
     Page<Follow> findAllFollowingByMember(Member member, PageRequest pageRequest);
+
+    void deleteByFollowingMemberAndFollowerMember(Member member, Member owner);
 }
