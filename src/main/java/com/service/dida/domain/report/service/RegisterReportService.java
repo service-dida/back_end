@@ -15,7 +15,7 @@ import com.service.dida.domain.report.repository.ReportRepository;
 import com.service.dida.domain.report.usecase.RegisterReportUseCase;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.*;
-import com.service.dida.global.util.mail.MailUseCase;
+import com.service.dida.global.util.usecase.MailUseCase;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

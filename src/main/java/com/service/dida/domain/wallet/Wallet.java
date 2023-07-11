@@ -46,4 +46,8 @@ public class Wallet extends BaseEntity {
             throw new BaseException(WalletErrorCode.WRONG_PWD);
         }
     }
+
+    public void changePayPwd(String pwd) {
+        this.payPwd = pwd;
+    }
 }

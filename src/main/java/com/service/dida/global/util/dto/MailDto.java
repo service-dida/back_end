@@ -1,4 +1,4 @@
-package com.service.dida.global.util.mail;
+package com.service.dida.global.util.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
