@@ -21,10 +21,10 @@ public class RegisterNftHideController {
      * [POST] /common/nft/hide
      */
     @PostMapping("/common/nft/hide")
-    public ResponseEntity<Integer> hideCard(
+    public ResponseEntity<Integer> hideNft(
             @RequestParam("nftId") Long nftId, @CurrentMember Member member)
             throws BaseException {
-        registerNftHideUseCase.hideCard(member, nftId);
+        registerNftHideUseCase.hideNft(member, nftId);
         return new ResponseEntity<>(200, HttpStatus.OK);
     }
 }

@@ -35,7 +35,7 @@ public class RegisterNftHideService implements RegisterNftHideUseCase {
 
     @Override
     @Transactional
-    public void hideCard(Member member, Long nftId) {
+    public void hideNft(Member member, Long nftId) {
         Nft nft = nftRepository.findByNftIdWithDeleted(nftId)
                 .orElseThrow(() -> new BaseException(NftErrorCode.EMPTY_NFT));
         if (hideRepository.findByMemberAndNft(member, nft).isEmpty()) {
