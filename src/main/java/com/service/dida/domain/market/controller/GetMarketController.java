@@ -1,7 +1,7 @@
 package com.service.dida.domain.market.controller;
 
 import com.service.dida.domain.market.dto.MarketResponseDto.GetMainPageWithoutSoldOut;
-import com.service.dida.domain.market.dto.MarketResponseDto.MoreHotSellers;
+import com.service.dida.domain.market.dto.MarketResponseDto.MoreHotSeller;
 import com.service.dida.domain.market.usecase.GetMarketUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.global.common.dto.PageRequestDto;
@@ -37,10 +37,11 @@ public class GetMarketController {
      * [GET] /hot-sellers
      */
     @GetMapping("/hot-sellers")
-    public ResponseEntity<PageResponseDto<List<MoreHotSellers>>> getMoreHotSellers(
+    public ResponseEntity<PageResponseDto<List<MoreHotSeller>>> getMoreHotSellers(
             @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto)
             throws BaseException {
         return new ResponseEntity<>(getMarketUseCase.getMoreHotSellers(member, pageRequestDto),
                 HttpStatus.OK);
     }
+
 }

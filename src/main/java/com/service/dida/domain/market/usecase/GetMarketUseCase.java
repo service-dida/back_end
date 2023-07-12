@@ -11,5 +11,5 @@ import java.util.List;
 public interface GetMarketUseCase {
 
     GetMainPageWithoutSoldOut getMainPage(Member member);
-    PageResponseDto<List<MarketResponseDto.MoreHotSellers>> getMoreHotSellers(Member member, PageRequestDto pageRequestDto);
+    PageResponseDto<List<MarketResponseDto.MoreHotSeller>> getMoreHotSellers(Member member, PageRequestDto pageRequestDto);
 }

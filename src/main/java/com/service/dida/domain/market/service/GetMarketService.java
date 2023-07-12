@@ -175,7 +175,7 @@ public class GetMarketService implements GetMarketUseCase {
         return new GetMainPageWithoutSoldOut(hotItems, hotSellers, recentNfts, hotMembers);
     }
 
-    public MoreHotSellers makeMoreHotSellersForm(Member member, Member seller) {
+    public MoreHotSeller makeMoreHotSellersForm(Member member, Member seller) {
         List<String> nftImgUrls;
         if (member != null) {
             nftImgUrls = nftRepository.getRecentNftImgUrlWithoutHide(member, seller,
@@ -184,11 +184,11 @@ public class GetMarketService implements GetMarketUseCase {
             nftImgUrls = nftRepository.getRecentNftImgUrl(seller,
                     PageRequest.of(0, 3)).orElse(null);
         }
-        return new MoreHotSellers(makeGetHotMemberForm(member, seller), nftImgUrls);
+        return new MoreHotSeller(makeGetHotMemberForm(member, seller), nftImgUrls);
     }
 
-    public PageResponseDto<List<MoreHotSellers>> makeMoreHotSellersListForm(Member member, Page<Long> hotSellers) {
-        List<MoreHotSellers> res = new ArrayList<>();
+    public PageResponseDto<List<MoreHotSeller>> makeMoreHotSellersListForm(Member member, Page<Long> hotSellers) {
+        List<MoreHotSeller> res = new ArrayList<>();
         hotSellers.forEach(sellerId -> res.add(makeMoreHotSellersForm(member,
                 memberRepository.findByMemberIdWithDeleted(sellerId)
                         .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER)))));
@@ -197,7 +197,7 @@ public class GetMarketService implements GetMarketUseCase {
     }
 
     @Override
-    public PageResponseDto<List<MoreHotSellers>> getMoreHotSellers(Member member, PageRequestDto pageRequestDto) {
+    public PageResponseDto<List<MoreHotSeller>> getMoreHotSellers(Member member, PageRequestDto pageRequestDto) {
         Page<Long> sellers;
         if (member != null) { // 로그인 했으면 숨김 리소스 제외
             sellers = transactionRepository.getHotSellersWithoutHide(member,
