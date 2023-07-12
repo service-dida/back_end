@@ -10,8 +10,14 @@ public class VersionService implements VersionUseCase{
 
     private final VersionRepository versionRepository;
 
+    @Override
     public AppVersion getAppVersion(Long versionId) {
-        return new AppVersion(versionRepository.findAppVersionByVersionId(versionId).orElse(0L));
+        Version version = versionRepository.getVersionByVersionId(versionId);
+        return new AppVersion(versionToString(version));
+    }
+
+    private String versionToString(Version version) {
+        return version.getMajor() + "." + version.getMinor() + "." + version.getPatch();
     }
 
 }

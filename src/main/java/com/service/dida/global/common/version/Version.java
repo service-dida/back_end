@@ -14,10 +14,21 @@ public class Version {
     @Column(name = "version_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long versionId;
-    @Column(name = "app_version")
-    private Long appVersion;
 
-    public void upVersion() {
-        this.appVersion = this.appVersion + 1;
+    @Column(name = "major", nullable = false)
+    private Long major;
+    @Column(name = "minor", nullable = false)
+    private Long minor;
+    @Column(name = "patch", nullable = false)
+    private Long patch;
+
+    public void upMajor() {
+        this.major = this.major + 1;
+    }
+    public void upMinor() {
+        this.minor = this.minor + 1;
+    }
+    public void upPatch() {
+        this.patch = this.patch + 1;
     }
 }

@@ -12,6 +12,6 @@ public class VersionResponseDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class AppVersion {
-        private Long version;
+        private String version;
     }
 }
