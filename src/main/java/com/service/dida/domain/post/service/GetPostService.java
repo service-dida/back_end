@@ -76,14 +76,13 @@ public class GetPostService implements GetPostUseCase {
 
         List<CommentResponseDto.GetCommentResponseDto> comments = new ArrayList<>();
         if (needComment) {
-            comments = getCommentService.getPreviewComments(post.getPostId());
+            comments = getCommentService.getPreviewComments(member, post.getPostId());
         }
 
         return GetPostResponseDto.builder()
                 .postInfo(postInfo)
                 .memberInfo(memberInfo)
                 .nftInfo(nftInfo)
-                // 로그인 상태 및 나의 게시글인지를 나타내는 정보
                 .type(checkIsMe(member, post.getMember()))
                 .comments(comments)
                 .build();
@@ -96,14 +95,7 @@ public class GetPostService implements GetPostUseCase {
     @Override
     public PageResponseDto<List<GetPostResponseDto>> makePostListForm(Member member, Page<Post> posts, boolean needComment) {
         List<GetPostResponseDto> res = new ArrayList<>();
-        // Page<Post>의 content 는 페이지 요청대로 가져온 List<Post>를 나타낸다.
-        for (Post p : posts.getContent()) {
-            // 로그인했다면 숨김 NFT 인지 확인 후 넘어가줌
-            if (member != null && getNftHideUseCase.checkIsNftHided(member, p.getNft())) {
-                continue;
-            }
-            res.add(makeGetPostResForm(member, p, needComment));
-        }
+        posts.forEach(p -> res.add(makeGetPostResForm(member, p, needComment)));
         return new PageResponseDto<>(
                 posts.getNumber(), posts.getSize(), posts.hasNext(), res);
     }
@@ -114,7 +106,12 @@ public class GetPostService implements GetPostUseCase {
      */
     @Override
     public PageResponseDto<List<GetPostResponseDto>> getAllPosts(Member member, PageRequestDto pageRequestDto) {
-        Page<Post> posts = postRepository.findAllWithDeleted(pageReq(pageRequestDto));
+        Page<Post> posts;
+        if (member != null) {
+            posts = postRepository.findAllWithDeletedWithoutHide(member, pageReq(pageRequestDto));
+        } else {
+            posts = postRepository.findAllWithDeleted(pageReq(pageRequestDto));
+        }
         return makePostListForm(member, posts, true);
     }
 
@@ -124,7 +121,12 @@ public class GetPostService implements GetPostUseCase {
      */
     @Override
     public PageResponseDto<List<GetPostResponseDto>> getPostsByNftId(Member member, Long nftId, PageRequestDto pageRequestDto) {
-        Page<Post> posts = postRepository.findByNftIdWithDeleted(nftId, pageReq(pageRequestDto));
+        Page<Post> posts;
+        if (member != null) {
+            posts = postRepository.findByNftIdWithDeletedWithoutHide(member, nftId, pageReq(pageRequestDto));
+        } else {
+            posts = postRepository.findByNftIdWithDeleted(nftId, pageReq(pageRequestDto));
+        }
         return makePostListForm(member, posts, true);
     }
 

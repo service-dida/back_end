@@ -12,7 +12,7 @@ import java.util.List;
 public interface GetCommentUseCase {
     CommentResponseDto.GetCommentResponseDto makeGetCommentResForm(Member member, Comment comment, boolean needType);
     PageResponseDto<List<CommentResponseDto.GetCommentResponseDto>> makeCommentListForm(Member member, Page<Comment> comments);
-    List<CommentResponseDto.GetCommentResponseDto> getPreviewComments(Long postId);
+    List<CommentResponseDto.GetCommentResponseDto> getPreviewComments(Member member, Long postId);
     PageResponseDto<List<CommentResponseDto.GetCommentResponseDto>> getAllComments(Member member, Long postId, PageRequestDto pageRequestDto);
     String checkIsMe(Member member, Member owner);
 

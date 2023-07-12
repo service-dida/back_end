@@ -5,6 +5,7 @@ import com.service.dida.domain.comment.dto.CommentResponseDto.CommentInfo;
 import com.service.dida.domain.comment.dto.CommentResponseDto.GetCommentResponseDto;
 import com.service.dida.domain.comment.repository.CommentRepository;
 import com.service.dida.domain.comment.usecase.GetCommentUseCase;
+import com.service.dida.domain.hide.comment_hide.repository.CommentHideRepository;
 import com.service.dida.domain.member.dto.MemberResponseDto.MemberInfo;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.post.Post;
@@ -28,6 +29,7 @@ public class GetCommentService implements GetCommentUseCase {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final CommentHideRepository commentHideRepository;
 
     /**
      * 댓글 조회에서 공통으로 사용 될 PageRequest 를 정의하는 함수
@@ -77,10 +79,7 @@ public class GetCommentService implements GetCommentUseCase {
     @Override
     public PageResponseDto<List<GetCommentResponseDto>> makeCommentListForm(Member member, Page<Comment> comments) {
         List<GetCommentResponseDto> res = new ArrayList<>();
-
-        for (Comment c : comments.getContent()) {
-            res.add(makeGetCommentResForm(member, c, true));
-        }
+        comments.forEach(c -> res.add(makeGetCommentResForm(member, c, true)));
         return new PageResponseDto<>(
                 comments.getNumber(), comments.getSize(), comments.hasNext(), res);
     }
@@ -91,7 +90,7 @@ public class GetCommentService implements GetCommentUseCase {
      * 최신순 조회 O
      */
     @Override
-    public List<GetCommentResponseDto> getPreviewComments(Long postId) {
+    public List<GetCommentResponseDto> getPreviewComments(Member member, Long postId) {
         Post post = postRepository.findByPostIdWithDeleted(postId)
                 .orElseThrow(() -> new BaseException(PostErrorCode.EMPTY_POST));
 
@@ -103,6 +102,7 @@ public class GetCommentService implements GetCommentUseCase {
         for (int i = comments.size() - 1; i >= 0; i--) {
             if (commentCounts-- == 0) break;
             Comment c = comments.get(i);
+            if (commentHideRepository.findByMemberAndComment(member, c).isPresent()) continue;
             res.add(makeGetCommentResForm(null, c, false));
         }
         return res;
@@ -115,7 +115,12 @@ public class GetCommentService implements GetCommentUseCase {
     public PageResponseDto<List<GetCommentResponseDto>> getAllComments(Member member, Long postId, PageRequestDto pageRequestDto) {
         postRepository.findByPostIdWithDeleted(postId)
                 .orElseThrow(() -> new BaseException(PostErrorCode.EMPTY_POST));
-        Page<Comment> comments = commentRepository.findByPostIdWithDeleted(postId, pageReq(pageRequestDto));
+        Page<Comment> comments;
+        if (member != null) {
+            comments = commentRepository.findByPostIdWithDeletedWithoutHide(member, postId, pageReq(pageRequestDto));
+        } else {
+            comments = commentRepository.findByPostIdWithDeleted(postId, pageReq(pageRequestDto));
+        }
         return makeCommentListForm(member, comments);
     }
 

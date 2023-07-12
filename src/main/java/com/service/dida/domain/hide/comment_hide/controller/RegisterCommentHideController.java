@@ -1,6 +1,6 @@
-package com.service.dida.domain.hide.nft_hide.controller;
+package com.service.dida.domain.hide.comment_hide.controller;
 
-import com.service.dida.domain.hide.nft_hide.usecase.RegisterNftHideUseCase;
+import com.service.dida.domain.hide.comment_hide.usecase.RegisterCommentHideUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.security.auth.CurrentMember;
@@ -13,18 +13,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class RegisterNftHideController {
-    private final RegisterNftHideUseCase registerNftHideUseCase;
+public class RegisterCommentHideController {
+
+    private final RegisterCommentHideUseCase registerCommentHideUseCase;
 
     /**
-     * NFT 숨기기
-     * [POST] /common/nft/hide
+     * 댓글 숨기기
+     * [POST] /common/comment/hide
      */
-    @PostMapping("/common/nft/hide")
-    public ResponseEntity<Integer> hideNft(
-            @RequestParam("nftId") Long nftId, @CurrentMember Member member)
+    @PostMapping("/common/comment/hide")
+    public ResponseEntity<Integer> hideComment(
+            @RequestParam("commentId") Long commentId, @CurrentMember Member member)
             throws BaseException {
-        registerNftHideUseCase.hideNft(member, nftId);
+        registerCommentHideUseCase.hideComment(member, commentId);
         return new ResponseEntity<>(200, HttpStatus.OK);
     }
 }

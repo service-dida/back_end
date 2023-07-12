@@ -2,6 +2,10 @@ package com.service.dida.domain.report.service;
 
 import com.service.dida.domain.comment.Comment;
 import com.service.dida.domain.comment.repository.CommentRepository;
+import com.service.dida.domain.hide.comment_hide.usecase.RegisterCommentHideUseCase;
+import com.service.dida.domain.hide.member_hide.usecase.RegisterMemberHideUseCase;
+import com.service.dida.domain.hide.nft_hide.usecase.RegisterNftHideUseCase;
+import com.service.dida.domain.hide.post_hide.usecase.RegisterPostHideUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.member.repository.MemberRepository;
 import com.service.dida.domain.nft.Nft;
@@ -34,6 +38,10 @@ public class RegisterReportService implements RegisterReportUseCase {
     private final CommentRepository commentRepository;
     private final NftRepository nftRepository;
     private final MailUseCase mailUseCase;
+    private final RegisterMemberHideUseCase registerMemberHideUseCase;
+    private final RegisterNftHideUseCase registerNftHideUseCase;
+    private final RegisterPostHideUseCase registerPostHideUseCase;
+    private final RegisterCommentHideUseCase registerCommentHideUseCase;
 
     @Transactional
     public void save(Report report) {
@@ -74,7 +82,7 @@ public class RegisterReportService implements RegisterReportUseCase {
 
         createReport(member, registerReport, ReportType.USER);
         reportedMember.plusReportCnt();
-        // 숨김 처리 추가 필요
+        registerMemberHideUseCase.hideMember(member, registerReport.getReportedId());
 
         // 누적 신고 횟수가 기준치 이상이라면 유저 임시 삭제 처리 및 이메일 전송
         if (reportedMember.getReportCnt() >= REPORT_STANDARD) {
@@ -94,7 +102,7 @@ public class RegisterReportService implements RegisterReportUseCase {
 
         createReport(member, registerReport, ReportType.POST);
         reportedPost.plusReportCnt();
-        // 숨김 처리 추가 필요
+        registerPostHideUseCase.hidePost(member, registerReport.getReportedId());
 
         // 누적 신고 횟수가 기준치 이상이라면 삭제
         if (reportedPost.getReportCnt() >= REPORT_STANDARD) {
@@ -113,7 +121,7 @@ public class RegisterReportService implements RegisterReportUseCase {
 
         createReport(member, registerReport, ReportType.COMMENT);
         reportedComment.plusReportCnt();
-        // 숨김 처리 추가 필요
+        registerCommentHideUseCase.hideComment(member, registerReport.getReportedId());
 
         // 누적 신고 횟수가 기준치 이상이라면 삭제
         if (reportedComment.getReportCnt() >= REPORT_STANDARD) {
@@ -132,7 +140,7 @@ public class RegisterReportService implements RegisterReportUseCase {
 
         createReport(member, registerReport, ReportType.NFT);
         reportedNft.plusReportCnt();
-        // 숨김 처리 추가 필요
+        registerNftHideUseCase.hideNft(member, registerReport.getReportedId());
 
         // 누적 신고 횟수가 기준치 이상이라면 삭제
         if (reportedNft.getReportCnt() >= REPORT_STANDARD) {
