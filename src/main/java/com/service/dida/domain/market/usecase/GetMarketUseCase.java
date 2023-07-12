@@ -13,4 +13,5 @@ public interface GetMarketUseCase {
     GetMainPageWithoutSoldOut getMainPage(Member member);
     PageResponseDto<List<MarketResponseDto.MoreHotSeller>> getMoreHotSellers(Member member, PageRequestDto pageRequestDto);
     PageResponseDto<List<MarketResponseDto.GetRecentNft>> getMoreRecentNfts(Member member, PageRequestDto pageRequestDto);
+    PageResponseDto<List<MarketResponseDto.MoreHotSeller>> getMoreHotMembers(Member member, PageRequestDto pageRequestDto);
 }

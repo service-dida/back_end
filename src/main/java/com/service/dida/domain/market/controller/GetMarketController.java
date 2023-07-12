@@ -56,4 +56,16 @@ public class GetMarketController {
         return new ResponseEntity<>(getMarketUseCase.getMoreRecentNfts(member, pageRequestDto),
                 HttpStatus.OK);
     }
+
+    /**
+     * 활발한 활동 더보기
+     * [GET] /hot-members
+     */
+    @GetMapping("/hot-members")
+    public ResponseEntity<PageResponseDto<List<MoreHotSeller>>> getMoreHotMembers(
+            @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto)
+            throws BaseException {
+        return new ResponseEntity<>(getMarketUseCase.getMoreHotMembers(member, pageRequestDto),
+                HttpStatus.OK);
+    }
 }
