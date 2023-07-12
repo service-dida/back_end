@@ -53,9 +53,16 @@ public class MarketResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetMainPageWithoutSoldOut {
-        List<GetHotItem> getHotItems;
-        List<GetHotSeller> getHotSellers;
-        List<GetRecentNft> getRecentNfts;
-        List<GetHotMember> getHotMembers;
+        private List<GetHotItem> getHotItems;
+        private List<GetHotSeller> getHotSellers;
+        private List<GetRecentNft> getRecentNfts;
+        private List<GetHotMember> getHotMembers;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class MoreHotSellers{
+        private GetHotMember sellerInfo;
+        private List<String> nftImgUrl;
     }
 }
