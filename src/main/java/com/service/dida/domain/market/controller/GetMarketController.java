@@ -1,15 +1,22 @@
 package com.service.dida.domain.market.controller;
 
+import com.service.dida.domain.market.dto.MarketResponseDto.GetRecentNft;
 import com.service.dida.domain.market.dto.MarketResponseDto.GetMainPageWithoutSoldOut;
+import com.service.dida.domain.market.dto.MarketResponseDto.MoreHotMember;
 import com.service.dida.domain.market.usecase.GetMarketUseCase;
 import com.service.dida.domain.member.entity.Member;
+import com.service.dida.global.common.dto.PageRequestDto;
+import com.service.dida.global.common.dto.PageResponseDto;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.security.auth.CurrentMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,5 +31,41 @@ public class GetMarketController {
     public ResponseEntity<GetMainPageWithoutSoldOut> getMainPage(@CurrentMember Member member)
             throws BaseException {
         return new ResponseEntity<>(getMarketUseCase.getMainPage(member), HttpStatus.OK);
+    }
+
+    /**
+     * Hot Seller 더보기
+     * [GET] /hot-sellers
+     */
+    @GetMapping("/hot-sellers")
+    public ResponseEntity<PageResponseDto<List<MoreHotMember>>> getMoreHotSellers(
+            @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto)
+            throws BaseException {
+        return new ResponseEntity<>(getMarketUseCase.getMoreHotSellers(member, pageRequestDto),
+                HttpStatus.OK);
+    }
+
+    /**
+     * 최신 NFT 더보기
+     * [GET] /recent-nfts
+     */
+    @GetMapping("/recent-nfts")
+    public ResponseEntity<PageResponseDto<List<GetRecentNft>>> getMoreRecentNfts(
+            @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto)
+            throws BaseException {
+        return new ResponseEntity<>(getMarketUseCase.getMoreRecentNfts(member, pageRequestDto),
+                HttpStatus.OK);
+    }
+
+    /**
+     * 활발한 활동 더보기
+     * [GET] /hot-members
+     */
+    @GetMapping("/hot-members")
+    public ResponseEntity<PageResponseDto<List<MoreHotMember>>> getMoreHotMembers(
+            @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto)
+            throws BaseException {
+        return new ResponseEntity<>(getMarketUseCase.getMoreHotMembers(member, pageRequestDto),
+                HttpStatus.OK);
     }
 }
