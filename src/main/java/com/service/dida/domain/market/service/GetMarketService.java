@@ -196,6 +196,13 @@ public class GetMarketService implements GetMarketUseCase {
                 hotSellers.getNumber(), hotSellers.getSize(), hotSellers.hasNext(), res);
     }
 
+    public PageResponseDto<List<GetRecentNft>> makeMoreRecentNftsListForm(Member member, Page<Nft> nfts) {
+        List<GetRecentNft> res = new ArrayList<>();
+        nfts.forEach(nft -> res.add(makeGetRecentNftForm(member, nft)));
+        return new PageResponseDto<>(
+                nfts.getNumber(), nfts.getSize(), nfts.hasNext(), res);
+    }
+
     @Override
     public PageResponseDto<List<MoreHotSeller>> getMoreHotSellers(Member member, PageRequestDto pageRequestDto) {
         Page<Long> sellers;
@@ -207,6 +214,17 @@ public class GetMarketService implements GetMarketUseCase {
                     LocalDateTime.now().minusDays(7), pageReq(pageRequestDto));
         }
         return makeMoreHotSellersListForm(member, sellers);
+    }
+
+    @Override
+    public PageResponseDto<List<GetRecentNft>> getMoreRecentNfts(Member member, PageRequestDto pageRequestDto) {
+        Page<Nft> nfts;
+        if (member != null) { // 로그인 했으면 숨김 리소스 제외
+            nfts = nftRepository.getRecentNftsWithoutHide(member, pageReq(pageRequestDto));
+        } else {
+            nfts = nftRepository.getRecentNfts(pageReq(pageRequestDto));
+        }
+        return makeMoreRecentNftsListForm(member, nfts);
     }
 
 }

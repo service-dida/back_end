@@ -1,5 +1,6 @@
 package com.service.dida.domain.market.controller;
 
+import com.service.dida.domain.market.dto.MarketResponseDto.GetRecentNft;
 import com.service.dida.domain.market.dto.MarketResponseDto.GetMainPageWithoutSoldOut;
 import com.service.dida.domain.market.dto.MarketResponseDto.MoreHotSeller;
 import com.service.dida.domain.market.usecase.GetMarketUseCase;
@@ -44,4 +45,15 @@ public class GetMarketController {
                 HttpStatus.OK);
     }
 
+    /**
+     * 최신 NFT 더보기
+     * [GET] /recent-nfts
+     */
+    @GetMapping("/recent-nfts")
+    public ResponseEntity<PageResponseDto<List<GetRecentNft>>> getMoreRecentNfts(
+            @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto)
+            throws BaseException {
+        return new ResponseEntity<>(getMarketUseCase.getMoreRecentNfts(member, pageRequestDto),
+                HttpStatus.OK);
+    }
 }
