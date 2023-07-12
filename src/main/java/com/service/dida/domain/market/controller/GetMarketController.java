@@ -2,7 +2,7 @@ package com.service.dida.domain.market.controller;
 
 import com.service.dida.domain.market.dto.MarketResponseDto.GetRecentNft;
 import com.service.dida.domain.market.dto.MarketResponseDto.GetMainPageWithoutSoldOut;
-import com.service.dida.domain.market.dto.MarketResponseDto.MoreHotSeller;
+import com.service.dida.domain.market.dto.MarketResponseDto.MoreHotMember;
 import com.service.dida.domain.market.usecase.GetMarketUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.global.common.dto.PageRequestDto;
@@ -38,7 +38,7 @@ public class GetMarketController {
      * [GET] /hot-sellers
      */
     @GetMapping("/hot-sellers")
-    public ResponseEntity<PageResponseDto<List<MoreHotSeller>>> getMoreHotSellers(
+    public ResponseEntity<PageResponseDto<List<MoreHotMember>>> getMoreHotSellers(
             @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto)
             throws BaseException {
         return new ResponseEntity<>(getMarketUseCase.getMoreHotSellers(member, pageRequestDto),
@@ -62,7 +62,7 @@ public class GetMarketController {
      * [GET] /hot-members
      */
     @GetMapping("/hot-members")
-    public ResponseEntity<PageResponseDto<List<MoreHotSeller>>> getMoreHotMembers(
+    public ResponseEntity<PageResponseDto<List<MoreHotMember>>> getMoreHotMembers(
             @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto)
             throws BaseException {
         return new ResponseEntity<>(getMarketUseCase.getMoreHotMembers(member, pageRequestDto),

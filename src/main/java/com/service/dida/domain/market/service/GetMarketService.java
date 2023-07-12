@@ -57,7 +57,7 @@ public class GetMarketService implements GetMarketUseCase {
     }
 
     /**
-     *  Nft Entity를 넘겨 받아 GetHotItem DTO 형태로 만드는 함수
+     * Nft Entity를 넘겨 받아 GetHotItem DTO 형태로 만드는 함수
      */
     public GetHotItem makeHotItemForm(Nft nft) {
         return new GetHotItem(nft.getNftId(), nft.getImgUrl(), nft.getTitle(), nft.getPrice(),
@@ -65,7 +65,7 @@ public class GetMarketService implements GetMarketUseCase {
     }
 
     /**
-     *  Member Entity를 넘겨 받아 GetHotSeller DTO 형태로 만드는 함수
+     * Member Entity를 넘겨 받아 GetHotSeller DTO 형태로 만드는 함수
      */
     public GetHotSeller makeHotSellerForm(Member member, Member owner) {
         List<String> nftImgUrls;
@@ -86,7 +86,7 @@ public class GetMarketService implements GetMarketUseCase {
     }
 
     /**
-     *  Nft Entity를 넘겨 받아 GetRecentNft DTO 형태로 만드는 함수
+     * Nft Entity를 넘겨 받아 GetRecentNft DTO 형태로 만드는 함수
      */
     public GetRecentNft makeGetRecentNftForm(Member member, Nft nft) {
         boolean liked = false;
@@ -98,41 +98,41 @@ public class GetMarketService implements GetMarketUseCase {
     }
 
     /**
-     *  Member Entity를 넘겨 받아 GetHotMember DTO 형태로 만드는 함수
+     * Member Entity를 넘겨 받아 GetHotMember DTO 형태로 만드는 함수
      */
-    public GetHotMember makeGetHotMemberForm(Member member, Member hotMember) {
+    public GetHotMember makeGetHotMemberForm(Member member, Member target) {
         boolean followed = false;
         boolean isMe = false;
         if (member != null) {
-            followed = getFollowUseCase.checkIsFollowed(member, hotMember);
-            isMe = checkIsMe(member.getMemberId(), hotMember.getMemberId());
+            followed = getFollowUseCase.checkIsFollowed(member, target);
+            isMe = checkIsMe(member.getMemberId(), target.getMemberId());
         }
-        return new GetHotMember(hotMember.getMemberId(), hotMember.getNickname(), hotMember.getProfileUrl(),
-                nftRepository.countByMemberWithDeleted(hotMember).orElse(0L), followed, isMe);
+        return new GetHotMember(target.getMemberId(), target.getNickname(), target.getProfileUrl(),
+                nftRepository.countByMemberWithDeleted(target).orElse(0L), followed, isMe);
     }
 
     /**
-     *  Member Entity를 넘겨 받아 MoreHotSeller DTO 형태로 만드는 함수
+     * Member Entity를 넘겨 받아 MoreHoMember DTO 형태로 만드는 함수
      */
-    public MoreHotSeller makeMoreHotSellersForm(Member member, Member seller, int limit) {
+    public MoreHotMember makeMoreHotMembersForm(Member member, Member target, int limit) {
         List<String> nftImgUrls;
         if (member != null) {
-            nftImgUrls = nftRepository.getRecentNftImgUrlWithoutHide(member, seller,
+            nftImgUrls = nftRepository.getRecentNftImgUrlWithoutHide(member, target,
                     PageRequest.of(0, limit)).orElse(null);
         } else {
-            nftImgUrls = nftRepository.getRecentNftImgUrl(seller,
+            nftImgUrls = nftRepository.getRecentNftImgUrl(target,
                     PageRequest.of(0, limit)).orElse(null);
         }
-        return new MoreHotSeller(makeGetHotMemberForm(member, seller), nftImgUrls);
+        return new MoreHotMember(makeGetHotMemberForm(member, target), nftImgUrls);
     }
 
     /**
-     *  Page 를 넘겨 받아 MoreHotSeller List를 만드는 함수
-     *  PageResponseDto로 반환
+     * Page 를 넘겨 받아 MoreHotSeller List를 만드는 함수
+     * PageResponseDto로 반환
      */
-    public PageResponseDto<List<MoreHotSeller>> makeMoreHotSellersListForm(Member member, Page<Long> hotSellers, int limit) {
-        List<MoreHotSeller> res = new ArrayList<>();
-        hotSellers.forEach(sellerId -> res.add(makeMoreHotSellersForm(member,
+    public PageResponseDto<List<MoreHotMember>> makeMoreHotMembersListForm(Member member, Page<Long> hotSellers, int limit) {
+        List<MoreHotMember> res = new ArrayList<>();
+        hotSellers.forEach(sellerId -> res.add(makeMoreHotMembersForm(member,
                 memberRepository.findByMemberIdWithDeleted(sellerId)
                         .orElseThrow(() -> new BaseException(MemberErrorCode.EMPTY_MEMBER)), limit)));
         return new PageResponseDto<>(
@@ -140,8 +140,8 @@ public class GetMarketService implements GetMarketUseCase {
     }
 
     /**
-     *  Page 를 넘겨 받아 GetRecentNft List를 만드는 함수
-     *  PageResponseDto로 반환
+     * Page 를 넘겨 받아 GetRecentNft List를 만드는 함수
+     * PageResponseDto로 반환
      */
     public PageResponseDto<List<GetRecentNft>> makeMoreRecentNftsListForm(Member member, Page<Nft> nfts) {
         List<GetRecentNft> res = new ArrayList<>();
@@ -228,12 +228,12 @@ public class GetMarketService implements GetMarketUseCase {
     }
 
     /**
-     *  핫 셀러(Hot Sellers) 더보기
-     *  controller 에서 넘겨 받은대로 paging 처리하여 가져오기
-     *  limit = 해당 유저가 민팅한 nftUrl을 몇개 보여줄건지
+     * 핫 셀러(Hot Sellers) 더보기
+     * controller 에서 넘겨 받은대로 paging 처리하여 가져오기
+     * limit = 해당 유저가 민팅한 nftUrl을 몇개 보여줄건지
      */
     @Override
-    public PageResponseDto<List<MoreHotSeller>> getMoreHotSellers(Member member, PageRequestDto pageRequestDto) {
+    public PageResponseDto<List<MoreHotMember>> getMoreHotSellers(Member member, PageRequestDto pageRequestDto) {
         Page<Long> sellers;
         if (member != null) { // 로그인 했으면 숨김 리소스 제외
             sellers = transactionRepository.getHotSellersWithoutHide(member,
@@ -242,16 +242,16 @@ public class GetMarketService implements GetMarketUseCase {
             sellers = transactionRepository.getHotSellers(
                     LocalDateTime.now().minusDays(7), pageReq(pageRequestDto));
         }
-        return makeMoreHotSellersListForm(member, sellers, 3);
+        return makeMoreHotMembersListForm(member, sellers, 3);
     }
 
     /**
-     *  활발한 활동(Hot Members) 더보기
-     *  controller 에서 넘겨 받은대로 paging 처리하여 가져오기
-     *  limit = 해당 유저가 민팅한 nftUrl을 몇개 보여줄건지
+     * 활발한 활동(Hot Members) 더보기
+     * controller 에서 넘겨 받은대로 paging 처리하여 가져오기
+     * limit = 해당 유저가 민팅한 nftUrl을 몇개 보여줄건지
      */
     @Override
-    public PageResponseDto<List<MoreHotSeller>> getMoreHotMembers(Member member, PageRequestDto pageRequestDto) {
+    public PageResponseDto<List<MoreHotMember>> getMoreHotMembers(Member member, PageRequestDto pageRequestDto) {
         Page<Long> members;
         if (member != null) { // 로그인 했으면 숨김 리소스 제외
             members = transactionRepository.getHotMembersWithoutHide(member, LocalDateTime.now().minusDays(30),
@@ -260,12 +260,12 @@ public class GetMarketService implements GetMarketUseCase {
             members = transactionRepository.getHotMembers(LocalDateTime.now().minusDays(30),
                     pageReq(pageRequestDto));
         }
-        return makeMoreHotSellersListForm(member, members, 10);
+        return makeMoreHotMembersListForm(member, members, 10);
     }
 
     /**
-     *  최신 NFT(Recent Nfts) 더보기
-     *  controller 에서 넘겨 받은대로 paging 처리하여 가져오기
+     * 최신 NFT(Recent Nfts) 더보기
+     * controller 에서 넘겨 받은대로 paging 처리하여 가져오기
      */
     @Override
     public PageResponseDto<List<GetRecentNft>> getMoreRecentNfts(Member member, PageRequestDto pageRequestDto) {

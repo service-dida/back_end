@@ -61,8 +61,8 @@ public class MarketResponseDto {
 
     @Getter
     @AllArgsConstructor
-    public static class MoreHotSeller {
-        private GetHotMember sellerInfo;
+    public static class MoreHotMember {
+        private GetHotMember memberInfo;
         private List<String> nftImgUrl;
     }
 }
