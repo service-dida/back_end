@@ -6,6 +6,7 @@ import com.service.dida.domain.member.dto.MemberResponseDto.MemberInfo;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.member.repository.MemberRepository;
 import com.service.dida.domain.nft.Nft;
+import com.service.dida.domain.nft.dto.NftResponseDto.SnsNft;
 import com.service.dida.domain.nft.dto.NftResponseDto.NftDetailInfo;
 import com.service.dida.domain.nft.dto.NftResponseDto.NftInfo;
 import com.service.dida.domain.nft.dto.NftResponseDto.ProfileNft;
@@ -72,5 +73,15 @@ public class GetNftService implements GetNftUseCase {
             getLikeUseCase.checkIsLiked(member, n))));
 
         return new PageResponseDto<>(nfts.getNumber(), nfts.getSize(), nfts.hasNext(), profileNfts);
+    }
+
+    @Override
+    public PageResponseDto<List<SnsNft>> getMyOwnNftList(Member member, PageRequestDto pageRequestDto) {
+        List<SnsNft> res = new ArrayList<>();
+        Page<Nft> nfts = nftRepository.findAllNftsByMember(member, pageReq(pageRequestDto));
+
+        nfts.forEach(nft -> res.add(new SnsNft(nft)));
+
+        return new PageResponseDto<>(nfts.getNumber(), nfts.getSize(), nfts.hasNext(), res);
     }
 }

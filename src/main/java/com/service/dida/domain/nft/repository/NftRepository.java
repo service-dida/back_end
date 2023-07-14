@@ -44,4 +44,5 @@ public interface NftRepository extends JpaRepository<Nft, Long> {
 
     @Query(value = "SELECT COUNT(n) FROM Nft n WHERE n.deleted=false AND n.member=:member")
     Optional<Long> countByMemberWithDeleted(Member member);
+
 }
