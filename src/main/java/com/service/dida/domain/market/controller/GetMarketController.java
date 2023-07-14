@@ -1,11 +1,11 @@
 package com.service.dida.domain.market.controller;
 
-import com.service.dida.domain.market.dto.MarketResponseDto.GetRecentNft;
 import com.service.dida.domain.market.dto.MarketResponseDto.GetMainPageWithoutSoldOut;
+import com.service.dida.domain.market.dto.MarketResponseDto.GetRecentNft;
 import com.service.dida.domain.market.dto.MarketResponseDto.MoreHotMember;
 import com.service.dida.domain.market.usecase.GetMarketUseCase;
 import com.service.dida.domain.member.entity.Member;
-import com.service.dida.domain.nft.dto.NftResponseDto;
+import com.service.dida.domain.nft.dto.NftResponseDto.NftAndMemberInfo;
 import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
 import com.service.dida.global.config.exception.BaseException;
@@ -40,10 +40,23 @@ public class GetMarketController {
      * [GET] /main/sold-out
      */
     @GetMapping("/main/sold-out")
-    public ResponseEntity<List<NftResponseDto.NftAndMemberInfo>> getMainPageSoldOut(
-            @CurrentMember Member member, @RequestParam ("range") int range)
+    public ResponseEntity<List<NftAndMemberInfo>> getMainPageSoldOut(
+            @CurrentMember Member member, @RequestParam("range") int range)
             throws BaseException {
-        return new ResponseEntity<>(getMarketUseCase.getMainPageSoldOut(member, range), HttpStatus.OK);
+        return new ResponseEntity<>(getMarketUseCase.getMainPageSoldOut(member, range, 0, 3), HttpStatus.OK);
+    }
+
+    /**
+     * Sold out 더보기
+     * [GET] /sold-out
+     */
+    @GetMapping("/sold-out")
+    public ResponseEntity<PageResponseDto<List<NftAndMemberInfo>>> getMoreSoldOuts(
+            @CurrentMember Member member, @RequestParam("range") int range,
+            @RequestBody PageRequestDto pageRequestDto)
+            throws BaseException {
+        return new ResponseEntity<>(getMarketUseCase.getMoreSoldOuts(member, range, pageRequestDto),
+                HttpStatus.OK);
     }
 
     /**

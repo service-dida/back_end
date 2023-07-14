@@ -20,4 +20,5 @@ public interface GetTransactionUseCase {
 
     PageResponseDto<List<DealingHistory>> getSoldDealingHistory(Member member,
         PageRequestDto pageRequestDto);
+
 }

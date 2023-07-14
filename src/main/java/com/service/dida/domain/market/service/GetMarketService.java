@@ -58,18 +58,19 @@ public class GetMarketService implements GetMarketUseCase {
     }
 
     @Override
-    public List<NftAndMemberInfo> getMainPageSoldOut(Member member, int range) {
+    public List<NftAndMemberInfo> getMainPageSoldOut(Member member, int range, int page, int limit) {
         List<NftAndMemberInfo> res = new ArrayList<>();
-        Page<Nft> nfts;
-        if (member != null) {
-            nfts = transactionRepository.getSoldOutWithoutHide(member, rangeToLocalDateTime(range),
-                    PageRequest.of(0, 3));
-        } else {
-            nfts = transactionRepository.getSoldOut(rangeToLocalDateTime(range),
-                    PageRequest.of(0, 3));
-        }
+        Page<Nft> nfts = getSoldOutPage(member, range, page, limit);
         nfts.forEach(n -> res.add(new NftAndMemberInfo(n)));
         return res;
+    }
+
+    @Override
+    public PageResponseDto<List<NftAndMemberInfo>> getMoreSoldOuts(Member member, int range, PageRequestDto pageRequestDto) {
+        List<NftAndMemberInfo> res = new ArrayList<>();
+        Page<Nft> nfts = getSoldOutPage(member, range, pageRequestDto.getPage(), pageRequestDto.getPageSize());
+        nfts.forEach(n -> res.add(new NftAndMemberInfo(n)));
+        return new PageResponseDto<>(nfts.getNumber(), nfts.getSize(), nfts.hasNext(), res);
     }
 
     /**
@@ -285,6 +286,16 @@ public class GetMarketService implements GetMarketUseCase {
                 nfts.getNumber(), nfts.getSize(), nfts.hasNext(), res);
     }
 
+    private Page<Nft> getSoldOutPage(Member member, int range, int page, int limit) {
+        if (member != null) {
+            return transactionRepository.getSoldOutWithoutHide(member, rangeToLocalDateTime(range),
+                    PageRequest.of(page, limit));
+        } else {
+            return transactionRepository.getSoldOut(rangeToLocalDateTime(range),
+                    PageRequest.of(page, limit));
+        }
+    }
+
     private boolean checkIsMe(Long memberId, Long ownerId) {
         return Objects.equals(memberId, ownerId);
     }
@@ -302,5 +313,4 @@ public class GetMarketService implements GetMarketUseCase {
             throw new BaseException(MarketErrorCode.INVALID_TERM);
         }
     }
-
 }
