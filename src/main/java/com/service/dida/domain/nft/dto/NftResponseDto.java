@@ -56,4 +56,23 @@ public class NftResponseDto {
                     nft.getMember().getProfileUrl());
         }
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class NftAndMemberInfo{
+        private NftInfo nftInfo;
+        private MemberInfo memberInfo;
+
+        public NftAndMemberInfo(Nft nft) {
+            this.nftInfo = new NftInfo(
+                    nft.getNftId(),
+                    nft.getTitle(),
+                    nft.getImgUrl(),
+                    nft.getPrice());
+            this.memberInfo = new MemberInfo(
+                    nft.getMember().getMemberId(),
+                    nft.getMember().getNickname(),
+                    nft.getMember().getProfileUrl());
+        }
+    }
 }
