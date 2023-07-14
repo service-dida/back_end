@@ -56,4 +56,15 @@ public class GetPostController {
             throws BaseException {
         return new ResponseEntity<>(getPostUseCase.getPost(member, postId), HttpStatus.OK);
     }
+
+    /**
+     * 시끌벅적 게시판 조회하기
+     * [GET] /posts/hot
+     */
+    @GetMapping("/posts/hot")
+    public ResponseEntity<PageResponseDto<List<PostResponseDto.GetHotPosts>>> getHotPosts(
+            @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto)
+            throws BaseException {
+        return new ResponseEntity<>(getPostUseCase.getHotPosts(member, pageRequestDto), HttpStatus.OK);
+    }
 }

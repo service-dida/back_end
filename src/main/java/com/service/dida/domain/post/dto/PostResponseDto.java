@@ -30,4 +30,14 @@ public class PostResponseDto {
         private List<GetCommentResponseDto> comments; // 미리보기 댓글, 최대 3개
     }
 
+    @Getter
+    @AllArgsConstructor
+    public static class GetHotPosts {
+        private Long postId;
+        private String title;
+        private int commentCnt;
+        private Long nftId;
+        private String nftImgUrl;
+    }
+
 }
