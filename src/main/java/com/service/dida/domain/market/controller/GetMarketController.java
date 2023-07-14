@@ -48,9 +48,9 @@ public class GetMarketController {
 
     /**
      * Sold out 더보기
-     * [GET] /sold-out
+     * [GET] /sold-outs
      */
-    @GetMapping("/sold-out")
+    @GetMapping("/sold-outs")
     public ResponseEntity<PageResponseDto<List<NftAndMemberInfo>>> getMoreSoldOuts(
             @CurrentMember Member member, @RequestParam("range") int range,
             @RequestBody PageRequestDto pageRequestDto)
