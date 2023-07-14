@@ -307,7 +307,7 @@ public class GetMarketService implements GetMarketUseCase {
     }
 
     private LocalDateTime rangeToLocalDateTime(int range) {
-        if (range == 7 || range == 30 || range == 60 || range == 365) {
+        if (range == 7 || range == 30 || range == 180 || range == 365) {
             return LocalDateTime.now().minusDays(range);
         } else {
             throw new BaseException(MarketErrorCode.INVALID_TERM);
