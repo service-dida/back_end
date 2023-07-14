@@ -1,7 +1,5 @@
 package com.service.dida.domain.nft.service;
 
-import static com.service.dida.global.config.exception.errorCode.NftErrorCode.EMPTY_NFT;
-
 import com.service.dida.domain.follow.usecase.GetFollowUseCase;
 import com.service.dida.domain.like.usecase.GetLikeUseCase;
 import com.service.dida.domain.member.dto.MemberResponseDto.MemberInfo;
@@ -17,13 +15,16 @@ import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.service.dida.global.config.exception.errorCode.NftErrorCode.EMPTY_NFT;
 
 @Service
 @RequiredArgsConstructor
