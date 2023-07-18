@@ -12,6 +12,7 @@ public enum MarketErrorCode implements ErrorCode {
     INVALID_PRICE("MARKET_002", "가격이 적절하지 않습니다.", HttpStatus.BAD_REQUEST),
     INVALID_MEMBER("MARKET_003", "본인의 Market이 아닙니다.", HttpStatus.BAD_REQUEST),
     ITS_YOUR_MARKET("MARKET_004", "본인의 NFT는 구매할 수 없습니다.", HttpStatus.BAD_REQUEST),
+    INVALID_TERM("MARKET_005", "유효한 기간이 아닙니다.", HttpStatus.BAD_REQUEST),
     ;
     private final String errorCode;
     private final String message;

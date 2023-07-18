@@ -1,6 +1,7 @@
 package com.service.dida.domain.post.service;
 
 import com.service.dida.domain.comment.dto.CommentResponseDto;
+import com.service.dida.domain.comment.repository.CommentRepository;
 import com.service.dida.domain.comment.service.GetCommentService;
 import com.service.dida.domain.hide.nft_hide.usecase.GetNftHideUseCase;
 import com.service.dida.domain.member.dto.MemberResponseDto;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,7 @@ public class GetPostService implements GetPostUseCase {
     private final PostRepository postRepository;
     private final GetNftHideUseCase getNftHideUseCase;
     private final GetCommentService getCommentService;
+    private final CommentRepository commentRepository;
 
 
     /**
@@ -100,6 +103,17 @@ public class GetPostService implements GetPostUseCase {
                 posts.getNumber(), posts.getSize(), posts.hasNext(), res);
     }
 
+    public PageResponseDto<List<PostResponseDto.GetHotPosts>> makeGetHotPostsListForm(Page<Post> posts) {
+        List<PostResponseDto.GetHotPosts> res = new ArrayList<>();
+
+        posts.forEach(p -> res.add(new PostResponseDto.GetHotPosts(
+                p.getPostId(), p.getTitle(),
+                commentRepository.countByPostAndDeletedFalse(p),
+                p.getNft().getNftId(), p.getNft().getImgUrl())));
+
+        return new PageResponseDto<>(posts.getNumber(), posts.getSize(), posts.hasNext(), res);
+    }
+
     /**
      * 최신 게시글(삭제 제외)을 페이지 요청에 맞게 가져오는 함수
      * List<GetPostResponseDto> 를 PageResponseDto 로 감싸서 반환
@@ -138,5 +152,20 @@ public class GetPostService implements GetPostUseCase {
         Post post = postRepository.findByPostIdWithDeleted(postId)
                 .orElseThrow(() -> new BaseException(PostErrorCode.EMPTY_POST));
         return makeGetPostResForm(member, post, false);
+    }
+
+    @Override
+    public PageResponseDto<List<PostResponseDto.GetHotPosts>> getHotPosts(Member member, PageRequestDto pageRequestDto) {
+        Page<Post> posts;
+        if (member != null) {
+            posts = commentRepository.findPostsByCommentCount(member,
+                    LocalDateTime.now().minusDays(7),
+                    PageRequest.of(pageRequestDto.getPage(), pageRequestDto.getPageSize()));
+        } else {
+            posts = commentRepository.findPostsByCommentCountWithoutHide(
+                    LocalDateTime.now().minusDays(7),
+                    PageRequest.of(pageRequestDto.getPage(), pageRequestDto.getPageSize()));
+        }
+        return makeGetHotPostsListForm(posts);
     }
 }

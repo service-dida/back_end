@@ -1,6 +1,7 @@
 package com.service.dida.domain.transaction.repository;
 
 import com.service.dida.domain.member.entity.Member;
+import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.transaction.Transaction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,4 +41,13 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             "AND t.createdAt >:date AND COUNT(t.buyerId) >= 10 GROUP BY t.buyerId ORDER BY COUNT(t.buyerId) DESC")
     Page<Long> getHotMembersWithoutHide(Member member, LocalDateTime date, PageRequest pageRequest);
 
+    @Query(value = "SELECT t.nft FROM Transaction t WHERE t.type='DEAL' " +
+            "AND (t.sellerId) NOT IN (SELECT mh.hideMember.memberId FROM MemberHide mh WHERE mh.member=:member) " +
+            "AND (t.nft) NOT IN (SELECT nh.nft FROM NftHide nh WHERE nh.member=:member) " +
+            "AND t.createdAt> :date ORDER BY t.payAmount DESC ")
+    Page<Nft> getSoldOutWithoutHide(Member member, LocalDateTime date, PageRequest pageRequest);
+
+    @Query(value = "SELECT t.nft FROM Transaction t WHERE t.type='DEAL' " +
+            "AND t.createdAt> :date ORDER BY t.payAmount DESC ")
+    Page<Nft> getSoldOut(LocalDateTime date, PageRequest pageRequest);
 }

@@ -1,13 +1,12 @@
 package com.service.dida.domain.nft.service;
 
-import static com.service.dida.global.config.exception.errorCode.NftErrorCode.EMPTY_NFT;
-
 import com.service.dida.domain.follow.usecase.GetFollowUseCase;
 import com.service.dida.domain.like.usecase.GetLikeUseCase;
 import com.service.dida.domain.member.dto.MemberResponseDto.MemberInfo;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.member.repository.MemberRepository;
 import com.service.dida.domain.nft.Nft;
+import com.service.dida.domain.nft.dto.NftResponseDto.SnsNft;
 import com.service.dida.domain.nft.dto.NftResponseDto.NftDetailInfo;
 import com.service.dida.domain.nft.dto.NftResponseDto.NftInfo;
 import com.service.dida.domain.nft.dto.NftResponseDto.ProfileNft;
@@ -17,13 +16,16 @@ import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.service.dida.global.config.exception.errorCode.NftErrorCode.EMPTY_NFT;
 
 @Service
 @RequiredArgsConstructor
@@ -71,5 +73,15 @@ public class GetNftService implements GetNftUseCase {
             getLikeUseCase.checkIsLiked(member, n))));
 
         return new PageResponseDto<>(nfts.getNumber(), nfts.getSize(), nfts.hasNext(), profileNfts);
+    }
+
+    @Override
+    public PageResponseDto<List<SnsNft>> getMyOwnNftList(Member member, PageRequestDto pageRequestDto) {
+        List<SnsNft> res = new ArrayList<>();
+        Page<Nft> nfts = nftRepository.findAllNftsByMember(member, pageReq(pageRequestDto));
+
+        nfts.forEach(nft -> res.add(new SnsNft(nft)));
+
+        return new PageResponseDto<>(nfts.getNumber(), nfts.getSize(), nfts.hasNext(), res);
     }
 }

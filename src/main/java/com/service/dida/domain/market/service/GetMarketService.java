@@ -8,11 +8,13 @@ import com.service.dida.domain.market.usecase.GetMarketUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.member.repository.MemberRepository;
 import com.service.dida.domain.nft.Nft;
+import com.service.dida.domain.nft.dto.NftResponseDto.*;
 import com.service.dida.domain.nft.repository.NftRepository;
 import com.service.dida.domain.transaction.repository.TransactionRepository;
 import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
 import com.service.dida.global.config.exception.BaseException;
+import com.service.dida.global.config.exception.errorCode.MarketErrorCode;
 import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -53,6 +55,22 @@ public class GetMarketService implements GetMarketUseCase {
         List<GetRecentNft> recentNfts = getRecentNfts(member);
         List<GetHotMember> hotMembers = getHotMembers(member);
         return new GetMainPageWithoutSoldOut(hotItems, hotSellers, recentNfts, hotMembers);
+    }
+
+    @Override
+    public List<NftAndMemberInfo> getMainPageSoldOut(Member member, int range, int page, int limit) {
+        List<NftAndMemberInfo> res = new ArrayList<>();
+        Page<Nft> nfts = getSoldOutPage(member, range, page, limit);
+        nfts.forEach(n -> res.add(new NftAndMemberInfo(n)));
+        return res;
+    }
+
+    @Override
+    public PageResponseDto<List<NftAndMemberInfo>> getMoreSoldOuts(Member member, int range, PageRequestDto pageRequestDto) {
+        List<NftAndMemberInfo> res = new ArrayList<>();
+        Page<Nft> nfts = getSoldOutPage(member, range, pageRequestDto.getPage(), pageRequestDto.getPageSize());
+        nfts.forEach(n -> res.add(new NftAndMemberInfo(n)));
+        return new PageResponseDto<>(nfts.getNumber(), nfts.getSize(), nfts.hasNext(), res);
     }
 
     /**
@@ -173,6 +191,7 @@ public class GetMarketService implements GetMarketUseCase {
         }
         return hotMembers;
     }
+
     /**
      * Nft Entity를 넘겨 받아 GetHotItem DTO 형태로 만드는 함수
      */
@@ -267,6 +286,16 @@ public class GetMarketService implements GetMarketUseCase {
                 nfts.getNumber(), nfts.getSize(), nfts.hasNext(), res);
     }
 
+    private Page<Nft> getSoldOutPage(Member member, int range, int page, int limit) {
+        if (member != null) {
+            return transactionRepository.getSoldOutWithoutHide(member, rangeToLocalDateTime(range),
+                    PageRequest.of(page, limit));
+        } else {
+            return transactionRepository.getSoldOut(rangeToLocalDateTime(range),
+                    PageRequest.of(page, limit));
+        }
+    }
+
     private boolean checkIsMe(Long memberId, Long ownerId) {
         return Objects.equals(memberId, ownerId);
     }
@@ -275,5 +304,13 @@ public class GetMarketService implements GetMarketUseCase {
         if (likeCount >= 1000) {
             return likeCount / 1000 + "K";
         } else return Long.toString(likeCount);
+    }
+
+    private LocalDateTime rangeToLocalDateTime(int range) {
+        if (range == 7 || range == 30 || range == 180 || range == 365) {
+            return LocalDateTime.now().minusDays(range);
+        } else {
+            throw new BaseException(MarketErrorCode.INVALID_TERM);
+        }
     }
 }

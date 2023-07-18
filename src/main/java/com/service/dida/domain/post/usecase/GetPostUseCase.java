@@ -16,4 +16,5 @@ public interface GetPostUseCase {
     PageResponseDto<List<PostResponseDto.GetPostResponseDto>> getPostsByNftId(Member member, Long nftId, PageRequestDto pageRequestDto);
     PostResponseDto.GetPostResponseDto getPost(Member member, Long postId);
     String checkIsMe(Member member, Member owner);
+    PageResponseDto<List<PostResponseDto.GetHotPosts>> getHotPosts(Member member, PageRequestDto pageRequestDto);
 }
