@@ -10,10 +10,7 @@ import com.service.dida.global.config.security.auth.CurrentMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,9 +28,9 @@ public class GetCommentController {
     public ResponseEntity<PageResponseDto<List<GetCommentResponseDto>>> getAllComments(
             @CurrentMember Member member,
             @PathVariable("postId") Long postId,
-            @RequestBody PageRequestDto pageRequestDto)
+            @RequestParam("page") int page, @RequestParam("size") int size)
             throws BaseException {
         return new ResponseEntity<>(
-                getCommentUseCase.getAllComments(member, postId, pageRequestDto), HttpStatus.OK);
+                getCommentUseCase.getAllComments(member, postId, new PageRequestDto(page, size)), HttpStatus.OK);
     }
 }

@@ -11,10 +11,7 @@ import com.service.dida.global.config.security.auth.CurrentMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,8 +34,10 @@ public class GetNftController {
      */
     @GetMapping("/common/profile/nft")
     public ResponseEntity<PageResponseDto<List<ProfileNft>>> getProfileNftList(
-        @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto) {
-        return new ResponseEntity<>(getNftUseCase.getProfileNftList(member, null, pageRequestDto),
+            @CurrentMember Member member,
+            @RequestParam("page") int page, @RequestParam("size") int size) {
+        return new ResponseEntity<>(getNftUseCase.getProfileNftList(member, null,
+                new PageRequestDto(page, size)),
             HttpStatus.OK);
     }
 
@@ -47,10 +46,10 @@ public class GetNftController {
      */
     @GetMapping("/profile/nft/{memberId}")
     public ResponseEntity<PageResponseDto<List<ProfileNft>>> getOtherProfileNftList(
-        @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto,
+        @CurrentMember Member member, @RequestParam("page") int page, @RequestParam("size") int size,
         @PathVariable(name = "memberId") Long memberId) {
         return new ResponseEntity<>(
-            getNftUseCase.getProfileNftList(member, memberId, pageRequestDto), HttpStatus.OK);
+            getNftUseCase.getProfileNftList(member, memberId, new PageRequestDto(page, size)), HttpStatus.OK);
     }
 
     /**
@@ -58,9 +57,9 @@ public class GetNftController {
      */
     @GetMapping("/common/nft/own")
     public ResponseEntity<PageResponseDto<List<SnsNft>>> getMyOwnNftList(
-            @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto) {
+            @CurrentMember Member member, @RequestParam("page") int page, @RequestParam("size") int size) {
         return new ResponseEntity<>(
-                getNftUseCase.getMyOwnNftList(member, pageRequestDto), HttpStatus.OK);
+                getNftUseCase.getMyOwnNftList(member, new PageRequestDto(page, size)), HttpStatus.OK);
     }
 
 }

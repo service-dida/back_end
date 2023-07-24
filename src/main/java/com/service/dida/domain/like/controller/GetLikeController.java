@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -26,9 +26,10 @@ public class GetLikeController {
      */
     @GetMapping("/common/nft/like")
     public ResponseEntity<PageResponseDto<List<NftResponseDto.SnsNft>>> getMyLikeNftList(
-            @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto) {
+            @CurrentMember Member member,
+            @RequestParam("page") int page, @RequestParam("size") int size) {
         return new ResponseEntity<>(
-                getLikeUseCase.getMyLikeNftList(member, pageRequestDto), HttpStatus.OK);
+                getLikeUseCase.getMyLikeNftList(member, new PageRequestDto(page, size)), HttpStatus.OK);
     }
 
 }

@@ -1,7 +1,7 @@
 package com.service.dida.domain.hide.member_hide.controller;
 
-import com.service.dida.domain.hide.member_hide.usecase.GetMemberHideUseCase;
 import com.service.dida.domain.hide.member_hide.dto.MemberHideResponseDto.GetMemberHide;
+import com.service.dida.domain.hide.member_hide.usecase.GetMemberHideUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -28,8 +28,10 @@ public class GetMemberHideController {
      */
     @GetMapping("/common/member/hide")
     public ResponseEntity<PageResponseDto<List<GetMemberHide>>> getNftHideNftList(
-            @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto)
+            @CurrentMember Member member,
+            @RequestParam("page") int page, @RequestParam("size") int size)
             throws BaseException {
-        return new ResponseEntity<>(getMemberHideUseCase.getMemberHideList(member, pageRequestDto), HttpStatus.OK);
+        return new ResponseEntity<>(getMemberHideUseCase.getMemberHideList(member,
+                new PageRequestDto(page, size)), HttpStatus.OK);
     }
 }
