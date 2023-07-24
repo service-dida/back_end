@@ -83,10 +83,10 @@ public class GetMarketService implements GetMarketUseCase {
         Page<Long> sellers;
         if (member != null) { // 로그인 했으면 숨김 리소스 제외
             sellers = transactionRepository.getHotSellersWithoutHide(member,
-                    LocalDateTime.now().minusDays(7), pageReq(pageRequestDto));
+                    LocalDateTime.now().minusDays(7), PageRequest.of(pageRequestDto.getPage(), pageRequestDto.getPageSize()));
         } else {
             sellers = transactionRepository.getHotSellers(
-                    LocalDateTime.now().minusDays(7), pageReq(pageRequestDto));
+                    LocalDateTime.now().minusDays(7), PageRequest.of(pageRequestDto.getPage(), pageRequestDto.getPageSize()));
         }
         return makeMoreHotMembersListForm(member, sellers, 3);
     }
@@ -101,10 +101,10 @@ public class GetMarketService implements GetMarketUseCase {
         Page<Long> members;
         if (member != null) { // 로그인 했으면 숨김 리소스 제외
             members = transactionRepository.getHotMembersWithoutHide(member, LocalDateTime.now().minusDays(30),
-                    pageReq(pageRequestDto));
+                    PageRequest.of(pageRequestDto.getPage(), pageRequestDto.getPageSize()));
         } else {
             members = transactionRepository.getHotMembers(LocalDateTime.now().minusDays(30),
-                    pageReq(pageRequestDto));
+                    PageRequest.of(pageRequestDto.getPage(), pageRequestDto.getPageSize()));
         }
         return makeMoreHotMembersListForm(member, members, 10);
     }

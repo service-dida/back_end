@@ -2,6 +2,7 @@ package com.service.dida.domain.like;
 
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.nft.Nft;
+import com.service.dida.global.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -22,7 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "nft_like")
-public class Like {
+public class Like extends BaseEntity {
     @Id
     @Column(name = "like_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

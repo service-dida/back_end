@@ -4,14 +4,14 @@ import com.service.dida.domain.comment.Comment;
 import com.service.dida.domain.comment.repository.CommentRepository;
 import com.service.dida.domain.comment.usecase.UpdateCommentUseCase;
 import com.service.dida.domain.member.entity.Member;
-import com.service.dida.domain.member.repository.MemberRepository;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.CommentErrorCode;
-import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +25,7 @@ public class UpdateCommentService implements UpdateCommentUseCase {
      */
     @PreAuthorize("hasAnyRole('VISITOR, MEMBER')")
     public boolean checkIsMe(Member member, Member owner) {
-        if(member.equals(owner)) {
+        if(Objects.equals(member.getMemberId(), owner.getMemberId())) {
             return true;
         } else {
             throw new BaseException(CommentErrorCode.NOT_OWN_COMMENT);

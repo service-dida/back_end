@@ -7,12 +7,13 @@ import com.service.dida.domain.post.dto.EditPostRequestDto;
 import com.service.dida.domain.post.repository.PostRepository;
 import com.service.dida.domain.post.usecase.UpdatePostUseCase;
 import com.service.dida.global.config.exception.BaseException;
-import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 import com.service.dida.global.config.exception.errorCode.PostErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -27,7 +28,7 @@ public class UpdatePostService implements UpdatePostUseCase {
      */
     @PreAuthorize("hasAnyRole('VISITOR, MEMBER')")
     public boolean checkIsMe(Member member, Member owner) {
-        if (member.equals(owner)) {
+        if (Objects.equals(member.getMemberId(), owner.getMemberId())) {
             return true;
         } else {
             throw new BaseException(PostErrorCode.NOT_OWN_POST);

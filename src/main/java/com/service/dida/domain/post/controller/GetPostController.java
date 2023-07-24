@@ -36,9 +36,9 @@ public class GetPostController {
 
     /**
      * NFT 별 게시글 최신 조회하기
-     * [GET] /posts/{nftId}
+     * [GET] /posts/nft/{nftId}
      */
-    @GetMapping("/posts/{nftId}")
+    @GetMapping("/posts/nft/{nftId}")
     public ResponseEntity<PageResponseDto<List<PostResponseDto.GetPostResponseDto>>> getPostsByNft(
             @PathVariable("nftId") Long nftId, @RequestBody PageRequestDto pageRequestDto,
             @CurrentMember Member member)
@@ -48,9 +48,9 @@ public class GetPostController {
 
     /**
      * 게시글 상세 조회하기
-     * [GET] /post/{postId}
+     * [GET] /posts/{postId}
      */
-    @GetMapping("/post/{postId}")
+    @GetMapping("/posts/{postId}")
     public ResponseEntity<PostResponseDto.GetPostResponseDto> getPost(
             @PathVariable("postId") Long postId, @CurrentMember Member member)
             throws BaseException {
