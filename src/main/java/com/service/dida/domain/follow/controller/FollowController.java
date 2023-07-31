@@ -7,15 +7,12 @@ import com.service.dida.domain.member.entity.Member;
 import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
 import com.service.dida.global.config.security.auth.CurrentMember;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,9 +36,10 @@ public class FollowController {
      */
     @GetMapping("/common/follow")
     public ResponseEntity<PageResponseDto<List<FollowList>>> getFollowerList(
-        @CurrentMember Member member,
-        @RequestBody PageRequestDto pageRequestDto) {
-        return new ResponseEntity<>(getFollowUseCase.getFollowerList(member, pageRequestDto),
+            @CurrentMember Member member,
+            @RequestParam("page") int page, @RequestParam("size") int size) {
+        return new ResponseEntity<>(getFollowUseCase.getFollowerList(member,
+                new PageRequestDto(page, size)),
             HttpStatus.OK);
     }
 
@@ -51,8 +49,9 @@ public class FollowController {
     @GetMapping("/common/following")
     public ResponseEntity<PageResponseDto<List<FollowList>>> getFollowingList(
         @CurrentMember Member member,
-        @RequestBody PageRequestDto pageRequestDto) {
-        return new ResponseEntity<>(getFollowUseCase.getFollowingList(member, pageRequestDto),
+        @RequestParam("page") int page, @RequestParam("size") int size) {
+        return new ResponseEntity<>(getFollowUseCase.getFollowingList(member,
+                new PageRequestDto(page, size)),
             HttpStatus.OK);
     }
 }

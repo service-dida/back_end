@@ -33,12 +33,12 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     Page<Long> getHotSellers(LocalDateTime date, PageRequest pageRequest);
 
     @Query(value = "SELECT t.buyerId FROM Transaction t WHERE t.type='MINTING' " +
-            "AND t.createdAt >:date AND COUNT(t.buyerId) >= 10 GROUP BY t.buyerId ORDER BY COUNT(t.buyerId) DESC")
+            "AND t.createdAt >:date GROUP BY t.buyerId HAVING COUNT(t.buyerId) >= 10 ORDER BY COUNT(t.buyerId) DESC")
     Page<Long> getHotMembers(LocalDateTime date, PageRequest pageRequest);
 
     @Query(value = "SELECT t.buyerId FROM Transaction t WHERE t.type='MINTING' " +
             "AND (t.buyerId) NOT IN (SELECT mh.hideMember.memberId FROM MemberHide mh WHERE mh.member=:member) " +
-            "AND t.createdAt >:date AND COUNT(t.buyerId) >= 10 GROUP BY t.buyerId ORDER BY COUNT(t.buyerId) DESC")
+            "AND t.createdAt >:date GROUP BY t.buyerId HAVING COUNT(t.buyerId) >= 10 ORDER BY COUNT(t.buyerId) DESC")
     Page<Long> getHotMembersWithoutHide(Member member, LocalDateTime date, PageRequest pageRequest);
 
     @Query(value = "SELECT t.nft FROM Transaction t WHERE t.type='DEAL' " +

@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,9 +52,10 @@ public class GetMarketController {
     @GetMapping("/sold-outs")
     public ResponseEntity<PageResponseDto<List<NftAndMemberInfo>>> getMoreSoldOuts(
             @CurrentMember Member member, @RequestParam("range") int range,
-            @RequestBody PageRequestDto pageRequestDto)
+            @RequestParam("page") int page, @RequestParam("size") int size)
             throws BaseException {
-        return new ResponseEntity<>(getMarketUseCase.getMoreSoldOuts(member, range, pageRequestDto),
+        return new ResponseEntity<>(getMarketUseCase.getMoreSoldOuts(member, range,
+                new PageRequestDto(page, size)),
                 HttpStatus.OK);
     }
 
@@ -65,9 +65,10 @@ public class GetMarketController {
      */
     @GetMapping("/hot-sellers")
     public ResponseEntity<PageResponseDto<List<MoreHotMember>>> getMoreHotSellers(
-            @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto)
+            @CurrentMember Member member, @RequestParam("page") int page, @RequestParam("size") int size)
             throws BaseException {
-        return new ResponseEntity<>(getMarketUseCase.getMoreHotSellers(member, pageRequestDto),
+        return new ResponseEntity<>(getMarketUseCase.getMoreHotSellers(member,
+                new PageRequestDto(page, size)),
                 HttpStatus.OK);
     }
 
@@ -77,9 +78,10 @@ public class GetMarketController {
      */
     @GetMapping("/recent-nfts")
     public ResponseEntity<PageResponseDto<List<GetRecentNft>>> getMoreRecentNfts(
-            @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto)
+            @CurrentMember Member member, @RequestParam("page") int page, @RequestParam("size") int size)
             throws BaseException {
-        return new ResponseEntity<>(getMarketUseCase.getMoreRecentNfts(member, pageRequestDto),
+        return new ResponseEntity<>(getMarketUseCase.getMoreRecentNfts(member,
+                new PageRequestDto(page, size)),
                 HttpStatus.OK);
     }
 
@@ -89,9 +91,10 @@ public class GetMarketController {
      */
     @GetMapping("/hot-members")
     public ResponseEntity<PageResponseDto<List<MoreHotMember>>> getMoreHotMembers(
-            @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto)
+            @CurrentMember Member member, @RequestParam("page") int page, @RequestParam("size") int size)
             throws BaseException {
-        return new ResponseEntity<>(getMarketUseCase.getMoreHotMembers(member, pageRequestDto),
+        return new ResponseEntity<>(getMarketUseCase.getMoreHotMembers(member,
+                new PageRequestDto(page, size)),
                 HttpStatus.OK);
     }
 }

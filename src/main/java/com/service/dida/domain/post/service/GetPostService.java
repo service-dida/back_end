@@ -3,10 +3,10 @@ package com.service.dida.domain.post.service;
 import com.service.dida.domain.comment.dto.CommentResponseDto;
 import com.service.dida.domain.comment.repository.CommentRepository;
 import com.service.dida.domain.comment.service.GetCommentService;
-import com.service.dida.domain.hide.nft_hide.usecase.GetNftHideUseCase;
 import com.service.dida.domain.member.dto.MemberResponseDto;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.nft.dto.NftResponseDto;
+import com.service.dida.domain.nft.repository.NftRepository;
 import com.service.dida.domain.post.Post;
 import com.service.dida.domain.post.dto.PostResponseDto;
 import com.service.dida.domain.post.dto.PostResponseDto.GetPostResponseDto;
@@ -15,6 +15,7 @@ import com.service.dida.domain.post.usecase.GetPostUseCase;
 import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
 import com.service.dida.global.config.exception.BaseException;
+import com.service.dida.global.config.exception.errorCode.NftErrorCode;
 import com.service.dida.global.config.exception.errorCode.PostErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,13 +26,14 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class GetPostService implements GetPostUseCase {
 
     private final PostRepository postRepository;
-    private final GetNftHideUseCase getNftHideUseCase;
+    private final NftRepository nftRepository;
     private final GetCommentService getCommentService;
     private final CommentRepository commentRepository;
 
@@ -53,7 +55,7 @@ public class GetPostService implements GetPostUseCase {
         String type;
         if (member == null) {  // 로그인하지 않았다면
             type = "NEED LOGIN";
-        } else if (member.equals(owner)) {  // 내 게시물이라면
+        } else if (Objects.equals(member.getMemberId(), owner.getMemberId())) {  // 내 게시물이라면
             type = "MINE";
         } else {  // 내 게시물이 아니라면
             type = "NOT MINE";
@@ -135,6 +137,9 @@ public class GetPostService implements GetPostUseCase {
      */
     @Override
     public PageResponseDto<List<GetPostResponseDto>> getPostsByNftId(Member member, Long nftId, PageRequestDto pageRequestDto) {
+        if(nftRepository.findByNftIdWithDeleted(nftId).isEmpty()) {
+            throw new BaseException(NftErrorCode.EMPTY_NFT);
+        }
         Page<Post> posts;
         if (member != null) {
             posts = postRepository.findByNftIdWithDeletedWithoutHide(member, nftId, pageReq(pageRequestDto));

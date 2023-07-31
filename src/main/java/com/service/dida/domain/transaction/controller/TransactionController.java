@@ -8,13 +8,14 @@ import com.service.dida.domain.transaction.usecase.GetTransactionUseCase;
 import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
 import com.service.dida.global.config.security.auth.CurrentMember;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,9 +28,10 @@ public class TransactionController {
      */
     @GetMapping("/member/swap")
     public ResponseEntity<PageResponseDto<List<SwapHistory>>> getSwapHistoryList(
-        @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto) {
+            @CurrentMember Member member, @RequestParam("page") int page, @RequestParam("size") int size) {
         return new ResponseEntity<>(
-            getTransactionUseCase.getSwapHistoryList(member, pageRequestDto), HttpStatus.OK);
+            getTransactionUseCase.getSwapHistoryList(member,
+                    new PageRequestDto(page, size)), HttpStatus.OK);
     }
 
     /**
@@ -37,9 +39,10 @@ public class TransactionController {
      */
     @GetMapping("/member/transaction")
     public ResponseEntity<PageResponseDto<List<AllTypeDealingHistory>>> getAllDealingHistory(
-        @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto) {
+        @CurrentMember Member member, @RequestParam("page") int page, @RequestParam("size") int size) {
         return new ResponseEntity<>(
-            getTransactionUseCase.getAllTypeDealingHistory(member, pageRequestDto), HttpStatus.OK);
+            getTransactionUseCase.getAllTypeDealingHistory(member,
+                    new PageRequestDto(page, size)), HttpStatus.OK);
     }
 
     /**
@@ -47,9 +50,10 @@ public class TransactionController {
      */
     @GetMapping("/member/transaction/purchase")
     public ResponseEntity<PageResponseDto<List<DealingHistory>>> getPurchasedDealingHistory(
-        @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto) {
+        @CurrentMember Member member, @RequestParam("page") int page, @RequestParam("size") int size) {
         return new ResponseEntity<>(
-            getTransactionUseCase.getPurchaseDealingHistory(member, pageRequestDto), HttpStatus.OK);
+            getTransactionUseCase.getPurchaseDealingHistory(member,
+                    new PageRequestDto(page, size)), HttpStatus.OK);
     }
 
     /**
@@ -57,8 +61,9 @@ public class TransactionController {
      */
     @GetMapping("/member/transaction/sale")
     public ResponseEntity<PageResponseDto<List<DealingHistory>>> getSoldDealingHistory(
-        @CurrentMember Member member, @RequestBody PageRequestDto pageRequestDto) {
+        @CurrentMember Member member, @RequestParam("page") int page, @RequestParam("size") int size) {
         return new ResponseEntity<>(
-            getTransactionUseCase.getSoldDealingHistory(member, pageRequestDto), HttpStatus.OK);
+            getTransactionUseCase.getSoldDealingHistory(member,
+                    new PageRequestDto(page, size)), HttpStatus.OK);
     }
 }

@@ -8,7 +8,7 @@ import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.post.Post;
 import com.service.dida.domain.post.repository.PostRepository;
 import com.service.dida.global.config.exception.BaseException;
-import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
+import com.service.dida.global.config.exception.errorCode.PostErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,8 @@ public class RegisterCommentService implements RegisterCommentUseCase {
     @Override
     @Transactional
     public void registerComment(Member member, PostCommentRequestDto postCommentRequestDto) {
-        Post post = postRepository.findByPostIdWithDeleted(postCommentRequestDto.getPostId()).orElse(null);
+        Post post = postRepository.findByPostIdWithDeleted(postCommentRequestDto.getPostId())
+                .orElseThrow(() -> new BaseException(PostErrorCode.EMPTY_POST));
 
         Comment comment = Comment.builder()
                 .content(postCommentRequestDto.getContent())

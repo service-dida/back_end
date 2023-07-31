@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +49,7 @@ public class GetCommentService implements GetCommentUseCase {
         String type;
         if (member == null) {  // 로그인하지 않았다면
             type = "NEED LOGIN";
-        } else if (member.equals(owner)) {  // 내 게시물이라면
+        } else if (Objects.equals(member.getMemberId(), owner.getMemberId())) {  // 내 게시물이라면
             type = "MINE";
         } else {  // 내 게시물이 아니라면
             type = "NOT MINE";

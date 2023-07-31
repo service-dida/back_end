@@ -7,8 +7,8 @@ import com.service.dida.global.config.security.auth.CurrentMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,12 +19,12 @@ public class UpdateCommentController {
 
     /**
      * 댓글 삭제하기
-     * [PATCH] /common/comment/delete
+     * [DELETE] /common/comments/{commentId}
      */
-    @PatchMapping("/common/comment/delete")
+    @DeleteMapping("/common/comments/{commentId}")
     public ResponseEntity<Integer> deleteComment(
             @CurrentMember Member member,
-            @RequestParam("commentId") Long commentId)
+            @PathVariable("commentId") Long commentId)
             throws BaseException {
         updateCommentUseCase.deleteComment(member, commentId);
         return new ResponseEntity<Integer>(200, HttpStatus.OK);
