@@ -16,6 +16,10 @@ public class BaseException extends RuntimeException {
         status = code.getStatus();
     }
 
+    public void setAiErrorMessage(String message) {
+        this.message = message;
+    }
+
     public void setEmailMessage(String message) {
         this.message = "해당 사용자의 이메일은 " + message + " 입니다.";
     }
