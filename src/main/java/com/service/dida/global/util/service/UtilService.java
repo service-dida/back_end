@@ -1,12 +1,13 @@
 package com.service.dida.global.util.service;
 
 import com.service.dida.global.util.usecase.UtilUseCase;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -41,5 +42,9 @@ public class UtilService implements UtilUseCase {
         } else {
             return localDateTime.format(DateTimeFormatter.ofPattern("MM-dd HH:mm"));
         }
+    }
+
+    public String localDateTimeToDateFormatting(LocalDateTime localDateTime) {
+        return localDateTime.format(DateTimeFormatter.ofPattern("yyyy. MM. dd"));
     }
 }

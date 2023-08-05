@@ -17,6 +17,7 @@ import com.service.dida.global.common.dto.PageResponseDto;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.NftErrorCode;
 import com.service.dida.global.config.exception.errorCode.PostErrorCode;
+import com.service.dida.global.util.usecase.UtilUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,6 +37,7 @@ public class GetPostService implements GetPostUseCase {
     private final NftRepository nftRepository;
     private final GetCommentService getCommentService;
     private final CommentRepository commentRepository;
+    private final UtilUseCase utilUseCase;
 
 
     /**
@@ -89,6 +91,7 @@ public class GetPostService implements GetPostUseCase {
                 .memberInfo(memberInfo)
                 .nftInfo(nftInfo)
                 .type(checkIsMe(member, post.getMember()))
+                .createdAt(utilUseCase.localDateTimeToDateFormatting(post.getCreatedAt()))
                 .comments(comments)
                 .build();
     }
