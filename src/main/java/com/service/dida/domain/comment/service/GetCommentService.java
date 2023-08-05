@@ -36,9 +36,9 @@ public class GetCommentService implements GetCommentUseCase {
      * 댓글 조회에서 공통으로 사용 될 PageRequest 를 정의하는 함수
      */
     public PageRequest pageReq(PageRequestDto pageRequestDto) {
-        // pageRequest 는 원하는 page, 한 page 당 size, 오래된 순서 정렬이라는 요청을 담고 있다.
+        // pageRequest 는 원하는 page, 한 page 당 size, 최신 순서 정렬이라는 요청을 담고 있다.
         return PageRequest.of(pageRequestDto.getPage(), pageRequestDto.getPageSize()
-                , Sort.by(Sort.Direction.ASC, "createdAt"));
+                , Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 
     /**
