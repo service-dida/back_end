@@ -35,19 +35,15 @@ public class Wallet extends BaseEntity {
     @Column(name = "wrong_cnt", nullable = false)
     private int wrongCnt;
 
-    public void checkPayPwd(String pwd) {
-        if (this.wrongCnt == 5) {
-            throw new BaseException(WalletErrorCode.FIVE_ERRORS_FOR_PWD);
-        }
-        if (this.getPayPwd().equals(pwd)) {
-            this.wrongCnt = 0;
-        } else {
-            this.wrongCnt += 1;
-            throw new BaseException(WalletErrorCode.WRONG_PWD);
-        }
-    }
-
     public void changePayPwd(String pwd) {
         this.payPwd = pwd;
+    }
+
+    public void initWrongCnt() {
+        this.wrongCnt = 0;
+    }
+
+    public void upWrongCnt() {
+        this.wrongCnt += 1;
     }
 }

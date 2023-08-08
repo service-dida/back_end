@@ -17,6 +17,12 @@ import com.service.dida.global.config.properties.KasProperties;
 import com.service.dida.global.util.usecase.KasUseCase;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
@@ -54,9 +60,9 @@ public class RegisterNftService implements RegisterNftUseCase {
 
     @Override
     public void registerNft(Member member, PostNftRequestDto postNftRequestDto)
-        throws IOException, ParseException, InterruptedException {
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         Wallet wallet = member.getWallet();
-        wallet.checkPayPwd(postNftRequestDto.getPayPwd());
+        walletUseCase.checkPayPwd(wallet,postNftRequestDto.getPayPwd());
         walletUseCase.useWallet(wallet);
 
         // 사용료 납부 부분 없음

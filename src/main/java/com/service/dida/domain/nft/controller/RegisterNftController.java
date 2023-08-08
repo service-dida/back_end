@@ -8,6 +8,12 @@ import com.service.dida.global.config.security.auth.CurrentMember;
 import com.service.dida.global.util.dto.AiPictureDto;
 import com.service.dida.global.util.usecase.AiUseCase;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.parser.ParseException;
 import org.springframework.http.HttpStatus;
@@ -29,7 +35,7 @@ public class RegisterNftController {
     @PostMapping("/member/nft")
     public ResponseEntity<Integer> registerNft(@CurrentMember Member member,
         @RequestBody PostNftRequestDto postNftRequestDto)
-        throws IOException, ParseException, InterruptedException {
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         registerNftUseCase.registerNft(member, postNftRequestDto);
         return new ResponseEntity<>(200, HttpStatus.OK);
     }
