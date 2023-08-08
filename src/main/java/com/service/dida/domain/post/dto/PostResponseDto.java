@@ -27,7 +27,8 @@ public class PostResponseDto {
         private MemberResponseDto.MemberInfo memberInfo;      // 게시글 작성자 관련 정보
         private NftResponseDto.NftInfo nftInfo;               // NFT 관련 정보
         private String type;                                  // 본인의 게시물인지
-        private List<GetCommentResponseDto> comments; // 미리보기 댓글, 최대 3개
+        private String createdAt;                             // 작성 시간
+        private List<GetCommentResponseDto> comments;         // 미리보기 댓글, 최대 3개
     }
 
     @Getter

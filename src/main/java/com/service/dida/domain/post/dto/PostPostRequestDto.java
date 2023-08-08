@@ -15,9 +15,9 @@ public class PostPostRequestDto {
     @NotNull(message = "게시글을 작성하려는 nftId를 입력하세요.")
     private Long nftId;
     @NotBlank(message = "제목을 입력하세요.")
-    @Size(min = 2, max = 30, message = "제목의 길이는 2~20이어야 합니다.")
+    @Size(min = 1, max = 200, message = "제목의 길이는 1~200이어야 합니다.")
     private String title;
     @NotBlank(message = "본문을 입력하세요.")
-    @Size(min = 2, max = 300, message = "본문의 길이는 2~300이어야 합니다.")
+    @Size(min = 1, max = 300, message = "본문의 길이는 1~300이어야 합니다.")
     private String content;
 }

@@ -11,4 +11,6 @@ public interface UtilUseCase {
     String decimalToPeb(double decimal);
 
     String localDateTimeFormatting(LocalDateTime localDateTime,LocalDateTime now);
+
+    String localDateTimeToDateFormatting(LocalDateTime localDateTime);
 }
