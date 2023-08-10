@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum AlarmErrorCode implements ErrorCode {
-    INVALID_ID("ALARM_001", "없거나 이미 본 ALARM ID 입니다.", HttpStatus.BAD_REQUEST);
+    INVALID_ID("ALARM_001", "잘못된 ALARM ID 입니다.", HttpStatus.BAD_REQUEST);
 
     private final String errorCode;
     private final String message;
