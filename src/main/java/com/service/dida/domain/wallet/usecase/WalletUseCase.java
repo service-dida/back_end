@@ -9,6 +9,12 @@ import com.service.dida.domain.wallet.dto.WalletRequestDto.SendKlayOutside;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.SendNftRequestDto;
 import com.service.dida.domain.wallet.dto.WalletResponseDto.WalletDetail;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import org.json.simple.parser.ParseException;
 
 public interface WalletUseCase {
@@ -17,21 +23,24 @@ public interface WalletUseCase {
 
     void useWallet(Wallet wallet);
 
+    void checkPayPwd(Wallet wallet, String encodedPwd)
+        throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException;
+
     void registerWallet(Member member, CheckPwd checkPwd)
-        throws IOException, ParseException, InterruptedException;
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException;
 
     void swapKlayToDida(Member member, ChangeCoin changeCoin)
-        throws IOException, ParseException, InterruptedException;
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException;
 
     void swapDidaToKlay(Member member, ChangeCoin changeCoin)
-        throws IOException, ParseException, InterruptedException;
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException;
 
     void sendKlayOutside(Member member, SendKlayOutside sendKlayOutside)
-        throws IOException, ParseException, InterruptedException;
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException;
 
     void sendNftOutside(Member member, SendNftRequestDto sendNftRequestDto)
-        throws IOException, ParseException, InterruptedException;
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException;
 
     void purchaseNftInMarket(Member buyer, String payPwd, Market market)
-        throws IOException, ParseException, InterruptedException;
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException;
 }

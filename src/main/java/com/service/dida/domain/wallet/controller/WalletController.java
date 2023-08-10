@@ -10,6 +10,12 @@ import com.service.dida.domain.wallet.usecase.WalletUseCase;
 import com.service.dida.global.config.security.auth.CurrentMember;
 import jakarta.validation.Valid;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.parser.ParseException;
 import org.springframework.http.HttpStatus;
@@ -40,7 +46,7 @@ public class WalletController {
     @PostMapping("/visitor/wallet")
     public ResponseEntity<Integer> registerWallet(
         @Valid @RequestBody WalletRequestDto.CheckPwd checkPwd, @CurrentMember Member member)
-        throws IOException, ParseException, InterruptedException {
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         walletUseCase.registerWallet(member, checkPwd);
         return new ResponseEntity<>(200, HttpStatus.OK);
     }
@@ -51,7 +57,7 @@ public class WalletController {
     @PostMapping("/member/klay")
     public ResponseEntity<Integer> swapKlayToDida(@CurrentMember Member member,
         @Valid @RequestBody ChangeCoin changeCoin)
-        throws IOException, ParseException, InterruptedException {
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         walletUseCase.swapKlayToDida(member, changeCoin);
         return new ResponseEntity<>(200, HttpStatus.OK);
     }
@@ -62,7 +68,7 @@ public class WalletController {
     @PostMapping("/member/dida")
     public ResponseEntity<Integer> swapDidaToKlay(@CurrentMember Member member,
         @Valid @RequestBody ChangeCoin changeCoin)
-        throws IOException, ParseException, InterruptedException {
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         walletUseCase.swapDidaToKlay(member, changeCoin);
         return new ResponseEntity<>(200, HttpStatus.OK);
     }
@@ -73,7 +79,7 @@ public class WalletController {
     @PostMapping("/member/klay/outside")
     public ResponseEntity<Integer> sendKlayOutside(@CurrentMember Member member,
         @Valid @RequestBody SendKlayOutside sendKlayOutside)
-        throws IOException, ParseException, InterruptedException {
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         walletUseCase.sendKlayOutside(member, sendKlayOutside);
         return new ResponseEntity<>(200, HttpStatus.OK);
     }
@@ -85,7 +91,7 @@ public class WalletController {
     @PostMapping("/member/nft/outside")
     public ResponseEntity<Integer> sendNftOutside(@CurrentMember Member member,
         @RequestBody SendNftRequestDto sendNftRequestDto)
-        throws IOException, ParseException, InterruptedException {
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         walletUseCase.sendNftOutside(member, sendNftRequestDto);
         return new ResponseEntity<>(200, HttpStatus.OK);
     }

@@ -20,4 +20,13 @@ public class NftRequestDto {
         @NotBlank(message = "이미지는 빈값일 수 없습니다.")
         private String image;
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DrawPictureRequestDto {
+        @NotBlank(message = "비밀번호가 일치하지 않습니다.")
+        private String payPwd;
+        private String sentence;
+    }
 }

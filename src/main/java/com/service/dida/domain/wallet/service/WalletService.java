@@ -1,5 +1,6 @@
 package com.service.dida.domain.wallet.service;
 
+import static com.service.dida.global.config.constants.ServerConstants.PRIVATE_KEY;
 import static com.service.dida.global.config.constants.ServerConstants.PURCHASE_FEE;
 import static com.service.dida.global.config.constants.ServerConstants.SEND_KLAY_OUTSIDE_FEE;
 import static com.service.dida.global.config.constants.ServerConstants.SEND_NFT_OUTSIDE_FEE;
@@ -28,11 +29,19 @@ import com.service.dida.domain.wallet.usecase.WalletUseCase;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.NftErrorCode;
 import com.service.dida.global.config.exception.errorCode.WalletErrorCode;
+import com.service.dida.global.util.usecase.BcryptUseCase;
 import com.service.dida.global.util.usecase.KasUseCase;
+import com.service.dida.global.util.usecase.RsaUseCase;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
@@ -46,6 +55,8 @@ public class WalletService implements WalletUseCase {
     private final NftRepository nftRepository;
     private final RegisterTransactionUseCase registerTransactionUseCase;
     private final KasUseCase kasUseCase;
+    private final BcryptUseCase bcryptUseCase;
+    private final RsaUseCase rsaUseCase;
 
     public void save(Wallet wallet) {
         walletRepository.save(wallet);
@@ -83,10 +94,26 @@ public class WalletService implements WalletUseCase {
     }
 
     @Override
+    public void checkPayPwd(Wallet wallet, String encodedPwd)
+        throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
+        if(wallet.getWrongCnt() == 5) {
+            throw new BaseException(WalletErrorCode.FIVE_ERRORS_FOR_PWD);
+        }
+        if(bcryptUseCase.isMatch(rsaUseCase.rsaDecode(encodedPwd,PRIVATE_KEY),wallet.getPayPwd())) {
+            wallet.initWrongCnt();
+        }
+        else {
+            wallet.upWrongCnt();
+            throw new BaseException(WalletErrorCode.WRONG_PWD);
+        }
+        save(wallet);
+    }
+
+    @Override
     public void registerWallet(Member member, CheckPwd checkPwd)
-        throws IOException, ParseException, InterruptedException {
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         if (checkPassword(checkPwd)) {
-            register(member, checkPwd.getPayPwd());
+            register(member, bcryptUseCase.encrypt(checkPwd.getPayPwd()));
         } else {
             throw new BaseException(WalletErrorCode.WRONG_PWD);
         }
@@ -94,9 +121,9 @@ public class WalletService implements WalletUseCase {
 
     @Override
     public void swapKlayToDida(Member member, ChangeCoin changeCoin)
-        throws IOException, ParseException, InterruptedException {
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         Wallet wallet = member.getWallet();
-        wallet.checkPayPwd(changeCoin.getPayPwd());
+        checkPayPwd(wallet,changeCoin.getPayPwd());
         useWallet(wallet);
         checkKlay(wallet, changeCoin.getCoin());
         exchangeKlay(member, changeCoin.getCoin());
@@ -104,9 +131,9 @@ public class WalletService implements WalletUseCase {
 
     @Override
     public void swapDidaToKlay(Member member, ChangeCoin changeCoin)
-        throws IOException, ParseException, InterruptedException {
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         Wallet wallet = member.getWallet();
-        wallet.checkPayPwd(changeCoin.getPayPwd());
+        checkPayPwd(wallet,changeCoin.getPayPwd());
         useWallet(wallet);
         checkDida(wallet, changeCoin.getCoin());
         exchangeDida(member, changeCoin.getCoin());
@@ -114,7 +141,7 @@ public class WalletService implements WalletUseCase {
 
     @Override
     public void sendKlayOutside(Member member, SendKlayOutside sendKlayOutside)
-        throws IOException, ParseException, InterruptedException {
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         Wallet wallet = member.getWallet();
         checkForSendKlayOutside(wallet, sendKlayOutside);
         sendKlayOutsideFun(member, sendKlayOutside);
@@ -122,7 +149,7 @@ public class WalletService implements WalletUseCase {
 
     @Override
     public void sendNftOutside(Member member, SendNftRequestDto sendNftRequestDto)
-        throws IOException, ParseException, InterruptedException {
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         checkSendNftOutside(member, sendNftRequestDto);
 
         Nft nft = nftRepository.findByNftIdWithDeletedAndMember(member,
@@ -133,14 +160,14 @@ public class WalletService implements WalletUseCase {
 
     @Override
     public void purchaseNftInMarket(Member buyer, String payPwd, Market market)
-        throws IOException, ParseException, InterruptedException {
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         Member seller = market.getMember();
         checkForDeal(buyer.getWallet(), payPwd, market.getPrice());
         purchaseNftOnMarketFun(buyer, seller, market);
     }
 
     private void checkForDeal(Wallet buyerWallet, String payPwd, double price)
-        throws IOException, ParseException, InterruptedException {
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         checkWallet(buyerWallet, payPwd);
         checkDida(buyerWallet, price);
     }
@@ -167,7 +194,7 @@ public class WalletService implements WalletUseCase {
     }
 
     private void checkSendNftOutside(Member member, SendNftRequestDto sendNftRequestDto)
-        throws IOException, ParseException, InterruptedException {
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         if (walletRepository.existsWalletByAddress(sendNftRequestDto.getAddress()).orElse(false)) {
             throw new BaseException(WalletErrorCode.IN_MEMBER_ADDRESS);
         }
@@ -191,7 +218,7 @@ public class WalletService implements WalletUseCase {
     }
 
     private void checkForSendKlayOutside(Wallet wallet, SendKlayOutside sendKlayOutside)
-        throws IOException, ParseException, InterruptedException {
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         if (walletRepository.existsWalletByAddress(sendKlayOutside.getAddress()).orElse(false)) {
             throw new BaseException(WalletErrorCode.IN_MEMBER_ADDRESS);
         }
@@ -257,12 +284,15 @@ public class WalletService implements WalletUseCase {
         }
     }
 
-    private void checkWallet(Wallet wallet, String payPwd) {
-        wallet.checkPayPwd(payPwd);
+    private void checkWallet(Wallet wallet, String payPwd)
+        throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
+        checkPayPwd(wallet,payPwd);
         useWallet(wallet);
     }
 
-    private boolean checkPassword(CheckPwd checkPwd) {
-        return checkPwd.getPayPwd().equals(checkPwd.getCheckPwd());
+    private boolean checkPassword(CheckPwd checkPwd)
+        throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
+        return rsaUseCase.rsaDecode(checkPwd.getPayPwd(), PRIVATE_KEY)
+            .equals(rsaUseCase.rsaDecode(checkPwd.getCheckPwd(), PRIVATE_KEY));
     }
 }

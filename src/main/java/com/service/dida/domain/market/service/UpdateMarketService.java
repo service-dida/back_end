@@ -10,7 +10,13 @@ import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.MarketErrorCode;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Objects;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
@@ -24,8 +30,9 @@ public class UpdateMarketService implements UpdateMarketUseCase {
     private final WalletUseCase walletUseCase;
 
     @Override
-    public void deleteMarket(Member member, UpdateMarket updateMarket) {
-        member.getWallet().checkPayPwd(updateMarket.getPayPwd());
+    public void deleteMarket(Member member, UpdateMarket updateMarket)
+        throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
+        walletUseCase.checkPayPwd(member.getWallet(),updateMarket.getPayPwd());
         Market market = marketRepository.findMarketByMarketIdWithDeleted(updateMarket.getMarketId())
             .orElseThrow(() -> new BaseException(MarketErrorCode.EMPTY_MARKET));
         if (!Objects.equals(market.getMember().getMemberId(), member.getMemberId())) {
@@ -37,7 +44,7 @@ public class UpdateMarketService implements UpdateMarketUseCase {
 
     @Override
     public void purchaseNftInMarket(Member buyer, UpdateMarket updateMarket)
-        throws IOException, ParseException, InterruptedException {
+        throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         Market market = marketRepository.findMarketByMarketIdWithDeleted(updateMarket.getMarketId())
             .orElseThrow(() -> new BaseException(MarketErrorCode.EMPTY_MARKET));
         if (Objects.equals(market.getMember().getMemberId(), buyer.getMemberId())) {
