@@ -72,6 +72,7 @@ public class RsaService implements RsaUseCase {
         return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(privateKeyByte));
     }
 
+    @Override
     public String base64EncodeToString(byte[] byteData) {
         return Base64.getEncoder().encodeToString(byteData);
     }

@@ -1,5 +1,6 @@
 package com.service.dida.domain.member.entity;
 
+import com.service.dida.domain.alarm.Alarm;
 import com.service.dida.domain.follow.dto.FollowResponseDto.FollowList;
 import com.service.dida.domain.like.Like;
 import com.service.dida.domain.market.Market;
@@ -79,6 +80,9 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<Like> likes;
+
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private List<Alarm> alarms;
 
     public void changeRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
