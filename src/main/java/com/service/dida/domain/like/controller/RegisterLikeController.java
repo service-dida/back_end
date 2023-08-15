@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequiredArgsConstructor
 public class RegisterLikeController {
@@ -25,7 +27,7 @@ public class RegisterLikeController {
     @PostMapping("/common/nft/like")
     public ResponseEntity<Boolean> pushLike(
             @RequestParam("nftId") Long nftId, @CurrentMember Member member)
-            throws BaseException {
+            throws BaseException, IOException {
         return new ResponseEntity<>(registerLikeUseCase.pushLike(member, nftId), HttpStatus.OK);
     }
 
