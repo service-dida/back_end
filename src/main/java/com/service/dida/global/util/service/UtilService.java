@@ -47,4 +47,13 @@ public class UtilService implements UtilUseCase {
     public String localDateTimeToDateFormatting(LocalDateTime localDateTime) {
         return localDateTime.format(DateTimeFormatter.ofPattern("yyyy. MM. dd"));
     }
+
+    public String localDateTimeToAlarmFormatting(LocalDateTime localDateTime) {
+        LocalDateTime now = LocalDateTime.now();
+        if(localDateTime.getYear() == now.getYear() && localDateTime.getDayOfMonth() == now.getDayOfMonth()) {
+            return localDateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+        } else  {
+            return localDateTimeToDateFormatting(localDateTime);
+        }
+    }
 }

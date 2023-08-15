@@ -1,5 +1,6 @@
 package com.service.dida.domain.market.service;
 
+import com.service.dida.domain.alarm.usecase.RegisterAlarmUseCase;
 import com.service.dida.domain.market.Market;
 import com.service.dida.domain.market.dto.MarketRequestDto.UpdateMarket;
 import com.service.dida.domain.market.repository.MarketRepository;
@@ -28,6 +29,7 @@ public class UpdateMarketService implements UpdateMarketUseCase {
 
     private final MarketRepository marketRepository;
     private final WalletUseCase walletUseCase;
+    private final RegisterAlarmUseCase registerAlarmUseCase;
 
     @Override
     public void deleteMarket(Member member, UpdateMarket updateMarket)
@@ -51,5 +53,6 @@ public class UpdateMarketService implements UpdateMarketUseCase {
             throw new BaseException(MarketErrorCode.ITS_YOUR_MARKET);
         }
         walletUseCase.purchaseNftInMarket(buyer, updateMarket.getPayPwd(), market);
+        registerAlarmUseCase.registerSaleAlarm(market.getMember(),market.getNft().getNftId());
     }
 }

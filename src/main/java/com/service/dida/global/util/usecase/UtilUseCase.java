@@ -13,4 +13,6 @@ public interface UtilUseCase {
     String localDateTimeFormatting(LocalDateTime localDateTime,LocalDateTime now);
 
     String localDateTimeToDateFormatting(LocalDateTime localDateTime);
+
+    String localDateTimeToAlarmFormatting(LocalDateTime localDateTime);
 }

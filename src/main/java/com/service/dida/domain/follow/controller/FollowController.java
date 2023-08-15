@@ -7,6 +7,7 @@ import com.service.dida.domain.member.entity.Member;
 import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
 import com.service.dida.global.config.security.auth.CurrentMember;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class FollowController {
      */
     @PatchMapping("/common/follow/{memberId}")
     public ResponseEntity<Integer> pushFollow(@CurrentMember Member member,
-        @PathVariable(name = "memberId") Long memberId) {
+        @PathVariable(name = "memberId") Long memberId) throws IOException {
         registerFollowUseCase.registerFollow(member, memberId);
         return new ResponseEntity<>(200, HttpStatus.OK);
     }
