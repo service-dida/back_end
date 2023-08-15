@@ -1,5 +1,6 @@
 package com.service.dida.domain.comment.service;
 
+import com.service.dida.domain.alarm.usecase.RegisterAlarmUseCase;
 import com.service.dida.domain.comment.Comment;
 import com.service.dida.domain.comment.dto.CommentRequestDto.PostCommentRequestDto;
 import com.service.dida.domain.comment.repository.CommentRepository;
@@ -13,20 +14,23 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+
 @Service
 @AllArgsConstructor
+@Transactional
 public class RegisterCommentService implements RegisterCommentUseCase {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
-    @Transactional
+    private final RegisterAlarmUseCase registerAlarmUseCase;
+
     public void save(Comment comment) {
         commentRepository.save(comment);
     }
 
     @Override
-    @Transactional
-    public void registerComment(Member member, PostCommentRequestDto postCommentRequestDto) {
+    public void registerComment(Member member, PostCommentRequestDto postCommentRequestDto) throws IOException {
         Post post = postRepository.findByPostIdWithDeleted(postCommentRequestDto.getPostId())
                 .orElseThrow(() -> new BaseException(PostErrorCode.EMPTY_POST));
 
@@ -37,5 +41,6 @@ public class RegisterCommentService implements RegisterCommentUseCase {
                 .build();
 
         save(comment);
+        registerAlarmUseCase.registerCommentAlarm(post.getMember(), comment.getCommentId());
     }
 }
