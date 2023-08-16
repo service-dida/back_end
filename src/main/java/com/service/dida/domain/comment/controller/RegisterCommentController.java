@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @AllArgsConstructor
 public class RegisterCommentController {
@@ -27,7 +29,7 @@ public class RegisterCommentController {
     public ResponseEntity<Integer> registerComment(
             @CurrentMember Member member,
             @RequestBody @Valid PostCommentRequestDto postCommentRequestDto)
-            throws BaseException {
+            throws BaseException, IOException {
         registerCommentUseCase.registerComment(member, postCommentRequestDto);
         return new ResponseEntity<>(200, HttpStatus.OK);
     }
