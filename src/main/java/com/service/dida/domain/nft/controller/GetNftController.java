@@ -34,10 +34,11 @@ public class GetNftController {
      */
     @GetMapping("/common/profile/nft")
     public ResponseEntity<PageResponseDto<List<ProfileNft>>> getProfileNftList(
-            @CurrentMember Member member,
-            @RequestParam("page") int page, @RequestParam("size") int size) {
+        @CurrentMember Member member,
+        @RequestParam("page") int page, @RequestParam("size") int size,
+        @RequestParam("sort") String sort) {
         return new ResponseEntity<>(getNftUseCase.getProfileNftList(member, null,
-                new PageRequestDto(page, size)),
+            new PageRequestDto(page, size), sort),
             HttpStatus.OK);
     }
 
@@ -46,10 +47,13 @@ public class GetNftController {
      */
     @GetMapping("/profile/nft/{memberId}")
     public ResponseEntity<PageResponseDto<List<ProfileNft>>> getOtherProfileNftList(
-        @CurrentMember Member member, @RequestParam("page") int page, @RequestParam("size") int size,
-        @PathVariable(name = "memberId") Long memberId) {
+        @CurrentMember Member member, @RequestParam("page") int page,
+        @RequestParam("size") int size,
+        @PathVariable(name = "memberId") Long memberId,
+        @RequestParam("sort") String sort) {
         return new ResponseEntity<>(
-            getNftUseCase.getProfileNftList(member, memberId, new PageRequestDto(page, size)), HttpStatus.OK);
+            getNftUseCase.getProfileNftList(member, memberId, new PageRequestDto(page, size), sort),
+            HttpStatus.OK);
     }
 
     /**
@@ -57,9 +61,10 @@ public class GetNftController {
      */
     @GetMapping("/common/nft/own")
     public ResponseEntity<PageResponseDto<List<SnsNft>>> getMyOwnNftList(
-            @CurrentMember Member member, @RequestParam("page") int page, @RequestParam("size") int size) {
+        @CurrentMember Member member, @RequestParam("page") int page,
+        @RequestParam("size") int size) {
         return new ResponseEntity<>(
-                getNftUseCase.getMyOwnNftList(member, new PageRequestDto(page, size)), HttpStatus.OK);
+            getNftUseCase.getMyOwnNftList(member, new PageRequestDto(page, size)), HttpStatus.OK);
     }
 
 }

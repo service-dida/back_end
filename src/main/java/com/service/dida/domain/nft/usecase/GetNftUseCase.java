@@ -10,9 +10,11 @@ import java.util.List;
 
 public interface GetNftUseCase {
 
-    NftDetailInfo getNftDetail(Member member,Long nftId);
+    NftDetailInfo getNftDetail(Member member, Long nftId);
 
-    PageResponseDto<List<ProfileNft>> getProfileNftList(Member member,Long memberId, PageRequestDto pageRequestDto);
+    PageResponseDto<List<ProfileNft>> getProfileNftList(Member member, Long memberId,
+        PageRequestDto pageRequestDto, String sort);
 
-    PageResponseDto<List<NftResponseDto.SnsNft>> getMyOwnNftList(Member member, PageRequestDto pageRequestDto);
+    PageResponseDto<List<NftResponseDto.SnsNft>> getMyOwnNftList(Member member,
+        PageRequestDto pageRequestDto);
 }

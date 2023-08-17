@@ -15,11 +15,13 @@ import com.service.dida.domain.nft.usecase.GetNftUseCase;
 import com.service.dida.global.common.dto.PageRequestDto;
 import com.service.dida.global.common.dto.PageResponseDto;
 import com.service.dida.global.config.exception.BaseException;
+import com.service.dida.global.config.exception.errorCode.GlobalErrorCode;
 import com.service.dida.global.config.exception.errorCode.MemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,10 +37,10 @@ public class GetNftService implements GetNftUseCase {
     private final GetLikeUseCase getLikeUseCase;
     private final GetFollowUseCase getFollowUseCase;
 
-    public PageRequest pageReq(PageRequestDto pageRequestDto) {
+    public PageRequest pageReq(PageRequestDto pageRequestDto, Direction sort) {
         // pageRequest 는 원하는 page, 한 page 당 size, 최신 순서 정렬 이라는 요청을 담고 있다.
         return PageRequest.of(pageRequestDto.getPage(), pageRequestDto.getPageSize()
-            , Sort.by(Sort.Direction.DESC, "updatedAt"));
+            , Sort.by(sort, "updatedAt"));
     }
 
     @Override
@@ -58,15 +60,28 @@ public class GetNftService implements GetNftUseCase {
 
     @Override
     public PageResponseDto<List<ProfileNft>> getProfileNftList(Member member, Long memberId,
-        PageRequestDto pageRequestDto) {
+        PageRequestDto pageRequestDto, String sort) {
+        checkSortingWord(sort);
         List<ProfileNft> profileNfts = new ArrayList<>();
-        Page<Nft> nfts;
+        Page<Nft> nfts = null;
         if (memberId == null) {
-            nfts = nftRepository.findAllNftsByMember(member, pageReq(pageRequestDto));
+            if (sort.equals("updated_desc")) {
+                nfts = nftRepository.findAllNftsByMember(member,
+                    pageReq(pageRequestDto, Direction.DESC));
+            } else if (sort.equals("updated_asc")) {
+                nfts = nftRepository.findAllNftsByMember(member,
+                    pageReq(pageRequestDto, Direction.ASC));
+            }
         } else {
             Member other = memberRepository.findByMemberIdWithDeleted(memberId).orElseThrow(() ->
                 new BaseException(MemberErrorCode.EMPTY_MEMBER));
-            nfts = nftRepository.findAllNftsByMember(other,pageReq(pageRequestDto));
+            if (sort.equals("updated_desc")) {
+                nfts = nftRepository.findAllNftsByMember(other,
+                    pageReq(pageRequestDto, Direction.DESC));
+            } else if (sort.equals("updated_asc")) {
+                nfts = nftRepository.findAllNftsByMember(other,
+                    pageReq(pageRequestDto, Direction.ASC));
+            }
         }
         nfts.forEach(n -> profileNfts.add(new ProfileNft(
             new NftInfo(n.getNftId(), n.getTitle(), n.getImgUrl(), n.getPrice()),
@@ -76,12 +91,20 @@ public class GetNftService implements GetNftUseCase {
     }
 
     @Override
-    public PageResponseDto<List<SnsNft>> getMyOwnNftList(Member member, PageRequestDto pageRequestDto) {
+    public PageResponseDto<List<SnsNft>> getMyOwnNftList(Member member,
+        PageRequestDto pageRequestDto) {
         List<SnsNft> res = new ArrayList<>();
-        Page<Nft> nfts = nftRepository.findAllNftsByMember(member, pageReq(pageRequestDto));
+        Page<Nft> nfts = nftRepository.findAllNftsByMember(member,
+            pageReq(pageRequestDto, Direction.DESC));
 
         nfts.forEach(nft -> res.add(new SnsNft(nft)));
 
         return new PageResponseDto<>(nfts.getNumber(), nfts.getSize(), nfts.hasNext(), res);
+    }
+    
+    public void checkSortingWord(String sort) {
+        if(!sort.equals("updated_desc") && !sort.equals("updated_asc")) {
+            throw new BaseException(GlobalErrorCode.NOT_VALID_ARGUMENT_ERROR);
+        }
     }
 }
