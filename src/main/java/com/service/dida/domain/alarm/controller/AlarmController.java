@@ -5,6 +5,7 @@ import com.service.dida.domain.alarm.usecase.GetAlarmUseCase;
 import com.service.dida.domain.alarm.usecase.UpdateAlarmUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.global.common.dto.PageRequestDto;
+import com.service.dida.global.common.dto.PageResponseDto;
 import com.service.dida.global.config.security.auth.CurrentMember;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class AlarmController {
      * 알림 페이지 가져오기
      */
     @GetMapping("/common/alarm")
-    public ResponseEntity<List<AlarmInfo>> getAllAlarms(@CurrentMember Member member,
+    public ResponseEntity<PageResponseDto<List<AlarmInfo>>> getAllAlarms(@CurrentMember Member member,
         @RequestParam("page") int page, @RequestParam("size") int size) {
         return new ResponseEntity<>(
             getAlarmUseCase.getAllAlarms(member, new PageRequestDto(page, size)), HttpStatus.OK);
