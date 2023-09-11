@@ -6,6 +6,7 @@ import com.service.dida.domain.alarm.repository.AlarmRepository;
 import com.service.dida.domain.alarm.usecase.GetAlarmUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.global.common.dto.PageRequestDto;
+import com.service.dida.global.common.dto.PageResponseDto;
 import com.service.dida.global.util.usecase.UtilUseCase;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class GetAlarmService implements GetAlarmUseCase {
 
 
     @Override
-    public List<AlarmInfo> getAllAlarms(Member member, PageRequestDto pageRequestDto) {
+    public PageResponseDto<List<AlarmInfo>> getAllAlarms(Member member, PageRequestDto pageRequestDto) {
         Page<Alarm> alarms = alarmRepository.findAllByMember(member,
             PageRequest.of(pageRequestDto.getPage(), pageRequestDto.getPageSize(),
                 Sort.by(Direction.DESC, "createdAt")));
@@ -37,6 +38,6 @@ public class GetAlarmService implements GetAlarmUseCase {
             )
         );
 
-        return alarmInfos;
+        return new PageResponseDto<>(alarms.getNumber(),alarms.getSize(),alarms.hasNext(),alarmInfos);
     }
 }
