@@ -34,7 +34,7 @@ public class CommonController {
         PRIVATE_KEY = rsaUseCase.base64EncodeToString(keyPair.getPrivate().getEncoded());
     }
 
-    @GetMapping("/member/key")
+    @GetMapping("/common/key")
     public ResponseEntity<PublicKeyDto> providePublicKey() {
         return new ResponseEntity<>(new PublicKeyDto(PUBLIC_KEY), HttpStatus.OK);
     }

@@ -62,7 +62,7 @@ public class RegisterNftService implements RegisterNftUseCase {
     public void registerNft(Member member, PostNftRequestDto postNftRequestDto)
         throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         Wallet wallet = member.getWallet();
-        walletUseCase.checkPayPwd(wallet,postNftRequestDto.getPayPwd());
+        walletUseCase.checkPayPwd(wallet, postNftRequestDto.getPayPwd());
         walletUseCase.useWallet(wallet);
 
         // 사용료 납부 부분 없음
@@ -71,7 +71,7 @@ public class RegisterNftService implements RegisterNftUseCase {
             sendFee = kasUseCase.sendDidaToFeeAccount(wallet, MINTING_FEE);
         }
         String uri = kasUseCase.uploadMetadata(postNftRequestDto);
-        String id = Long.toHexString(manageUseCase.getNftIdAndPlusOne());
+        String id = "0x" + Long.toHexString(manageUseCase.getNftIdAndPlusOne());
         String transactionHash = kasUseCase.createNft(wallet.getAddress(), id, uri);
         Nft nft = register(postNftRequestDto, id, kasProperties.getNftContractAddress(),
             transactionHash, false, member);
