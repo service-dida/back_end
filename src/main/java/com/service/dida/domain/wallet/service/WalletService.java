@@ -9,6 +9,7 @@ import static com.service.dida.global.config.constants.ServerConstants.SWAP_FEE;
 import com.service.dida.domain.market.Market;
 import com.service.dida.domain.member.Role;
 import com.service.dida.domain.member.entity.Member;
+import com.service.dida.domain.member.service.RegisterMemberService;
 import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.nft.repository.NftRepository;
 import com.service.dida.domain.transaction.TransactionType;
@@ -52,6 +53,7 @@ import org.springframework.stereotype.Service;
 public class WalletService implements WalletUseCase {
 
     private final WalletRepository walletRepository;
+    private final RegisterMemberService registerMemberService;
     private final NftRepository nftRepository;
     private final RegisterTransactionUseCase registerTransactionUseCase;
     private final KasUseCase kasUseCase;
@@ -73,6 +75,7 @@ public class WalletService implements WalletUseCase {
         save(wallet);
         member.changeRole(Role.ROLE_MEMBER);
         member.updateWallet(wallet);
+        registerMemberService.save(member);
     }
 
     @Override
@@ -96,13 +99,13 @@ public class WalletService implements WalletUseCase {
     @Override
     public void checkPayPwd(Wallet wallet, String encodedPwd)
         throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
-        if(wallet.getWrongCnt() == 5) {
+        if (wallet.getWrongCnt() == 5) {
             throw new BaseException(WalletErrorCode.FIVE_ERRORS_FOR_PWD);
         }
-        if(bcryptUseCase.isMatch(rsaUseCase.rsaDecode(encodedPwd,PRIVATE_KEY),wallet.getPayPwd())) {
+        if (bcryptUseCase.isMatch(rsaUseCase.rsaDecode(encodedPwd, PRIVATE_KEY),
+            wallet.getPayPwd())) {
             wallet.initWrongCnt();
-        }
-        else {
+        } else {
             wallet.upWrongCnt();
             throw new BaseException(WalletErrorCode.WRONG_PWD);
         }
@@ -113,7 +116,8 @@ public class WalletService implements WalletUseCase {
     public void registerWallet(Member member, CheckPwd checkPwd)
         throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         if (checkPassword(checkPwd)) {
-            register(member, bcryptUseCase.encrypt(checkPwd.getPayPwd()));
+            register(member,
+                bcryptUseCase.encrypt(rsaUseCase.rsaDecode(checkPwd.getPayPwd(), PRIVATE_KEY)));
         } else {
             throw new BaseException(WalletErrorCode.WRONG_PWD);
         }
@@ -123,7 +127,7 @@ public class WalletService implements WalletUseCase {
     public void swapKlayToDida(Member member, ChangeCoin changeCoin)
         throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         Wallet wallet = member.getWallet();
-        checkPayPwd(wallet,changeCoin.getPayPwd());
+        checkPayPwd(wallet, changeCoin.getPayPwd());
         useWallet(wallet);
         checkKlay(wallet, changeCoin.getCoin());
         exchangeKlay(member, changeCoin.getCoin());
@@ -133,7 +137,7 @@ public class WalletService implements WalletUseCase {
     public void swapDidaToKlay(Member member, ChangeCoin changeCoin)
         throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         Wallet wallet = member.getWallet();
-        checkPayPwd(wallet,changeCoin.getPayPwd());
+        checkPayPwd(wallet, changeCoin.getPayPwd());
         useWallet(wallet);
         checkDida(wallet, changeCoin.getCoin());
         exchangeDida(member, changeCoin.getCoin());
@@ -286,7 +290,7 @@ public class WalletService implements WalletUseCase {
 
     private void checkWallet(Wallet wallet, String payPwd)
         throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
-        checkPayPwd(wallet,payPwd);
+        checkPayPwd(wallet, payPwd);
         useWallet(wallet);
     }
 
