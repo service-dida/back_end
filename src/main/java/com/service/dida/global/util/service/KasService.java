@@ -69,7 +69,7 @@ public class KasService implements KasUseCase {
     @Override
     public String uploadMetadata(PostNftRequestDto postNftRequestDto)
         throws IOException, ParseException, InterruptedException {
-        String url = "https://metadata-api.klaytnapi.com/v1/metadata/";
+        String url = "https://metadata-api.klaytnapi.com/v1/metadata";
         HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(
             "{\n  " +
                 "\"metadata\": {\n    " +
@@ -84,7 +84,7 @@ public class KasService implements KasUseCase {
     @Override
     public String createNft(String address, String id, String uri)
         throws IOException, ParseException, InterruptedException {
-        String url = "https://kip17-api.klaytnapi.com/2/contract/" + kasProperties.getNftContract()
+        String url = "https://kip17-api.klaytnapi.com/v2/contract/" + kasProperties.getNftContract()
             + "/token";
         HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(
             "{\n  " +
