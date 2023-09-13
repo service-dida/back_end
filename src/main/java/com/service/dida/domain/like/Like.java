@@ -37,7 +37,7 @@ public class Like extends BaseEntity {
     @JoinColumn(name = "nft_id")
     private Nft nft;
 
-    @Column(name = "status", nullable = false, columnDefinition = "boolean default true")
+    @Column(name = "status", nullable = false)
     private boolean status;
 
     public boolean changeStatus() {
