@@ -32,6 +32,7 @@ public class RegisterLikeService implements RegisterLikeUseCase {
         save(Like.builder()
                 .member(member)
                 .nft(nft)
+                .status(true)
                 .build());
     }
 
