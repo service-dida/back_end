@@ -51,6 +51,7 @@ public class RegisterMarketService implements RegisterMarketUseCase {
             .member(member)
             .build();
         save(market);
+        nft.changeMarket(market);
     }
 
     private void checkPrice(double price) {

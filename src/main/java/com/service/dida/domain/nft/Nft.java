@@ -92,4 +92,8 @@ public class Nft extends BaseEntity {
     public void changeMember(Member member) {
         this.member = member;
     }
+
+    public void changeMarket(Market market) {
+        this.market = market;
+    }
 }
