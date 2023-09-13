@@ -194,6 +194,7 @@ public class WalletService implements WalletUseCase {
                 new TransactionSetDto(sendDida, sendNft, sendFee))
         );
         nft.changeMember(buyer);
+        nft.changeMarket(null);
         market.delete();
     }
 
