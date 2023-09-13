@@ -43,6 +43,9 @@ public class RegisterMarketService implements RegisterMarketUseCase {
         walletUseCase.checkPayPwd(wallet,registerNft.getPayPwd());
         Nft nft = nftRepository.findByNftIdWithDeletedAndMember(member, registerNft.getNftId())
             .orElseThrow(() -> new BaseException(EMPTY_NFT));
+        if(marketRepository.existsByNft(nft).orElse(false)) {
+            throw new BaseException(MarketErrorCode.ALREADY_IN_MARKET);
+        }
         // 판매하기 시 수수료 및 무료횟수 부분 추가 필요
         checkPrice(registerNft.getPrice());
         Market market = Market.builder()
