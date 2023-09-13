@@ -53,8 +53,8 @@ public class GetTransactionService implements GetTransactionUseCase {
         Page<Transaction> transactions = transactionRepository.findAllDealingHistoryByMemberId(
             member.getMemberId(), pageReq(pageRequestDto));
         transactions.forEach(t -> histories.add(new AllTypeDealingHistory(
-            new DealingHistory(t.getTransactionId(), t.getNft(), t.getNft().getTitle(),
-                t.getPriceByDealingType(member.getMemberId())),
+            new DealingHistory(t.getTransactionId(), t.getNft().getNftId(), t.getNft().getTitle(),
+                t.getNft().getImgUrl(), t.getPriceByDealingType(member.getMemberId())),
             t.getIsPurchased(member.getMemberId()))));
         return new PageResponseDto<>(transactions.getNumber(), transactions.getSize(),
             transactions.hasNext(), histories);
@@ -67,8 +67,8 @@ public class GetTransactionService implements GetTransactionUseCase {
         Page<Transaction> transactions = transactionRepository.findPurchaseDealingHistoryByMemberId(
             member.getMemberId(), pageReq(pageRequestDto));
         transactions.forEach(t -> histories.add(
-            new DealingHistory(t.getTransactionId(), t.getNft(), t.getNft().getTitle(),
-                t.getPayAmount())));
+            new DealingHistory(t.getTransactionId(), t.getNft().getNftId(), t.getNft().getTitle(),
+                t.getNft().getImgUrl(), t.getPayAmount())));
         return new PageResponseDto<>(transactions.getNumber(), transactions.getSize(),
             transactions.hasNext(), histories);
     }
@@ -80,8 +80,8 @@ public class GetTransactionService implements GetTransactionUseCase {
         Page<Transaction> transactions = transactionRepository.findSoldDealingHistoryByMemberId(
             member.getMemberId(), pageReq(pageRequestDto));
         transactions.forEach(t -> histories.add(
-            new DealingHistory(t.getTransactionId(), t.getNft(), t.getNft().getTitle(),
-                t.getPayAmount())));
+            new DealingHistory(t.getTransactionId(), t.getNft().getNftId(), t.getNft().getTitle(),
+                t.getNft().getImgUrl(), t.getPayAmount())));
         return new PageResponseDto<>(transactions.getNumber(), transactions.getSize(),
             transactions.hasNext(), histories);
     }

@@ -23,8 +23,9 @@ public class TransactionResponseDto {
     @NoArgsConstructor
     public static class DealingHistory {
         private Long transactionId;
-        private Nft nft;
+        private Long nftId;
         private String nftTitle;
+        private String nftUrl;
         private double price;
     }
 
