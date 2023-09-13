@@ -99,7 +99,7 @@ public class KasService implements KasUseCase {
     @Override
     public String sendNftOutside(String sendAddress, String receiveAddress, String id)
         throws IOException, ParseException, InterruptedException {
-        String url = "https://kip17-api.klaytnapi.com/v2/contract" + kasProperties.getNftContract()
+        String url = "https://kip17-api.klaytnapi.com/v2/contract/" + kasProperties.getNftContract()
             + "/token/" + id;
         HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(
             "{\n  " +
