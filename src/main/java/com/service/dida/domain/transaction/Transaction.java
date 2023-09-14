@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -61,19 +62,11 @@ public class Transaction extends BaseEntity {
         this.feeTransaction = transactionSet.getFeeTransaction();
     }
 
-    public double getPriceByDealingType(Long memberId) {
-        if (memberId == this.buyerId) {
-            return this.payAmount;
-        } else {
-            return this.payBackAmount;
-        }
+    public double getPriceByDealingType() {
+        return this.payAmount;
     }
 
     public boolean getIsPurchased(Long memberId) {
-        if (memberId == this.buyerId) {
-            return true;
-        } else {
-            return false;
-        }
+        return Objects.equals(memberId, this.buyerId);
     }
 }

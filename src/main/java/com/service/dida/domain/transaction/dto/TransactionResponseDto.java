@@ -1,6 +1,5 @@
 package com.service.dida.domain.transaction.dto;
 
-import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.transaction.TransactionType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
