@@ -3,6 +3,7 @@ package com.service.dida.domain.like.service;
 
 import com.service.dida.domain.alarm.usecase.RegisterAlarmUseCase;
 import com.service.dida.domain.like.Like;
+import com.service.dida.domain.like.dto.LikeRequestDto;
 import com.service.dida.domain.like.repository.LikeRepository;
 import com.service.dida.domain.like.usecase.RegisterLikeUseCase;
 import com.service.dida.domain.member.entity.Member;
@@ -37,8 +38,8 @@ public class RegisterLikeService implements RegisterLikeUseCase {
     }
 
     @Override
-    public boolean pushLike(Member member, Long nftId) throws IOException {
-        Nft nft = nftRepository.findByNftIdWithDeleted(nftId)
+    public boolean pushLike(Member member, LikeRequestDto.NftLikeRequestDto nftLikeRequestDto) throws IOException {
+        Nft nft = nftRepository.findByNftIdWithDeleted(nftLikeRequestDto.getNftId())
                 .orElseThrow(() -> new BaseException(NftErrorCode.EMPTY_NFT));
 
         Like like = likeRepository.findByMemberAndNft(member, nft).orElse(null);

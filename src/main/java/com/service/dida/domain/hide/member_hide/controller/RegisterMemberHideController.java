@@ -23,7 +23,7 @@ public class RegisterMemberHideController {
      */
     @PostMapping("/common/member/hide")
     public ResponseEntity<Integer> hideMember(
-            @CurrentMember Member member, @RequestParam("nftId") Long memberId)
+            @CurrentMember Member member, @RequestParam("memberId") Long memberId)
             throws BaseException {
         registerMemberHideUseCase.hideMember(member, memberId);
         return new ResponseEntity<>(200, HttpStatus.OK);

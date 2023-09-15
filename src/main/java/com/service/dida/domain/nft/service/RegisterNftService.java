@@ -1,7 +1,5 @@
 package com.service.dida.domain.nft.service;
 
-import static com.service.dida.global.config.constants.ServerConstants.MINTING_FEE;
-
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.nft.dto.NftRequestDto.PostNftRequestDto;
@@ -16,16 +14,19 @@ import com.service.dida.global.common.manage.ManageUseCase;
 import com.service.dida.global.config.properties.KasProperties;
 import com.service.dida.global.util.usecase.KasUseCase;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.json.simple.parser.ParseException;
+import org.springframework.stereotype.Service;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import lombok.RequiredArgsConstructor;
-import org.json.simple.parser.ParseException;
-import org.springframework.stereotype.Service;
+
+import static com.service.dida.global.config.constants.ServerConstants.MINTING_FEE;
 
 @Service
 @RequiredArgsConstructor
@@ -59,7 +60,7 @@ public class RegisterNftService implements RegisterNftUseCase {
     }
 
     @Override
-    public void registerNft(Member member, PostNftRequestDto postNftRequestDto)
+    public Long registerNft(Member member, PostNftRequestDto postNftRequestDto)
         throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         Wallet wallet = member.getWallet();
         walletUseCase.checkPayPwd(wallet, postNftRequestDto.getPayPwd());
@@ -78,5 +79,6 @@ public class RegisterNftService implements RegisterNftUseCase {
         registerTransactionUseCase.saveMintingTransaction(
             new MintingTransactionDto(member.getMemberId(), nft,
                 new TransactionSetDto("", transactionHash, sendFee)));
+        return nft.getNftId();
     }
 }
