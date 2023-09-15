@@ -1,5 +1,6 @@
 package com.service.dida.domain.like.controller;
 
+import com.service.dida.domain.like.dto.LikeRequestDto;
 import com.service.dida.domain.like.usecase.RegisterLikeUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.global.config.exception.BaseException;
@@ -8,8 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -26,9 +26,9 @@ public class RegisterLikeController {
      */
     @PostMapping("/common/nft/like")
     public ResponseEntity<Boolean> pushLike(
-            @RequestParam("nftId") Long nftId, @CurrentMember Member member)
+            @RequestBody LikeRequestDto.NftLikeRequestDto nftLikeRequestDto, @CurrentMember Member member)
             throws BaseException, IOException {
-        return new ResponseEntity<>(registerLikeUseCase.pushLike(member, nftId), HttpStatus.OK);
+        return new ResponseEntity<>(registerLikeUseCase.pushLike(member, nftLikeRequestDto), HttpStatus.OK);
     }
 
 }
