@@ -75,4 +75,10 @@ public class NftResponseDto {
                     nft.getMember().getProfileUrl());
         }
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class NftId {
+        private Long nftId;
+    }
 }
