@@ -29,6 +29,7 @@ public class NftResponseDto {
         private String contractAddress;
         private boolean followed;
         private boolean liked;
+        private boolean isMe;
     }
 
     @Getter
@@ -74,5 +75,11 @@ public class NftResponseDto {
                     nft.getMember().getNickname(),
                     nft.getMember().getProfileUrl());
         }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class NftId {
+        private Long nftId;
     }
 }

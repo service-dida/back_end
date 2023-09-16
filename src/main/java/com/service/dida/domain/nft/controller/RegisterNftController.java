@@ -3,6 +3,7 @@ package com.service.dida.domain.nft.controller;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.nft.dto.NftRequestDto.DrawPictureRequestDto;
 import com.service.dida.domain.nft.dto.NftRequestDto.PostNftRequestDto;
+import com.service.dida.domain.nft.dto.NftResponseDto;
 import com.service.dida.domain.nft.usecase.RegisterNftUseCase;
 import com.service.dida.global.config.security.auth.CurrentMember;
 import com.service.dida.global.util.dto.AiPictureDto;
@@ -34,8 +35,8 @@ public class RegisterNftController {
      * NFT 생성 Api 사용료 부분 없음, Ai 기능 추가시 조금 수정 필요
      */
     @PostMapping("/member/nft")
-    public ResponseEntity<Long> registerNft(@CurrentMember Member member,
-        @RequestBody PostNftRequestDto postNftRequestDto)
+    public ResponseEntity<NftResponseDto.NftId> registerNft(@CurrentMember Member member,
+                                                            @RequestBody PostNftRequestDto postNftRequestDto)
         throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         return new ResponseEntity<>(registerNftUseCase.registerNft(member, postNftRequestDto), HttpStatus.OK);
     }

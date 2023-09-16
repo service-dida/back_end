@@ -3,6 +3,7 @@ package com.service.dida.domain.nft.service;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.nft.dto.NftRequestDto.PostNftRequestDto;
+import com.service.dida.domain.nft.dto.NftResponseDto;
 import com.service.dida.domain.nft.repository.NftRepository;
 import com.service.dida.domain.nft.usecase.RegisterNftUseCase;
 import com.service.dida.domain.transaction.dto.TransactionRequestDto.MintingTransactionDto;
@@ -60,7 +61,7 @@ public class RegisterNftService implements RegisterNftUseCase {
     }
 
     @Override
-    public Long registerNft(Member member, PostNftRequestDto postNftRequestDto)
+    public NftResponseDto.NftId registerNft(Member member, PostNftRequestDto postNftRequestDto)
         throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         Wallet wallet = member.getWallet();
         walletUseCase.checkPayPwd(wallet, postNftRequestDto.getPayPwd());
@@ -79,6 +80,6 @@ public class RegisterNftService implements RegisterNftUseCase {
         registerTransactionUseCase.saveMintingTransaction(
             new MintingTransactionDto(member.getMemberId(), nft,
                 new TransactionSetDto("", transactionHash, sendFee)));
-        return nft.getNftId();
+        return new NftResponseDto.NftId(nft.getNftId());
     }
 }

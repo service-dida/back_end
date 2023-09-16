@@ -2,6 +2,7 @@ package com.service.dida.domain.nft.usecase;
 
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.nft.dto.NftRequestDto.PostNftRequestDto;
+import com.service.dida.domain.nft.dto.NftResponseDto;
 import org.json.simple.parser.ParseException;
 
 import javax.crypto.BadPaddingException;
@@ -14,6 +15,6 @@ import java.security.spec.InvalidKeySpecException;
 
 public interface RegisterNftUseCase {
 
-    Long registerNft(Member member, PostNftRequestDto postNftRequestDto)
+    NftResponseDto.NftId registerNft(Member member, PostNftRequestDto postNftRequestDto)
         throws IOException, ParseException, InterruptedException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException;
 }
