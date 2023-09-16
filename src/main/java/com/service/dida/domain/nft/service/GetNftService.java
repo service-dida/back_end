@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.service.dida.global.config.exception.errorCode.NftErrorCode.EMPTY_NFT;
 
@@ -48,6 +49,7 @@ public class GetNftService implements GetNftUseCase {
         Nft nft = nftRepository.findByNftIdWithDeleted(nftId)
             .orElseThrow(() -> new BaseException(EMPTY_NFT));
         Member owner = nft.getMember();
+        boolean isMe = checkIsMe(member.getMemberId(), nft.getMember().getMemberId());
         boolean followed = member != null && getFollowUseCase.checkIsFollowed(member, owner);
         // boolean liked = member == null ? false : getLikeUseCase.checkIsLiked(member, nft) 와 같음
         boolean liked = member != null && getLikeUseCase.checkIsLiked(member, nft);
@@ -55,7 +57,7 @@ public class GetNftService implements GetNftUseCase {
             new NftInfo(nft.getNftId(), nft.getTitle(), nft.getImgUrl(), nft.getPrice()),
             nft.getDescription(),
             new MemberInfo(owner.getMemberId(), owner.getNickname(), owner.getProfileUrl()),
-            nft.getId(), nft.getContracts(), followed, liked);
+            nft.getId(), nft.getContracts(), followed, liked, isMe);
     }
 
     @Override
@@ -106,5 +108,9 @@ public class GetNftService implements GetNftUseCase {
         if(!sort.equals("updated_desc") && !sort.equals("updated_asc")) {
             throw new BaseException(GlobalErrorCode.NOT_VALID_ARGUMENT_ERROR);
         }
+    }
+
+    private boolean checkIsMe(Long memberId, Long ownerId) {
+        return Objects.equals(memberId, ownerId);
     }
 }

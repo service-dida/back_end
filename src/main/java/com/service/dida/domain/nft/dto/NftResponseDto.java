@@ -29,6 +29,7 @@ public class NftResponseDto {
         private String contractAddress;
         private boolean followed;
         private boolean liked;
+        private boolean isMe;
     }
 
     @Getter
