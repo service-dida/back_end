@@ -1,5 +1,6 @@
 package com.service.dida.domain.market.controller;
 
+import com.service.dida.domain.market.dto.MarketResponseDto;
 import com.service.dida.domain.market.dto.MarketResponseDto.GetMainPageWithoutSoldOut;
 import com.service.dida.domain.market.dto.MarketResponseDto.GetRecentNft;
 import com.service.dida.domain.market.dto.MarketResponseDto.MoreHotMember;
@@ -39,7 +40,7 @@ public class GetMarketController {
      * [GET] /main/sold-out
      */
     @GetMapping("/main/sold-out")
-    public ResponseEntity<List<NftAndMemberInfo>> getMainPageSoldOut(
+    public ResponseEntity<MarketResponseDto.GetMainSoldOut> getMainPageSoldOut(
             @CurrentMember Member member, @RequestParam("range") int range)
             throws BaseException {
         return new ResponseEntity<>(getMarketUseCase.getMainPageSoldOut(member, range, 0, 3), HttpStatus.OK);

@@ -58,11 +58,11 @@ public class GetMarketService implements GetMarketUseCase {
     }
 
     @Override
-    public List<NftAndMemberInfo> getMainPageSoldOut(Member member, int range, int page, int limit) {
+    public GetMainSoldOut getMainPageSoldOut(Member member, int range, int page, int limit) {
         List<NftAndMemberInfo> res = new ArrayList<>();
         Page<Nft> nfts = getSoldOutPage(member, range, page, limit);
         nfts.forEach(n -> res.add(new NftAndMemberInfo(n)));
-        return res;
+        return new GetMainSoldOut(res);
     }
 
     @Override
