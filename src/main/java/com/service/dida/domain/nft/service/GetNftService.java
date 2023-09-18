@@ -87,7 +87,7 @@ public class GetNftService implements GetNftUseCase {
         }
         nfts.forEach(n -> profileNfts.add(new ProfileNft(
             new NftInfo(n.getNftId(), n.getTitle(), n.getImgUrl(), n.getPrice()),
-            getLikeUseCase.checkIsLiked(member, n))));
+                new MemberInfo(n.getMember()), getLikeUseCase.checkIsLiked(member, n))));
 
         return new PageResponseDto<>(nfts.getNumber(), nfts.getSize(), nfts.hasNext(), profileNfts);
     }
