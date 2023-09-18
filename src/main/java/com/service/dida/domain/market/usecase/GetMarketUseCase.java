@@ -12,7 +12,7 @@ import java.util.List;
 public interface GetMarketUseCase {
 
     GetMainPageWithoutSoldOut getMainPage(Member member);
-    List<NftResponseDto.NftAndMemberInfo> getMainPageSoldOut(Member member, int range, int page, int limit);
+    MarketResponseDto.GetMainSoldOut getMainPageSoldOut(Member member, int range, int page, int limit);
     PageResponseDto<List<NftResponseDto.NftAndMemberInfo>> getMoreSoldOuts(Member member, int range, PageRequestDto pageRequestDto);
     PageResponseDto<List<MarketResponseDto.MoreHotMember>> getMoreHotSellers(Member member, PageRequestDto pageRequestDto);
     PageResponseDto<List<MarketResponseDto.GetRecentNft>> getMoreRecentNfts(Member member, PageRequestDto pageRequestDto);

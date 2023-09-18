@@ -1,5 +1,6 @@
 package com.service.dida.domain.member.dto;
 
+import com.service.dida.domain.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,6 +28,12 @@ public class MemberResponseDto {
         private Long memberId;
         private String memberName;
         private String profileImgUrl;
+
+        public MemberInfo(Member member) {
+            this.memberId = member.getMemberId();
+            this.memberName = member.getNickname();
+            this.profileImgUrl = member.getProfileUrl();
+        }
     }
 
     @Getter

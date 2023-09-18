@@ -1,5 +1,6 @@
 package com.service.dida.domain.market.dto;
 
+import com.service.dida.domain.nft.dto.NftResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -64,5 +65,11 @@ public class MarketResponseDto {
     public static class MoreHotMember {
         private GetHotMember memberInfo;
         private List<String> nftImgUrl;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class GetMainSoldOut {
+        private List<NftResponseDto.NftAndMemberInfo> nftAndMemberInfos;
     }
 }
