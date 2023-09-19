@@ -66,6 +66,7 @@ public class GetNftService implements GetNftUseCase {
         checkSortingWord(sort);
         List<ProfileNft> profileNfts = new ArrayList<>();
         Page<Nft> nfts = null;
+        String memberName;
         if (memberId == null) {
             if (sort.equals("updated_desc")) {
                 nfts = nftRepository.findAllNftsByMember(member,
@@ -74,6 +75,7 @@ public class GetNftService implements GetNftUseCase {
                 nfts = nftRepository.findAllNftsByMember(member,
                     pageReq(pageRequestDto, Direction.ASC));
             }
+            memberName = member.getNickname();
         } else {
             Member other = memberRepository.findByMemberIdWithDeleted(memberId).orElseThrow(() ->
                 new BaseException(MemberErrorCode.EMPTY_MEMBER));
@@ -84,10 +86,11 @@ public class GetNftService implements GetNftUseCase {
                 nfts = nftRepository.findAllNftsByMember(other,
                     pageReq(pageRequestDto, Direction.ASC));
             }
+            memberName = other.getNickname();
         }
         nfts.forEach(n -> profileNfts.add(new ProfileNft(
             new NftInfo(n.getNftId(), n.getTitle(), n.getImgUrl(), n.getPrice()),
-                new MemberInfo(n.getMember()), getLikeUseCase.checkIsLiked(member, n))));
+                memberName, getLikeUseCase.checkIsLiked(member, n))));
 
         return new PageResponseDto<>(nfts.getNumber(), nfts.getSize(), nfts.hasNext(), profileNfts);
     }

@@ -36,7 +36,7 @@ public class NftResponseDto {
     @AllArgsConstructor
     public static class ProfileNft {
         private NftInfo nftInfo;
-        private MemberInfo memberInfo;
+        private String memberName;
         private boolean liked;
     }
 
