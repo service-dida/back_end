@@ -22,7 +22,7 @@ public interface NftRepository extends JpaRepository<Nft, Long> {
 
     Integer countByMemberAndDeleted(Member member, boolean deleted);
 
-    @Query(value = "SELECT n FROM Nft n JOIN FETCH n.market WHERE n.member = :member AND n.deleted = false",
+    @Query(value = "SELECT n FROM Nft n LEFT JOIN FETCH n.market WHERE n.member = :member AND n.deleted = false",
             countQuery = "SELECT count(n) FROM Nft n")
     Page<Nft> findAllNftsByMember(Member member, PageRequest pageRequest);
 
