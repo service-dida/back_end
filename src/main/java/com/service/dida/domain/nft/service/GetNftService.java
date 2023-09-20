@@ -49,10 +49,17 @@ public class GetNftService implements GetNftUseCase {
         Nft nft = nftRepository.findByNftIdWithDeleted(nftId)
             .orElseThrow(() -> new BaseException(EMPTY_NFT));
         Member owner = nft.getMember();
-        boolean isMe = checkIsMe(member.getMemberId(), nft.getMember().getMemberId());
-        boolean followed = member != null && getFollowUseCase.checkIsFollowed(member, owner);
-        // boolean liked = member == null ? false : getLikeUseCase.checkIsLiked(member, nft) 와 같음
-        boolean liked = member != null && getLikeUseCase.checkIsLiked(member, nft);
+        boolean isMe, followed, liked;
+        if (member == null) {
+            isMe = false;
+            followed = false;
+            liked = false;
+        } else {
+            isMe = checkIsMe(member.getMemberId(), nft.getMember().getMemberId());
+            followed = getFollowUseCase.checkIsFollowed(member, owner);
+            // boolean liked = member == null ? false : getLikeUseCase.checkIsLiked(member, nft) 와 같음
+            liked = getLikeUseCase.checkIsLiked(member, nft);
+        }
         return new NftDetailInfo(
             new NftInfo(nft.getNftId(), nft.getTitle(), nft.getImgUrl(), nft.getPrice()),
             nft.getDescription(),
@@ -90,7 +97,7 @@ public class GetNftService implements GetNftUseCase {
         }
         nfts.forEach(n -> profileNfts.add(new ProfileNft(
             new NftInfo(n.getNftId(), n.getTitle(), n.getImgUrl(), n.getPrice()),
-                memberName, getLikeUseCase.checkIsLiked(member, n))));
+            memberName, getLikeUseCase.checkIsLiked(member, n))));
 
         return new PageResponseDto<>(nfts.getNumber(), nfts.getSize(), nfts.hasNext(), profileNfts);
     }
@@ -106,9 +113,9 @@ public class GetNftService implements GetNftUseCase {
 
         return new PageResponseDto<>(nfts.getNumber(), nfts.getSize(), nfts.hasNext(), res);
     }
-    
+
     public void checkSortingWord(String sort) {
-        if(!sort.equals("updated_desc") && !sort.equals("updated_asc")) {
+        if (!sort.equals("updated_desc") && !sort.equals("updated_asc")) {
             throw new BaseException(GlobalErrorCode.NOT_VALID_ARGUMENT_ERROR);
         }
     }

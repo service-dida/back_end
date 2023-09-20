@@ -6,6 +6,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +27,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             .equals("/common/refresh") && jwtTokenProvider.validateRefreshToken(refreshToken)) {
             Authentication authentication = jwtTokenProvider.getRefreshAuthentication(refreshToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+        }  else if(Objects.equals(token, "") && !((HttpServletRequest) request).getRequestURI()
+            .contains("/common") && !((HttpServletRequest) request).getRequestURI()
+            .contains("/member") && !((HttpServletRequest) request).getRequestURI()
+            .contains("/visitor")) {
+            SecurityContextHolder.getContext().setAuthentication(null);
         } else if (token != null && jwtTokenProvider.validateToken(token)) {
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
