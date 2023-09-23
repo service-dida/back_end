@@ -9,7 +9,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -28,7 +27,6 @@ public class Follow extends BaseEntity {
     @Column(name = "follow_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long followId;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "following_member")

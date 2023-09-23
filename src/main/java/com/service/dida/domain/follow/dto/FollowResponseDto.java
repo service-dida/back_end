@@ -12,5 +12,6 @@ public class FollowResponseDto {
         private String nickname;
         private String profileUrl;
         private int nftCnt;
+        private boolean isFollowing;
     }
 }

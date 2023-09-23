@@ -5,8 +5,10 @@ import static com.service.dida.global.config.constants.ServerConstants.PRIVATE_K
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.wallet.Wallet;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.ChangePwd;
+import com.service.dida.domain.wallet.dto.WalletRequestDto.CheckPwdForNft;
 import com.service.dida.domain.wallet.repository.WalletRepository;
 import com.service.dida.domain.wallet.usecase.WalletPasswordUseCase;
+import com.service.dida.domain.wallet.usecase.WalletUseCase;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.WalletErrorCode;
 import com.service.dida.global.util.usecase.BcryptUseCase;
@@ -31,6 +33,7 @@ public class WalletPasswordService implements WalletPasswordUseCase {
     private final WalletRepository walletRepository;
     private final BcryptUseCase bcryptUseCase;
     private final RsaUseCase rsaUseCase;
+    private final WalletUseCase walletUseCase;
 
     private void save(Wallet wallet) {
         walletRepository.save(wallet);
@@ -47,11 +50,19 @@ public class WalletPasswordService implements WalletPasswordUseCase {
     public void changePassword(Member member, ChangePwd changePwd)
         throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         Wallet wallet = member.getWallet();
-        if (bcryptUseCase.isMatch(rsaUseCase.rsaDecode(changePwd.getNowPwd(), PRIVATE_KEY), wallet.getPayPwd())) {
-            wallet.changePayPwd(bcryptUseCase.encrypt(rsaUseCase.rsaDecode(changePwd.getChangePwd(), PRIVATE_KEY)));
+        if (bcryptUseCase.isMatch(rsaUseCase.rsaDecode(changePwd.getNowPwd(), PRIVATE_KEY),
+            wallet.getPayPwd())) {
+            wallet.changePayPwd(
+                bcryptUseCase.encrypt(rsaUseCase.rsaDecode(changePwd.getChangePwd(), PRIVATE_KEY)));
             save(wallet);
         } else {
             throw new BaseException(WalletErrorCode.WRONG_PWD);
         }
+    }
+
+    @Override
+    public void checkPassword(Member member, CheckPwdForNft checkPwdForNft)
+        throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
+        walletUseCase.checkPayPwd(member.getWallet(), checkPwdForNft.getPayPwd());
     }
 }

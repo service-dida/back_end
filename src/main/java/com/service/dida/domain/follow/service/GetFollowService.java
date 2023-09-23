@@ -43,7 +43,8 @@ public class GetFollowService implements GetFollowUseCase {
         List<FollowList> followLists = new ArrayList<>();
         Page<Follow> follows = followRepository.findAllFollowerByMember(member,
             pageReq(pageRequestDto));
-        follows.forEach(f -> followLists.add(f.getFollowingMember().setFollowList()));
+        follows.forEach(f -> followLists.add(
+            f.getFollowingMember().setFollowList(checkFollowing(member, f.getFollowingMember()))));
         return new PageResponseDto<>(follows.getNumber(), follows.getSize(), follows.hasNext(),
             followLists);
     }
@@ -54,8 +55,12 @@ public class GetFollowService implements GetFollowUseCase {
         List<FollowList> followLists = new ArrayList<>();
         Page<Follow> follows = followRepository.findAllFollowingByMember(member,
             pageReq(pageRequestDto));
-        follows.forEach(f -> followLists.add(f.getFollowerMember().setFollowList()));
+        follows.forEach(f -> followLists.add(f.getFollowerMember().setFollowList(true)));
         return new PageResponseDto<>(follows.getNumber(), follows.getSize(), follows.hasNext(),
             followLists);
+    }
+
+    private boolean checkFollowing(Member member, Member followerMember) {
+        return followRepository.existsByFollowerMemberAndFollowingMemberAndStatus(followerMember, member,true);
     }
 }
