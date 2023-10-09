@@ -164,9 +164,9 @@ public class GetMarketService implements GetMarketUseCase {
         List<GetRecentNft> recentNfts = new ArrayList<>();
         Page<Nft> nfts;
         if (member != null) { // 로그인 했으면 숨김 리소스 제외
-            nfts = nftRepository.getRecentNftsWithoutHide(member, PageRequest.of(0, 3));
+            nfts = nftRepository.getRecentNftsWithoutHide(member, PageRequest.of(0, 4));
         } else {
-            nfts = nftRepository.getRecentNfts(PageRequest.of(0, 3));
+            nfts = nftRepository.getRecentNfts(PageRequest.of(0, 4));
         }
         nfts.forEach(nft -> recentNfts.add(makeGetRecentNftForm(member, nft)));
         return recentNfts;
