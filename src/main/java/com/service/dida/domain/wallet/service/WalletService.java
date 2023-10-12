@@ -25,6 +25,7 @@ import com.service.dida.domain.wallet.dto.WalletRequestDto.CheckPwd;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.SendKlayOutside;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.SendNftRequestDto;
 import com.service.dida.domain.wallet.dto.WalletResponseDto.WalletDetail;
+import com.service.dida.domain.wallet.dto.WalletResponseDto.WrongCnt;
 import com.service.dida.domain.wallet.repository.WalletRepository;
 import com.service.dida.domain.wallet.usecase.WalletUseCase;
 import com.service.dida.global.config.exception.BaseException;
@@ -97,19 +98,21 @@ public class WalletService implements WalletUseCase {
     }
 
     @Override
-    public void checkPayPwd(Wallet wallet, String encodedPwd)
+    public WrongCnt checkPayPwd(Wallet wallet, String encodedPwd)
         throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
         if (wallet.getWrongCnt() == 5) {
             throw new BaseException(WalletErrorCode.FIVE_ERRORS_FOR_PWD);
         }
+        boolean matched = false;
         if (bcryptUseCase.isMatch(rsaUseCase.rsaDecode(encodedPwd, PRIVATE_KEY),
             wallet.getPayPwd())) {
             wallet.initWrongCnt();
+            matched = true;
         } else {
             wallet.upWrongCnt();
-            throw new BaseException(WalletErrorCode.WRONG_PWD);
         }
         save(wallet);
+        return new WrongCnt(matched, wallet.getWrongCnt());
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.service.dida.domain.wallet.dto.WalletRequestDto.CheckPwd;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.SendKlayOutside;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.SendNftRequestDto;
 import com.service.dida.domain.wallet.dto.WalletResponseDto.WalletDetail;
+import com.service.dida.domain.wallet.dto.WalletResponseDto.WrongCnt;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -23,7 +24,7 @@ public interface WalletUseCase {
 
     void useWallet(Wallet wallet);
 
-    void checkPayPwd(Wallet wallet, String encodedPwd)
+    WrongCnt checkPayPwd(Wallet wallet, String encodedPwd)
         throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException;
 
     void registerWallet(Member member, CheckPwd checkPwd)

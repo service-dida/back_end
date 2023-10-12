@@ -3,6 +3,7 @@ package com.service.dida.domain.wallet.controller;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.ChangePwd;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.CheckPwdForNft;
+import com.service.dida.domain.wallet.dto.WalletResponseDto.WrongCnt;
 import com.service.dida.domain.wallet.usecase.WalletPasswordUseCase;
 import com.service.dida.global.config.security.auth.CurrentMember;
 import jakarta.validation.Valid;
@@ -50,10 +51,10 @@ public class WalletPasswordController {
      * 비밀번호 확인 API
      */
     @PostMapping("/member/password/check")
-    public ResponseEntity<Integer> checkPwd(@CurrentMember Member member,
+    public ResponseEntity<WrongCnt> checkPwd(@CurrentMember Member member,
         @Valid @RequestBody CheckPwdForNft checkPwdForNft)
         throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
-        walletPasswordUseCase.checkPassword(member, checkPwdForNft);
-        return new ResponseEntity<>(200, HttpStatus.OK);
+        return new ResponseEntity<>(walletPasswordUseCase.checkPassword(member, checkPwdForNft),
+            HttpStatus.OK);
     }
 }
