@@ -298,9 +298,12 @@ public class WalletService implements WalletUseCase {
         useWallet(wallet);
     }
 
-    private boolean checkPassword(CheckPwd checkPwd)
-        throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
-        return rsaUseCase.rsaDecode(checkPwd.getPayPwd(), PRIVATE_KEY)
-            .equals(rsaUseCase.rsaDecode(checkPwd.getCheckPwd(), PRIVATE_KEY));
+    private boolean checkPassword(CheckPwd checkPwd) {
+        try {
+            rsaUseCase.rsaDecode(checkPwd.getPayPwd(), PRIVATE_KEY);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

@@ -8,8 +8,13 @@ import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.GlobalErrorCode;
 import com.service.dida.global.util.usecase.RsaUseCase;
 import jakarta.annotation.PostConstruct;
+import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,5 +42,12 @@ public class CommonController {
     @GetMapping("/common/key")
     public ResponseEntity<PublicKeyDto> providePublicKey() {
         return new ResponseEntity<>(new PublicKeyDto(PUBLIC_KEY), HttpStatus.OK);
+    }
+
+    @GetMapping("/common/encode")
+    public String test()
+        throws NoSuchAlgorithmException,NoSuchPaddingException, IllegalBlockSizeException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
+
+        return rsaUseCase.rsaEncode("000000",PUBLIC_KEY);
     }
 }
