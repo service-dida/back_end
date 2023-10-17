@@ -22,7 +22,6 @@ public class WalletRequestDto {
     public static class CheckPwd {
         @NotBlank(message = "비밀번호는 빈칸일 수 없습니다.")
         private String payPwd;
-        private String checkPwd;
     }
 
     @Getter
