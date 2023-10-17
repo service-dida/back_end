@@ -14,4 +14,12 @@ public class WalletResponseDto {
         private double klay;
         private double dida;
     }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class WrongCnt {
+        private boolean matched;
+        private int wrongCnt;
+    }
 }

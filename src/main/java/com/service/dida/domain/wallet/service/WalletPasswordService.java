@@ -6,6 +6,7 @@ import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.wallet.Wallet;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.ChangePwd;
 import com.service.dida.domain.wallet.dto.WalletRequestDto.CheckPwdForNft;
+import com.service.dida.domain.wallet.dto.WalletResponseDto.WrongCnt;
 import com.service.dida.domain.wallet.repository.WalletRepository;
 import com.service.dida.domain.wallet.usecase.WalletPasswordUseCase;
 import com.service.dida.domain.wallet.usecase.WalletUseCase;
@@ -61,8 +62,8 @@ public class WalletPasswordService implements WalletPasswordUseCase {
     }
 
     @Override
-    public void checkPassword(Member member, CheckPwdForNft checkPwdForNft)
+    public WrongCnt checkPassword(Member member, CheckPwdForNft checkPwdForNft)
         throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
-        walletUseCase.checkPayPwd(member.getWallet(), checkPwdForNft.getPayPwd());
+        return walletUseCase.checkPayPwd(member.getWallet(), checkPwdForNft.getPayPwd());
     }
 }
