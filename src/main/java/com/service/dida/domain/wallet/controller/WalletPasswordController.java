@@ -28,16 +28,7 @@ public class WalletPasswordController {
     private final WalletPasswordUseCase walletPasswordUseCase;
 
     /**
-     * 임시 비밀번호 발급 Api
-     */
-    @PatchMapping("/member/password/tmp")
-    public ResponseEntity<Integer> setTmpPassword(@CurrentMember Member member) {
-        walletPasswordUseCase.setTmpPassword(member);
-        return new ResponseEntity<>(200, HttpStatus.OK);
-    }
-
-    /**
-     * 비밀번호 변경하기(임시, 수정 필요)
+     * 비밀번호 변경하기
      */
     @PatchMapping("/member/password")
     public ResponseEntity<Integer> changePassword(@CurrentMember Member member,

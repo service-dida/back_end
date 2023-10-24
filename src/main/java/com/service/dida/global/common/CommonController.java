@@ -44,10 +44,4 @@ public class CommonController {
         return new ResponseEntity<>(new PublicKeyDto(PUBLIC_KEY), HttpStatus.OK);
     }
 
-    @GetMapping("/common/encode")
-    public String test()
-        throws NoSuchAlgorithmException,NoSuchPaddingException, IllegalBlockSizeException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
-
-        return rsaUseCase.rsaEncode("000000",PUBLIC_KEY);
-    }
 }

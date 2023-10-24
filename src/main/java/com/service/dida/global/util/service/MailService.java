@@ -24,11 +24,6 @@ public class MailService implements MailUseCase {
         return sendMail(createReportMemberMail(email));
     }
 
-    @Override
-    public String sendPasswordMail(String email) {
-        return sendMail(createPwdMail(email));
-    }
-
     public String getTmpPwd() {
         char[] numSet = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
         StringBuilder pwd = new StringBuilder();

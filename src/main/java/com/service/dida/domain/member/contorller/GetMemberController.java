@@ -31,7 +31,7 @@ public class GetMemberController {
     /**
      * 인증 메일 보내기 Api
      */
-    @GetMapping("/visitor/auth")
+    @GetMapping("/common/auth")
     public ResponseEntity<SendAuthEmailDto> sendAuthEmail(@CurrentMember Member member) {
         return new ResponseEntity<>(getUserUseCase.sendAuthMail(member), HttpStatus.OK);
     }
