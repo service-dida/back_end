@@ -29,7 +29,6 @@ public class WalletRequestDto {
     @AllArgsConstructor
     public static class ChangePwd {
         @NotBlank(message = "비밀번호는 빈칸일 수 없습니다.")
-        private String nowPwd;
         private String changePwd;
     }
 

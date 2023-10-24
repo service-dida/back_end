@@ -13,8 +13,6 @@ import javax.crypto.NoSuchPaddingException;
 
 public interface WalletPasswordUseCase {
 
-    void setTmpPassword(Member member);
-
     void changePassword(Member member, ChangePwd changePwd)
         throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, InvalidKeySpecException, BadPaddingException, InvalidKeyException;
 

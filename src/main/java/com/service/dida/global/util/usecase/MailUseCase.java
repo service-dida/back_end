@@ -5,6 +5,4 @@ public interface MailUseCase {
     String sendAuthMail(String email);
 
     String sendReportMail(String email);
-
-    String sendPasswordMail(String email);
 }
