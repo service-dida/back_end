@@ -42,6 +42,7 @@ public class WalletPasswordService implements WalletPasswordUseCase {
         Wallet wallet = member.getWallet();
         wallet.changePayPwd(
             bcryptUseCase.encrypt(rsaUseCase.rsaDecode(changePwd.getChangePwd(), PRIVATE_KEY)));
+        wallet.initWrongCnt();
         save(wallet);
     }
 
