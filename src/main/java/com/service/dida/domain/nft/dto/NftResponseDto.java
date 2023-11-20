@@ -30,6 +30,7 @@ public class NftResponseDto {
         private boolean followed;
         private boolean liked;
         private boolean isMe;
+        private Long marketId;
     }
 
     @Getter
