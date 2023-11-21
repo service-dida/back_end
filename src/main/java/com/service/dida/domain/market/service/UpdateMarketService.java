@@ -10,17 +10,18 @@ import com.service.dida.domain.wallet.usecase.WalletUseCase;
 import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.errorCode.MarketErrorCode;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.json.simple.parser.ParseException;
+import org.springframework.stereotype.Service;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Objects;
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import lombok.RequiredArgsConstructor;
-import org.json.simple.parser.ParseException;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +43,7 @@ public class UpdateMarketService implements UpdateMarketUseCase {
             throw new BaseException(MarketErrorCode.INVALID_MEMBER);
         }
         market.delete();
+        market.getNft().changeMarket(null);
     }
 
     @Override
