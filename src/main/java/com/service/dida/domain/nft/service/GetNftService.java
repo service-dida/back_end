@@ -50,6 +50,10 @@ public class GetNftService implements GetNftUseCase {
             .orElseThrow(() -> new BaseException(EMPTY_NFT));
         Member owner = nft.getMember();
         boolean isMe, followed, liked;
+        Long marketId = 0L;
+        if (nft.getMarket() != null) {
+            marketId = nft.getMarket().getMarketId();
+        }
         if (member == null) {
             isMe = false;
             followed = false;
@@ -64,7 +68,7 @@ public class GetNftService implements GetNftUseCase {
             new NftInfo(nft.getNftId(), nft.getTitle(), nft.getImgUrl(), nft.getPrice()),
             nft.getDescription(),
             new MemberInfo(owner.getMemberId(), owner.getNickname(), owner.getProfileUrl()),
-            nft.getId(), nft.getContracts(), followed, liked, isMe);
+            nft.getId(), nft.getContracts(), followed, liked, isMe, marketId);
     }
 
     @Override
