@@ -51,6 +51,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation:3.0.4'
     implementation 'org.jetbrains:annotations:24.0.0'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+    implementation 'org.thymeleaf:thymeleaf:3.1.1.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
