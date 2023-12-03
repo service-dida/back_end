@@ -1,5 +1,6 @@
 package com.service.dida.domain.nft.service;
 
+import com.service.dida.domain.history.usecase.RegisterHistoryUseCase;
 import com.service.dida.domain.member.entity.Member;
 import com.service.dida.domain.nft.Nft;
 import com.service.dida.domain.nft.dto.NftRequestDto.PostNftRequestDto;
@@ -40,6 +41,7 @@ public class RegisterNftService implements RegisterNftUseCase {
     private final KasProperties kasProperties;
     private final RegisterTransactionUseCase registerTransactionUseCase;
     private final WalletUseCase walletUseCase;
+    private final RegisterHistoryUseCase registerHistoryUseCase;
 
     public void save(Nft nft) {
         nftRepository.save(nft);
@@ -80,6 +82,7 @@ public class RegisterNftService implements RegisterNftUseCase {
         registerTransactionUseCase.saveMintingTransaction(
             new MintingTransactionDto(member.getMemberId(), nft,
                 new TransactionSetDto("", transactionHash, sendFee)));
+        registerHistoryUseCase.registerHistory(nft.getNftId(), member);
         return new NftResponseDto.NftId(nft.getNftId());
     }
 }
