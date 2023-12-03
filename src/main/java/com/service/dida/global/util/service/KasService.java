@@ -7,18 +7,20 @@ import com.service.dida.global.config.exception.BaseException;
 import com.service.dida.global.config.exception.ErrorCode;
 import com.service.dida.global.config.exception.errorCode.NftErrorCode;
 import com.service.dida.global.config.exception.errorCode.WalletErrorCode;
+import com.service.dida.global.config.log.LogExecutionTime;
 import com.service.dida.global.config.properties.KasProperties;
 import com.service.dida.global.util.usecase.KasUseCase;
 import com.service.dida.global.util.usecase.UtilUseCase;
-import java.io.IOException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +41,7 @@ public class KasService implements KasUseCase {
         return (String) jsonObject.get(parameter);
     }
 
+    @LogExecutionTime
     private String useKasApi(String query, String method, HttpRequest.BodyPublisher body,
         String parameter, ErrorCode errorCode)
         throws IOException, InterruptedException, BaseException, ParseException {
