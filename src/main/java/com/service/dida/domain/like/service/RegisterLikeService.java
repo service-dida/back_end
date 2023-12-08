@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +46,9 @@ public class RegisterLikeService implements RegisterLikeUseCase {
         Like like = likeRepository.findByMemberAndNft(member, nft).orElse(null);
         if (like == null) {
             createLike(member, nft);
-            registerAlarmUseCase.registerLikeAlarm(nft.getMember(), nft.getNftId());
+            if(!Objects.equals(nft.getMember().getMemberId(), member.getMemberId())) {
+                registerAlarmUseCase.registerLikeAlarm(nft.getMember(), nft.getNftId());
+            }
             return true;
         } else {
             return like.changeStatus();
