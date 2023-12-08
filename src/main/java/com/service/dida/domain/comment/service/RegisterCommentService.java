@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -41,6 +42,9 @@ public class RegisterCommentService implements RegisterCommentUseCase {
                 .build();
 
         save(comment);
-        registerAlarmUseCase.registerCommentAlarm(post.getMember(), comment.getCommentId());
+
+        if(!Objects.equals(post.getMember().getMemberId(), member.getMemberId())) {
+            registerAlarmUseCase.registerCommentAlarm(post.getMember(), comment.getCommentId());
+        }
     }
 }
