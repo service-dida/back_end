@@ -15,12 +15,6 @@ public class HistoryResponseDto {
         private LocalDateTime ownerDate;
         private Long ownerId;
         private String ownerName;
-    }
-
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class NftOwnHistory {
-        List<NftOwnData> nftOwnHistory;
+        private double price;
     }
 }

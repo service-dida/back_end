@@ -1,8 +1,10 @@
 package com.service.dida.domain.history.controller;
 
-import com.service.dida.domain.history.dto.HistoryResponseDto.NftOwnHistory;
+import com.service.dida.domain.history.dto.HistoryResponseDto.NftOwnData;
 import com.service.dida.domain.history.usecase.GetHistoryUseCase;
 import com.service.dida.global.common.dto.PageRequestDto;
+import com.service.dida.global.common.dto.PageResponseDto;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,7 @@ public class GetHistoryController {
      * NFT 소유권 내역 확인하기
      */
     @GetMapping("/history/{nftId}")
-    public ResponseEntity<NftOwnHistory> getNftOwnHistory(@RequestParam("page") int page,
+    public ResponseEntity<PageResponseDto<List<NftOwnData>>> getNftOwnHistory(@RequestParam("page") int page,
         @RequestParam("size") int size, @PathVariable Long nftId) {
         return new ResponseEntity<>(
             getHistoryUseCase.getNftOwnHistory(nftId, new PageRequestDto(page, size)),

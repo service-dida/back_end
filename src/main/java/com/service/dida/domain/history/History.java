@@ -36,6 +36,9 @@ public class History {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Column(name = "price", nullable = false)
+    private double price;
+
     @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;

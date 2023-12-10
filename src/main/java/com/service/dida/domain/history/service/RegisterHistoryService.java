@@ -21,11 +21,12 @@ public class RegisterHistoryService implements RegisterHistoryUseCase {
     }
 
     @Override
-    public void registerHistory(Long nftId, Member member) {
+    public void registerHistory(Long nftId, Member member, double price) {
         History history = History.builder()
             .createdAt(LocalDateTime.now())
             .nftId(nftId)
             .member(member)
+            .price(price)
             .build();
         save(history);
     }
