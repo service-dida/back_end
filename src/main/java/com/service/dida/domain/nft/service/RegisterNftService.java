@@ -82,7 +82,7 @@ public class RegisterNftService implements RegisterNftUseCase {
         registerTransactionUseCase.saveMintingTransaction(
             new MintingTransactionDto(member.getMemberId(), nft,
                 new TransactionSetDto("", transactionHash, sendFee)));
-        registerHistoryUseCase.registerHistory(nft.getNftId(), member);
+        registerHistoryUseCase.registerHistory(nft.getNftId(), member, 0D);
         return new NftResponseDto.NftId(nft.getNftId());
     }
 }

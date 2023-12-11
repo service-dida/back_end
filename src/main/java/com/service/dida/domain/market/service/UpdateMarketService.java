@@ -58,6 +58,6 @@ public class UpdateMarketService implements UpdateMarketUseCase {
         }
         walletUseCase.purchaseNftInMarket(buyer, updateMarket.getPayPwd(), market);
         registerAlarmUseCase.registerSaleAlarm(market.getMember(),market.getNft().getNftId());
-        registerHistoryUseCase.registerHistory(market.getNft().getNftId(),buyer);
+        registerHistoryUseCase.registerHistory(market.getNft().getNftId(),buyer,market.getPrice());
     }
 }
