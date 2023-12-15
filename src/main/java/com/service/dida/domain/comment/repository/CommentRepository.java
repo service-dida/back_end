@@ -28,11 +28,11 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "AND c.post.nft.member NOT IN (SELECT mh.hideMember FROM MemberHide mh WHERE mh.member=:member) " +
             "AND c.post.nft NOT IN (SELECT nh.nft FROM NftHide nh WHERE nh.member=:member) " +
             "AND c.post NOT IN (SELECT ph.post FROM PostHide ph WHERE ph.member=:member) " +
-            "AND c.post.createdAt >:date GROUP BY (c.post) ORDER BY COUNT(c.commentId) DESC")
+            "AND c.createdAt >:date GROUP BY (c.post) ORDER BY COUNT(c.commentId) DESC")
     Page<Post> findPostsByCommentCount(Member member, LocalDateTime date, PageRequest pageRequest);
 
     @Query(value = "SELECT c.post FROM Comment c WHERE c.deleted = false " +
-            "AND c.post.createdAt >:date GROUP BY (c.post) ORDER BY COUNT(c.commentId) DESC")
+            "AND c.createdAt >:date GROUP BY (c.post) ORDER BY COUNT(c.commentId) DESC")
     Page<Post> findPostsByCommentCountWithoutHide(LocalDateTime date, PageRequest pageRequest);
 
     Integer countByPostAndDeletedFalse(Post post);
