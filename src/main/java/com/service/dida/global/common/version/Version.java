@@ -1,5 +1,6 @@
 package com.service.dida.global.common.version;
 
+import com.service.dida.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "version")
-public class Version {
+public class Version extends BaseEntity {
     @Id
     @Column(name = "version_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,13 +23,9 @@ public class Version {
     @Column(name = "patch", nullable = false)
     private Long patch;
 
-    public void upMajor() {
-        this.major = this.major + 1;
-    }
-    public void upMinor() {
-        this.minor = this.minor + 1;
-    }
-    public void upPatch() {
-        this.patch = this.patch + 1;
-    }
+    @Column(name = "is_essential_update", nullable = false)
+    private boolean isEssentialUpdate;
+
+    @Column(name = "reason", nullable = false)
+    private String changes;
 }
